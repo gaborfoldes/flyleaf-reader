@@ -1,0 +1,19 @@
+{
+  "author": "",
+  "name": "templates",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gaborfoldes/flyleaf.git"
+  },
+  "engines": {
+    "node": "~0.6.6"
+  },
+  "dependencies": {
+    "less": "~1.1.6"
+  },
+  "devDependencies": {}
+  , "scripts": {
+    "less": "./node_modules/.bin/lessc --compress ./css/less/bootstrap.less > css/bootstrap.css"
+  }
+}

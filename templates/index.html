@@ -1,0 +1,258 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!-- Consider adding a manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <!-- Use the .htaccess and remove these lines to avoid edge case issues.
+       More info: h5bp.com/b/378 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Flyleaf</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile viewport optimized: h5bp.com/viewport -->
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
+
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
+
+  <!-- All JavaScript at the bottom, except this Modernizr build incl. Respond.js
+       Respond is a polyfill for min/max-width media queries. Modernizr enables HTML5 elements & feature detects; 
+       for optimal performance, create your own custom Modernizr build: www.modernizr.com/download/ -->
+  <script src="js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+
+	<div class="container">
+
+	  <header>
+	    <div class="topbar">
+	      <div class="filll">
+	        <div class="container">
+	          <a class="brand" href="#">flyleaf</a>
+	          <ul class="nav">
+	            <li class="active"><a href="#">Home</a></li>
+	            <li><a href="#about">About</a></li>
+	            <li><a href="#contact">Contact</a></li>
+	          </ul>
+	          <form action="" class="pull-right">
+	            <input class="input-small" type="text" placeholder="Username">
+	            <input class="input-small" type="password" placeholder="Password">
+	            <button class="btn" type="submit">Sign in</button>
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+	  </header>
+
+  	<div class="content" role="main">
+	    <!--div class="page-header">
+	      <h1>Page name <small>Supporting text or tagline</small></h1>
+	    </div-->
+			<div class="row">
+			</div>
+	    <div class="row">
+	      <div class="span10">
+	      	<h1>Page name <small>Supporting text or tagline</small></h1>
+	        <h2>Main content</h2>
+	      </div>
+	      <div class="span4">
+	        <h3>Secondary content</h3>
+	      </div>
+	    </div>
+	  </div>
+
+	</div>
+
+	  <footer>
+		<div class="clearfix"></div>	
+			
+		<div id="sign-up-form">
+	<!--div id="success" style="display:none;">
+		<p id="ready">Your Zendesk is ready.</p>
+		<div id="lets-go" class="buttonAnim">
+			<a href="#" onClick="_gaq.push(['_trackEvent','AcctThru','Click', 'LetsGo']);">
+				<img id="lets-go-click" src="http://www.zendesk.com/wp-content/themes/zendesk-twentyeleven/img/lets-go-click.png" alt="Button" />
+				<img id="lets-go-hover" src="http://www.zendesk.com/wp-content/themes/zendesk-twentyeleven/img/lets-go-hover.png" alt="Button" />
+				<img id="lets-go-button" src="http://www.zendesk.com/wp-content/themes/zendesk-twentyeleven/img/lets-go-button.png" alt="Button" />
+			</a>
+		</div>
+		<p class="lower"><span style="font-family: DNRM;">The url for your help desk is:</span><br>
+		<a id="future-access" href="#"></a><br>
+		Make sure you save it somewhere so you can get back there.</p>
+		<p class="lower"><span style="font-family: DNRM">And look out for the account verification email we just sent you</span><br>You’ll need to verify your account to log in in the future</p>
+	</div>
+	<div id="form-top">
+	<p id="sign-up-for-free-trial"><span style="font-family: DNRM;">SIGN UP</span> for a free trial.</p>
+	<div id="form-bottom" class="hidden">
+		<p id="instructions">Surprise! You just got <span class="bold">4 extra form fields</span> to fill out! We hope you forgive us, since we are just about to give you a totally free trial of the PLUS+ plan.</p>
+	</div> 
+	<div id="active-background"></div> 
+	<div id="ghost-background"></div> 
+	<form id="create-zendesk">
+		<a id="closeMe" href="#">&nbsp;</a>
+		<input type="text" placeholder="Full Name" id="fullname" name="owner[name]">&nbsp;
+		<input type="email" placeholder="Email" id="email" name="owner[email]">
+		<input type="text" form="create-zendesk" placeholder="Phone Number" name="address[phone]" id="phone">&nbsp;
+		<input type="text" form="create-zendesk" placeholder="Company" name="account[name]" id="company_name">&nbsp;
+		<br>
+		<select form="create-zendesk" name="account[help_desk_size]" id="numberofemployees">
+			<option>Number of Employees</option>
+			<option value="1-9">1-9</option>
+			<option value="10-99">10-99</option>
+			<option value="100-249">100-249</option>
+			<option value="250-499">250-499</option>
+			<option value="500-1999">500-1999</option>
+			<option value="2000-4999">2000-4999</option>
+			<option value="5000+">5000+</option>		
+		</select>
+			<input type="text" form="create-zendesk" placeholder="Sitename" name="account[subdomain]" id="site_address">
+			<input type="hidden" name="sfga" value="00D80000000KSY6" />
+			<input type="hidden" form="create-zendesk" name="trial_extras[Original_PPC_Campaign__c]" id="trial_extras[Original_PPC_Campaign__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Original_PPC_Keyword__c]" id="trial_extras[Original_PPC_Keyword__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Original_Referrer2__c]" id="trial_extras[Original_Referrer2__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Original_Search_Engine2__c]" id="trial_extras[Original_Search_Engine2__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Original_Search_String__c]" id="trial_extras[Original_Search_String__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Original_Search_Type__c]" id="trial_extras[Original_Search_Type__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Last_PPC_Campaign__c]" id="trial_extras[Last_PPC_Campaign__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Last_PPC_Keyword__c]" id="trial_extras[Last_PPC_Keyword__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Last_Referrer__c]" id="trial_extras[Last_Referrer__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Last_Search_Engine__c]" id="trial_extras[Last_Search_Engine__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Last_Search_String__c]" id="trial_extras[Last_Search_String__c]" value="">
+			<input type="hidden" form="create-zendesk" name="trial_extras[Last_Search_Type__c]" id="trial_extras[Last_Search_Type__c]" value="">
+		<p id="domain">.zendesk.com</p>
+		<p id="host" class="subtext">We'll host your help desk at this address.</p>
+		<br>
+		<div id="loading" style="display:none;">
+			<p>loading...please wait. <img src="http://www.zendesk.com/wp-content/themes/zendesk-twentyeleven/img/lotus_gif.gif" alt="Button" /></p>
+		</div>
+		<input type="button" src="http://www.zendesk.com/wp-content/themes/zendesk-twentyeleven/img/create-my-zendesk-click.png" id="create-my-zendesk-click" value="&nbsp;">
+		<div id="terms-and-conditions">
+			<div class="shake">
+				<input type="checkbox" form="create-zendesk" value="I agree to the terms & conditions and privacy policy." name="agree" id="terms">
+				<p class="subtext" id="tos">I agree to the <a href="http://www.zendesk.com/company/terms">terms & conditions</a> and <a href="http://www.zendesk.com/company/privacy">privacy policy</a>.</p>
+			</div>
+		</div>
+	</form>
+	</div> <!-- #form-top -->
+</div> <!-- #sign-up-form -->
+
+		
+		<div id="footer-global" role="contentinfo">
+
+			<nav class="container">				
+		
+				<section id="col1">
+					<header><h1>Promote</h1></header>
+					<ul>
+						<li><a href="">Profile Page</a></li>
+						<li><a href="">Press Kit</a></li>
+						<li><a href="">Distribution</a></li>
+						<li><a href="">Facebook App</a></li>
+						<li><a href="">Widgets</a></li>
+					</ul>
+				</section>
+		
+				<section id="col2">
+					<header><h1>Earn money</h1></header>
+					<ul>
+						<li><a href="">Sell directly</a></li>
+						<li><a href="">Customer Stories</a></li>
+						<li><a href="">Integrations</a></li>
+						<li><a href="">White Papers</a></li>
+					</ul>
+				</section>
+		
+				<section id="col3">
+        	<header><h1>Support</h1></header>
+        	<ul>
+						<li><a href="">Contact Us</a></li>
+						<li><a href="">Developers / API</a></li>
+						<li><a href="">Report a bug</a></li>
+						<li><a href="">Suggestions</a></li>
+					</ul>				
+				</section>
+		
+				<section id="col4">
+					<header><h1>The Company</h1></header>
+					<ul>
+						<li><a href="">About us</a></li>
+						<li><a href="">Team</a></li>
+						<li><a href="">Press</a></li>
+						<li><a href="">Blog</a></li>
+						<li><a href="">Careers</a></li>
+					</ul>
+				</section>
+				
+				<section id="access-signup">
+						<header><h1>Click and Connect</h1></header>					<p> 
+						<span class="alignleft">Don't be a stranger. </span>
+						<a id="facebook" class="alignright" href="http://www.facebook.com/flyleaffans"></a>
+						<a id="twitter" class="alignright" href="http://www.twitter.com/flyleafers"></a>
+					</p>
+				</section>
+				
+			</nav><!-- #access-footer -->
+			<nav id="access-footer-colophon" class="container vcard">
+				<img id="mini-tree" src="img/tree.gif" height=120 alt="Flyleaf :: marketing platform for authors" />	
+				<img id="logo" src="img/tinylogo.png" alt="Flyleaf :: marketing platform for authors" /> | 
+				<a href="/company/terms">Terms &amp; Conditions</a> |
+				<a href="/company/privacy">Privacy Policy</a> | 
+				<a href="/company/copyright">Copyright</a> |
+				<a href="/company/refund">Refund Policy</a>
+					<span class="fn org">Flyleaf</span> - 
+					<span class="adr">
+						<span class="street-address">2616 Erwin Rd Suite 2639</span> - 
+						<span class="locality">Durham</span> - 
+						<span class="region">NC</span> 
+						<span class="postal-code">27705</span> - 
+						<span class="country-name">USA</span>
+					</span>
+				<p>A home for your book &mdash; Flyleaf is the premier <a href="/">marketing platform for authors</a> and publishers.</p>
+			</nav>
+			
+		</div>
+	  </footer>
+
+
+  <!-- JavaScript at the bottom for fast page loading -->
+
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+
+  <!-- scripts concatenated and minified via build script -->
+  <script defer src="js/plugins.js"></script>
+  <script defer src="js/script.js"></script>
+  <!-- end scripts -->
+
+
+  <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.
+       mathiasbynens.be/notes/async-analytics-snippet -->
+  <script>
+    var _gaq=[['_setAccount','UA-28099727-1'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+  </script>
+
+  <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+       chromium.org/developers/how-tos/chrome-frame-getting-started -->
+  <!--[if lt IE 7 ]>
+    <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
+
+</body>
+</html>
