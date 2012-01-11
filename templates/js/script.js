@@ -27,23 +27,23 @@ function signUpFormWinning() {
 			if(open == false) {
 				$('#ghost-background').animate({ opacity: '0' },'fast');
 				if(msie == true){
-					$('#create-my-zendesk').css({ 'display': 'none' });	
+					$('#create-my-flyleaf').css({ 'display': 'none' });	
 				} else {
-					$('#create-my-zendesk').animate({ opacity: '0' },75);
+					$('#create-my-flyleaf').animate({ opacity: '0' },75);
 				}
 			}
 		}).mouseleave(function() {			
 			if(open == false) {
 				$('#ghost-background').animate({ opacity: '1' },'fast');
 				if(msie == true){
-					$('#create-my-zendesk').css({ 'display': 'block' });	
+					$('#create-my-flyleaf').css({ 'display': 'block' });	
 				} else {
-					$('#create-my-zendesk').animate({ opacity: '1' },75);
+					$('#create-my-flyleaf').animate({ opacity: '1' },75);
 				}
 			}
 		});		
 
-	// You clicked Create My Zendesk. Nice enthusiasm!
+	// You clicked Create My flyleaf. Nice enthusiasm!
 	$('#form-top input[type="button"]').mouseup(function(){
 		if(open == false){
 			scrollToForm();
@@ -51,7 +51,7 @@ function signUpFormWinning() {
 		} else {
 			scrollToForm();
 			// Did you fill it out? 
-			validateInsertTalktoapp($('#create-zendesk'));
+			validateInsertTalktoapp($('#create-flyleaf'));
 		}
 			return false;
 	});
@@ -60,9 +60,9 @@ function signUpFormWinning() {
 		if(open == false){
 			$('#ghost-background').animate({ opacity: '0' },'fast');
 			if(msie == true){
-				$('#create-my-zendesk, #create-my-zendesk-active').css({ 'display': 'none' });
+				$('#create-my-flyleaf, #create-my-flyleaf-active').css({ 'display': 'none' });
 			} else {
-				$('#create-my-zendesk').animate({ opacity: '0' },75);
+				$('#create-my-flyleaf').animate({ opacity: '0' },75);
 			}
 			scrollToForm();
 			openForm(); 
@@ -99,7 +99,7 @@ function signUpFormWinning() {
 	$('#closeMe').click(function(){
 		if(open == true){
 			open = false;
-			$('#create-zendesk, #ghost-background, #active-background').animate({
+			$('#create-flyleaf, #ghost-background, #active-background').animate({
 				    height: '30px',
 				paddingTop: '5px',
 				paddingRight: '5px',
@@ -119,9 +119,9 @@ function signUpFormWinning() {
 			});	
 
 			if(msie == true){
-				$('#create-my-zendesk, #create-my-zendesk-active, #create-my-zendesk-click').css({'top':'3px', 'right':'10px'});	
+				$('#create-my-flyleaf, #create-my-flyleaf-active, #create-my-flyleaf-click').css({'top':'3px', 'right':'10px'});	
 			} else {
-				$('#create-my-zendesk, #create-my-zendesk-active, #create-my-zendesk-click').animate({
+				$('#create-my-flyleaf, #create-my-flyleaf-active, #create-my-flyleaf-click').animate({
 					top: '6px',
 					right: '5px'
 				  }, 'slow',function(){
@@ -133,12 +133,12 @@ function signUpFormWinning() {
 		}
 	});
 
-	// hoverin' and clickin' on the new zendesk 'lets go!' buttons.
-	$('#signup-button, .try-button, #try-zendesk-free-translate').click(function(){
+	// hoverin' and clickin' on the new flyleaf 'lets go!' buttons.
+	$('#signup-button, .try-button, #try-flyleaf-free-translate').click(function(){
 		if(open == false){
 			$('#ghost-background').animate({ opacity: '0' },'fast');
-			$('#create-my-zendesk').animate({ opacity: '0' },75);
-			$('#create-my-zendesk-active').animate({ opacity: '1' },75);
+			$('#create-my-flyleaf').animate({ opacity: '0' },75);
+			$('#create-my-flyleaf-active').animate({ opacity: '1' },75);
 			scrollToForm();
 			openForm(); 
 		} else {
@@ -160,7 +160,7 @@ function signUpFormWinning() {
 		if(open == false){
 			open = true;
 	
-			$('#create-zendesk, #ghost-background, #active-background').animate({
+			$('#create-flyleaf, #ghost-background, #active-background').animate({
 			    height: '192px',
 				paddingTop: '5px',
 				paddingRight: '5px',
@@ -177,14 +177,14 @@ function signUpFormWinning() {
 			    // Animation complete.
 			});
 	
-			$('#create-my-zendesk,#create-my-zendesk-active, #create-my-zendesk-click').animate({
+			$('#create-my-flyleaf,#create-my-flyleaf-active, #create-my-flyleaf-click').animate({
 				top: '166px',
 				right: '5px'
 			  }, 'fast',function(){
 				// animation complete
 			});
 	
-			// animate #create-zendesk sliding down.
+			// animate #create-flyleaf sliding down.
 			$('#form-bottom').removeClass('hidden');			
 	
 		}
@@ -209,8 +209,8 @@ function signUpFormWinning() {
 			//var queryString = form.formSerialize();
 			//var domain = jQuery.url.setUrl(document.location).attr("host").split(".").splice(1,2).join(".");
 			
-			//$.getJSON("http://signup.zendesk.com/accounts.json?_method=post&callback=?", queryString, processSignupResponse);
-			$('#create-my-zendesk, #create-my-zendesk-click, #create-my-zendesk-active').fadeOut('fast');
+			//$.getJSON("http://signup.flyleaf.com/accounts.json?_method=post&callback=?", queryString, processSignupResponse);
+			$('#create-my-flyleaf, #create-my-flyleaf-click, #create-my-flyleaf-active').fadeOut('fast');
 			$('#loading').fadeIn('fast');
 
 var errorContent = '<div class="errors">';
@@ -220,7 +220,7 @@ errorContent += "</ul></div>";
 errorsContainer = $("#instructions");
 errorsContainer.html(errorContent);
 $('#loading').fadeOut('fast');
-$('#create-my-zendesk, #create-my-zendesk-click, #create-my-zendesk-active').fadeIn('fast');
+$('#create-my-flyleaf, #create-my-flyleaf-click, #create-my-flyleaf-active').fadeIn('fast');
 
 		}
 	}
@@ -249,7 +249,7 @@ $('#create-my-zendesk, #create-my-zendesk-click, #create-my-zendesk-active').fad
 	}
 	
 	function automaticLogin(data) {
-		//$("#success").after('<iframe style="display:none;" src="http://www.zendesk.com/wp-content/themes/zendesk-twentyeleven/signup_success.html"></iframe>');
+		//$("#success").after('<iframe style="display:none;" src="http://www.flyleaf.com/wp-content/themes/flyleaf-twentyeleven/signup_success.html"></iframe>');
 		console.log('success loaded');
 		setTimeout( function(response) {
 			window.location = data.right_away_link;
@@ -263,7 +263,7 @@ $('#create-my-zendesk, #create-my-zendesk-click, #create-my-zendesk-active').fad
 		$('#future-access').attr("href", data.right_away_link).html(data.help_desk_link);
 		$('#success').fadeIn('fast');
 		$('#form-bottom').remove();
-		$("#success").after('<iframe style="display:none;" src="http://www.zendesk.com/wp-content/themes/zendesk-twentyeleven/signup_success.html"></iframe>');
+		$("#success").after('<iframe style="display:none;" src="http://www.flyleaf.com/wp-content/themes/flyleaf-twentyeleven/signup_success.html"></iframe>');
 	}*/
 	
 	function displayErrorMessages(data) {
@@ -277,7 +277,7 @@ $('#create-my-zendesk, #create-my-zendesk-click, #create-my-zendesk-active').fad
 		errorsContainer = $("#instructions");
 		errorsContainer.html(errorContent);
 		$('#loading').fadeOut('fast');
-		$('#create-my-zendesk, #create-my-zendesk-click, #create-my-zendesk-active').fadeIn('fast');
+		$('#create-my-flyleaf, #create-my-flyleaf-click, #create-my-flyleaf-active').fadeIn('fast');
 	}
 	
 	function isDST() {
