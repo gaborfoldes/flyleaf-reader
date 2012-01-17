@@ -71,29 +71,92 @@ function woopraReady(tracker) {
 </head>
 
 <body>
-	<div class="container">
 		<div id="top">
 			<div id="main" class="col">
 				<h1 class="logo">flyleaf</h1>
 				<div id="flash">
 					<p>Marketing platform for authors</p>
-					<p class="no-bullet">A one-stop shop to manage your online presence &mdash; engage more readers, track your progress and sell more books</p>
+					<p class="no-bullet">A one-stop shop to manage your online presence &mdash; engage with readers, track your progress and sell more books</p>
 				</div>
 				<div id="signup_main"> 
 					<p id="signuptext" class="signuptext" >Request an invitation:</p>
 					<form id="submitform" action="/email.php" method="GET">
 						<fieldset>
 							<input id="email" type="email" name="email" placeholder="Email address" title=""/>
-							<input type="submit" class="awesome" value="GO"/>
+							<input id="submitbtn" type="submit" class="awesome" value="SIGN UP"/>
 						</fieldset>
 					</form>
 				</div>
 			</div>
-			<!--a id="learn_more" href="#bottom" class="submit awesome">Learn More</a-->
+		<a id="learn_more" href="#bottom" class="awesome">Learn More</a>
 		</div>
-	</div>
 
-    <footer id="footer">
+<div id="bottom" class="col">
+<h3 id="tagline"><a href="#main" id="scrollup"><img src="img/logo-1.png" /></a>&nbsp;Make a name for yourself &mdash; a comprehensive marketing platform for authors</h3>
+
+<div id="first" class="features">
+  <h3>Get a Profile Page</h3>
+  <div class="feature">
+    <h4>A home for your books</h4>
+    <p>A professional webpage to showcase you and your books &ndash; you can even use it as your home page</p>
+  </div>
+  <div class="feature">
+    <h4>A living press kit</h4>
+    <p>Include excerpts, accolades, photos, videos, blog posts, interviews, appearances and more</p>
+  </div>
+  <div class="feature">
+    <h4>Push content</h4>
+    <p>Manage content across multiple platforms from your Flyleaf page</p>
+  </div>
+</div>
+
+<div id="second" class="features"> 
+  <h3>Promote Everywhere</h3>
+  <div class="feature">
+    <h4>Get on Facebook</h4>
+    <p>Use the Flyleaf app to share with readers and help them spread the word</p>
+  </div>
+  <div class="feature">
+    <h4>Online buzz</h4>
+    <p>See all the mentions and ongoing conversations about you and reviews about your books</p>
+  </div>
+  <div class="feature">
+    <h4>Collaborate with the community</h4>
+    <p>Gather fans and don't forget to recommend other writers</p><p>
+  </p></div>
+</div>
+
+<div id="third" class="features"> 
+  <h3>Distribute Directly</h3>
+  <div class="feature">
+    <h4>Make more money</h4>
+    <p>Upload your book and sell directly to readers</p>
+  </div>
+  <div class="feature">
+    <h4>Sell from anywhere on the web</h4>
+    <p>Use our widget to sell from your home page</p>
+  </div>
+  <div class="feature">
+    <h4>Track your stats</h4>
+    <p>See everything from how much you sold to who reads your books</p>
+  </div>
+</div>
+
+<div class="clear"></div>
+<div id="signup_features"> 
+  <p id="signuptext" class="signuptext">Sign Up for an invite:</p>
+<form id="submitform" class="submitform" action="/submit" method="post">
+  <fieldset>
+    <input type="hidden" name="page" class="page" value="marketplace">
+    <input id="email" type="email" name="email" placeholder="Enter your email..." title="email address" class="no-boxshadow email">
+    <input type="submit" class="submit awesome submit_button" value="GO">
+  </fieldset>
+</form>
+</div>
+
+      </div>
+
+<footer id="footer">
 		<p>
 			&copy; 
 			2012  
@@ -111,7 +174,7 @@ function woopraReady(tracker) {
    <!-- <script src="http://cdn.jquerytools.org/1.2.5/jquery.tools.min.js"></script> -->
     <!-- scripts concatenated and minified via ant build script-->
 <script>
-   $(document).ready(function(){
+$(document).ready(function(){
 
       $("#submitform").live('submit',function(e) {
         var form = $(this);
@@ -150,6 +213,31 @@ function woopraReady(tracker) {
         }
         e.preventDefault();
       });     
+
+     setTopContainersMarginBottom = function() {
+        var top = $('#top');
+        var topOffset = top.offset().top
+        var bottomOffset = topOffset + top.height();
+        var windowHeight = $(window).height();
+        var diff = windowHeight - bottomOffset;
+        top.css('margin-bottom', diff + topOffset);
+     }
+
+     setTopContainersMarginBottom();
+     $(window).resize(setTopContainersMarginBottom);
+
+		$("#learn_more").click(function(event){
+		    event.preventDefault();
+		    var margintop = parseInt($(this.hash).css("margin-top"), 10);
+		    var scrollToPos = parseInt($(this.hash).offset().top, 10);
+		    var total = scrollToPos * 0.95;//- margintop;
+		    $('hmtl,body').animate({scrollTop:total},'fast');
+		});
+    
+		$("#scrollup").click(function(event){
+		    event.preventDefault();
+		    $('html,body').animate({scrollTop:0},'fast'); 
+		});
 
 });
 </script>

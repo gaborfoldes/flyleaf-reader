@@ -8,11 +8,13 @@ body{
    font-family: 'Ubuntu', sans-serif;
 }
 
-a, a:active, a:visited {
+a, a:active, a:visited, a:hover { text-decoration: none; } 
+
+footer a, footer a:active, footer a:visited {
     color: #93C769; text-decoration: none;
 }
 
-a:hover {
+footer a:hover {
     color: #fff; text-decoration: none;
 }
 
@@ -22,7 +24,10 @@ a:hover {
    background: url("../img/logo-1.png") no-repeat top center;
    color:#81562C;
    font-size:60px;
-   text-indent: -999px;
+   text-indent: -9999px;
+   width: 200px;
+   height: 133px;
+   margin: auto;
  }
 
 .col {
@@ -30,7 +35,7 @@ a:hover {
 /*  font-family: sans-serif;*/
   /*opacity: 0.68;
   background: #fff;*/
-  background: rgba(255,255,255,0.68);
+  background: rgba(255,255,255,0.8);
   border: 1px solid #81562C;
   box-shadow: inset 0 0 30px #81562C;
   -moz-box-shadow: inset 0 0 30px #81562C;
@@ -50,9 +55,13 @@ a:hover {
 }
 
 #top{
-  margin: 7% auto 0;
-  width: 400px;
+  margin: 7% auto 50%;
+  width: 440px;
   overflow:hidden;
+}
+
+#main {
+    margin-bottom: 50px;
 }
 
 #main .logo{
@@ -63,13 +72,13 @@ a:hover {
   right:0;
 }
 
-#learn_more {
-  margin-top:30px !important;
-}
-
 .clear {
   clear:both;
 }
+/*.clear:before, .clear:after { content: ""; display: table; }
+.clear:after { clear: both; }
+.clear { *zoom: 1; }*/
+
 
 #signup_main {
   margin-bottom: 50px;
@@ -96,9 +105,11 @@ a:hover {
 
 #submitform {
   text-align: center;
+  padding: 0 20px 0 20px;
 }
 
 #submitform #email {
+  width:250px;
   color:#222;
   background-color:transparent; /*rgba(63,63,63,0.3);*/
   -moz-transition: all 0.3s ease-in;
@@ -126,30 +137,42 @@ a:hover {
 :-moz-placeholder { color: #54310E; }
 
 .awesome {
+  padding: 9px 10px;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
   font-family: sans-serif;
-  height: 40px;
-  width: 55px;
-  text-shadow: 1px 1px 3px black;
-  font-size:20px;
-  margin-bottom: 3px;
-  border: 2px solid #81562C;
+  text-shadow: 1px 1px 3px #54310E !important;
+  font-size:16px;
+  border: 1px solid;
   border-radius: 6px;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
-background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#93C769), to(#5D8E35));background-image:-moz-linear-gradient(top, #93C769, #5D8E35);background-image:-ms-linear-gradient(top, #93C769, #5D8E35);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #93C769), color-stop(100%, #5D8E35));background-image:-webkit-linear-gradient(top, #93C769, #5D8E35);background-image:-o-linear-gradient(top, #93C769, #5D8E35);background-image:linear-gradient(top, #93C769, #5D8E35);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#93C769', endColorstr='#5D8E35', GradientType=0);text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);border-color:#5D8E35 #5D8E35 #3d773d;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#93C769), to(#5D8E35));background-image:-moz-linear-gradient(top, #93C769, #5D8E35);background-image:-ms-linear-gradient(top, #93C769, #5D8E35);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #93C769), color-stop(100%, #5D8E35));background-image:-webkit-linear-gradient(top, #93C769, #5D8E35);background-image:-o-linear-gradient(top, #93C769, #5D8E35);background-image:linear-gradient(top, #93C769, #5D8E35);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#93C769', endColorstr='#5D8E35', GradientType=0);border-color:#5D8E35 #5D8E35 #3d773d;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  opacity: 0.95;
 }
 
-.awesome:focus {
-/*  box-shadow: 0 0 10px #CDF5A8;*/
-}
+.awesome:focus { /*  box-shadow: 0 0 10px #CDF5A8;*/ }
 
 .awesome:hover{background-position:0 -15px;text-decoration:none;}
+
+#submitform #submitbtn {
+  height: 40px;
+  width: 85px;
+}
+
+#learn_more {
+  color: white;
+  border: 2px solid;
+  border-color:#5D8E35 #5D8E35 #3d773d;
+  line-height: 40px;
+}
+
+
+
 
   header p {
    padding-left:5px;
@@ -160,22 +183,52 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
      padding-top: 5%;
  }
 
-/*#bottom{
-  margin-bottom: 5%;
+#bottom{
   overflow:hidden;
-  margin:5%;
+  margin: 5% 5% 8% 5%;
+  height: 600px;
 }
 
-  #bottom .logo {
-    font-size:48px;
-    padding: 3% 5% 0;
+
+  #scrollup img {
+        position: absolute;
+        bottom: 3px;
+        left: 0;
+        width: 120px;
+        height: 80px;
   }
 
   #tagline {
-    margin: 2% 5% 2%;
-    border-bottom: 1px solid #CDF5A8;
-    text-shadow: 1px 1px 1px black;
+    position: relative;
+    text-align: left;
+    margin: 5% 5% 2%;
+    padding: 0 0 8px 130px;
+    border-bottom: 1px solid #81562C;
+    text-shadow: 1px 1px 1px #C09061;
+    letter-spacing: -1px;
   }
+
+/*  
+  a#scrollup {
+    font-size: 48px;
+    font-weight: 700; 
+   text-indent: -9999px;
+  }
+  
+  a#scrollup, a#scrollup:active, a#scrollup:visited, a#scrollup:hover {
+    color: #81562C;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px white;
+  }
+
+/*  #bottom #scrollup .logo {
+    background: 100px 66px;
+    width: 100px;
+    height: 66px;
+    font-size: 40px;
+  }*/
+
+
 
   .icons{
     float: left;
@@ -185,19 +238,19 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
 
   .features {
     float: left;
-    padding: 0 5%;
-    width: 40%;
-    text-shadow: 1px 1px 1px black;
+    padding: 0 0 0 5%;
+    width: 27%;
+    text-shadow: 1px 1px 1px #C09061;
   }
 
   .features h3 {
-    font-size: 30px;
-    margin-bottom: 4%;
+    font-size: 28px;
+    margin-bottom: 5%;
   }
 
   .feature{
     padding-bottom: 6%;
-    padding-left: 65px;
+    padding-left: 50px;
     text-align:left;
     min-height:50px;
 
@@ -205,16 +258,17 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
 
   .feature p {
     padding-top: 3px;
+    font-size: 96%;
   }
 
   .feature h4 {
     font-size: 20px;
   }
 
-  #brainstorm {
-  background: url(../img/brainstorm.png) no-repeat top left;
+  .feature {
+  background: url(../../favicon.ico) no-repeat 0 8px;
   }
-
+/*
   #commission {
     background: url(../img/photo.png)  no-repeat top left;
   }
@@ -234,7 +288,7 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
   #analyse {
     background: url(../img/analyse.png)  no-repeat top left;
   }
-
+*/
 #subtitle{
   top:0;
   left:0;
@@ -247,7 +301,7 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
   padding: 1%;
   color: #FFFFFF!important;
 }
-*/
+
  .col .no-bullet {
     font-size: 17px;
     font-weight: normal;
@@ -257,6 +311,7 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
 
  }
 
+/*
  .col a {
     text-decoration: none;
     text-shadow: 0px 0px 0px #FF531A;
@@ -270,13 +325,12 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
  .col a:hover {
    color:#FF531A;
    text-shadow: 0px 0px 8px #FF531A;
-   /*text-decoration: underline;*/
    -webkit-transition: all 1.5s ease-in;
    -moz-transition: all 1.5s ease-in;
    -o-transition: all 1.5s ease-in;
    -ms-transition: all 1.5s ease-in;
    transition: all 1.5s ease-in;
- }
+ }*/
  .col ul {
       font-size: 17px;
     line-height: 29px;
@@ -319,7 +373,7 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
  }
 
 #footer {
-  position:absolute;
+  position:fixed;
   bottom: 0px;
   width: 100%;
   height: 50px;
@@ -333,26 +387,12 @@ background-color:#5D8E35;background-repeat:repeat-x;background-image:-khtml-grad
 
 
 
-#twitter{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom: 46px;
-}
-
-#fb-root-2{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:17px;
-}
-
 footer p {
   position:absolute;
   bottom:0;
   left:0;
   right:0;
-  font-family: ;
+  font-family: 'Ubuntu';
   font-size:12px;
   color: #93C769;
 }
@@ -392,7 +432,7 @@ footer p {
   font-size: 16px;
   line-height: 20px;
   font-weight:bold;
-  color: #FF531A;
+  color: #335C11;
   text-align: left;
   opacity:1;
  	/*text-shadow: 0 1px 5px grey;*/
