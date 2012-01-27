@@ -13,7 +13,7 @@ $(function(){
 
     $.ajaxSetup({
       error: function(xhr, status, error) {
-        $('article').html("Sorry, it looks like we messed up and for some reason we couldn't load the chapter.  We are looking into it...");
+        $('article').html("Sorry, it looks like we messed up and we couldn't load the chapter.  We are looking into this...");
         console.log('Error:', status, error);
       }
     });

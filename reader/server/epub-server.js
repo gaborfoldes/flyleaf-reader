@@ -8,7 +8,7 @@ this.epubs = {};
 this.Server = function (bookroot, contentroot) {
     console.log('Epub server starting.');
     this.bookRoot = bookroot || '/';
-    this.contentRoot = contentroot || 'epub/';
+    this.contentRoot = contentroot || 'items/';
 }
 
 
@@ -37,8 +37,8 @@ this.Server.prototype.serveTOC = function (req, res, title) {
     var epub = exports.epubs[title];
     if (epub !== undefined) {
 
-        var tocxml = '<xml><title>' + epub.metadata.title + ' :: Table of contents</title><article><div id="flyleaf-toc">';
-        tocxml += '<div class="flyleaf-toc-entry"><a href="cover">Cover</a>';
+        var tocxml = '<xml><title>' + epub.metadata.title + ' :: Table of contents</title><article><div id="flyleaf-toc"><h1>CONTENTS</h1>';
+        tocxml += '<div class="flyleaf-toc-entry"><a href="cover">Cover</a></div>';
         for (i = 0; i < epub.toc.length; i++) {
             
             toclink = epub.toc[i].href;
