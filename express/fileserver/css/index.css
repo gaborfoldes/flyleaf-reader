@@ -1,0 +1,18 @@
+body {
+  padding: 50px;
+  font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+ul { list-style: none; margin: 0; padding: 0;}
+
+li { height: 57px; margin-bottom: 10px; vertical-align: middle; }
+
+img {display: inline; float: left;}
+
+a, a:visited, a:active {
+  color: #666; text-decoration: none; line-height: 57px;
+}
+
+a:hover {
+  color: #222; text-decoration: none;
+}

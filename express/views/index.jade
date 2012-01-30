@@ -1,2 +1,7 @@
-h1= title
-p Welcome to #{title}
+//p= 'Books available'
+ul
+	- for (var i in books)
+		li
+			a(href='/read/'+i+'/toc')
+				img(src='/read/'+i+'/apple-touch-icon-precomposed.png')
+				= books[i].metadata.creator + ': ' + books[i].metadata.title

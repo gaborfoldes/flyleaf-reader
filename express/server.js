@@ -16,14 +16,14 @@ bookServer.loadBooks('stevejobs', 'alice');
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.set("view options", {layout: false});
-  app.register('.html', {
+  app.set("view options", {layout: true});
+/*  app.register('.html', {
     compile: function(str, options){
       return function(locals){
         return str;
       };
     }
-  });
+  });*/
   app.use(express.logger());
 //  app.use(express.bodyParser());
 //  app.use(express.methodOverride());
@@ -60,7 +60,12 @@ app.get(/\/\./, function(req, res, next) {
 });
 
 // index.html
-app.get('/', routes.index);
+app.get('/', function (req, res, next) { 
+    res.render('index', {
+        title: 'Flyleaf Reader',
+        locals: { books: bookServer.books }
+    });
+})
 
 app.get('/read/:book/chapters/:chapter', function(req, res, next) {
     req.url = '/.epub/' + req.params.book + '/processed/' + req.params.chapter + '.xml';
@@ -81,7 +86,10 @@ app.get('/read/:book/apple-touch:touchimage', function(req, res, next) {
 })
 
 app.get('/read/:book/:chapter?', function(req, res, next) {
-    res.render('reader.html');
+    req.url = '/reader.html';
+    console.log('Rerouting to:', req.url);
+    return next();
+//    res.render('reader.html');
 })
 
 
