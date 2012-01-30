@@ -12,7 +12,7 @@ $(function(){
 
     $.ajaxSetup({
       error: function(xhr, status, error) {
-        $('article').html("Sorry, it looks like we messed up and we couldn't load the chapter.  We are looking into this...");
+        $('article').html('<center>Sorry, it looks like we messed up and we could not load the requested page.</center>');
         console.log('Error:', status, error);
       }
     });
@@ -33,8 +33,11 @@ $(function(){
                 $('nav').html(nav.html());
                 $('article').html(article.html());
                 setSize(window.scale, true);
-                $('#prev').attr('href', parseInt(ch)-1);
-                $('#next').attr('href', parseInt(ch)+1);
+                if (parseInt(ch) && parseInt(ch) > 0) { $('#prev').attr('href', parseInt(ch)-1); }
+                    else { $('#prev').attr('href', '#'); } 
+                if (parseInt(ch)+1) { $('#next').attr('href', parseInt(ch)+1); }
+                    else { $('#next').attr('href', '#'); } 
+                if (parseInt(ch)) { $('#position').html((parseInt(ch)+1)) } else { $('#position').html(''); }
                 window.localStorage.setItem(window.bookid + '-lastchapter', ch);
                 if (scrolltop) {
                     $(window).scrollTop(scrolltop);
@@ -46,20 +49,23 @@ $(function(){
         }
     }
 
-    $('article, .toolbar').on('click', 'a', function(event) {
+    $('article, .internal-link').on('click', 'a', function(event) {
         if (this.hostname == location.hostname) {
             var loc = $(this).attr('href');
-            history.pushState({}, '', window.readroot + window.bookid + loc)
-            loadChapter(loc);
+            if (loc != '#') {
+                history.pushState({}, '', window.readroot + window.bookid + loc)
+                loadChapter(loc);
+            }
             event.stopPropagation();
             event.preventDefault();
         }
     });
     
+    
     function loadCurrent() {
 
         var pathitems = location.pathname.split('/');
-        var loc = '';
+        var loc = 'toc';
         if ( window.readroot != 'undefined' && pathitems.length > 1 ) { window.readroot = '/' + pathitems[1] + '/'; }
         if ( window.bookid != 'undefined' && pathitems.length > 2 ) { window.bookid = pathitems[2] + '/'; }
         if ( pathitems.length > 3 ) { loc = pathitems[3]; }
@@ -92,11 +98,6 @@ $(function(){
         loadCurrent();
     });
     
-/*    $(document).touchwipe({
-        wipeLeft: function() { $('#next').click(); },
-        wipeRight: function() { $('#prev').click(); },
-        preventDefaultEvents: false
-    });*/
 
     window.swipeStartX = -1;
     window.swipeStartY = -1;

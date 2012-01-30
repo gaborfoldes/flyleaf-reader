@@ -217,70 +217,48 @@ td { vertical-align: top; }
 a, a:visited { color: #54310E !important; text-decoration: none !important; }
 a:hover { color: #335C11 !important; }
 
+header { background: black; position: fixed; top: 0; left: 0; width: 100%; height: 40px; }
+
+.toolbar ul {list-style-type: none; margin: 0; padding: 0;}
+
+.toolbar #back { background-position: 0px 0px; }
+.toolbar #forward { background-position: -32px 0px; }
+.toolbar #fontup { background-position: -64px 0px; }
+.toolbar #fontdown { background-position: -96px 0px; }
+.toolbar #prev { background-position: -128px 0px; }
+.toolbar #toc { background-position: -160px 0px; }
+.toolbar #next { background-position: -192px 0px; }
+.toolbar #settings { background-position: -224px 0px; }
+.toolbar #position { color: gray; vertical-align: middle; line-height: 40px; padding-right: 2%; }
+
+.toolbar .right { float: right;}
+
+.toolbar .center { width: 120px; margin: auto; }
+
+.toolbar-icon {
+    float: left;
+    background: black url('../img/toolbar-icons.png') no-repeat;
+    border: 0;
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+    text-indent: -9999px;
+}
+
 
 #main {
-    margin: 20px 8%; font-size: 16px; line-height: 1.4; zoom: 1;
+    margin: 50px 8% 20px 8%; font-size: 16px; line-height: 1.4; zoom: 1;
     font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
 }
 
-#main img { max-width: 90% !important;}
+#main img { max-width: 92% !important;}
 
 #main p { margin-bottom: 20px;}
 
 #flyleaf-toc { text-align: center; margin-top: 50px; font-size: 14px;}
 #flyleaf-toc h1 { color: #222;  margin-bottom: 30px;}
-.flyleaf-toc-entry { padding: 5px 0 15px 0; background: url('../img/sep.png') no-repeat bottom center; }
-
-.fontsizer input {}
-
-.pagination {
-  height: 36px;
-  margin: 0px 0;
-  position: relative;
-  top: -18px;
-  left: 50%;
-  float: left;
-}
-.pagination ul {
-  position: relative;
-  left:-50%;
-  float: left;
-  margin: 0;
-  padding: 0;
-  border: 1px solid #ddd;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-.pagination li {
-  display: inline;
-}
-.pagination a {
-  float: left;
-  padding: 0 14px;
-  line-height: 34px;
-  border-right: 1px solid;
-  border-right-color: #ddd;
-  border-right-color: rgba(0, 0, 0, 0.15);
-  *border-right-color: #ddd;
-  /* IE6-7 */
-
-  text-decoration: none;
-}
-.pagination a:hover, .pagination .active a {
-  /*background-color: #c7eefe;*/
-}
-.pagination .disabled a, .pagination .disabled a:hover {
-  background-color: transparent;
-  color: #bfbfbf;
-}
-.pagination .next a {
-  border: 0;
-}
+.flyleaf-toc-entry { padding: 5px 0 10px 0; background: url('../img/sep.png') no-repeat bottom center; }
+.flyleaf-toc-entry:last-child { background: 0; }
 
 
 

@@ -56,16 +56,25 @@
 
   <div id="container">
     <header>
-			<div class="fontsizer"><input type="submit" id="fontup" value="A"><input type="submit" id="fontdown" value="a"></div>
-			<div class="-pagination">
-				<div class="toolbar">
-					<span class="prev"><a href='#' id="prev">&larr; Previous</a></span>
-					<span><a href='toc'>Table of contents</a></li>
-					<span class="next"><a href='#' id="next">Next &rarr;</a></span>
-				</div>
+			<div class="toolbar">
+				<ul>
+					<li><input type="submit" class="toolbar-icon" onclick='history.go(-1)' id="back" value="Back" /></li>
+					<li><input type="submit" class="toolbar-icon" onclick='history.go(1)' id="forward"  value="Forward" /></li>
+					<li><input type="submit" class="toolbar-icon" id="fontup" value="Increase size" /></li>
+					<li><input type="submit" class="toolbar-icon" id="fontdown" value="Decrease size" /></li>
+				</ul>
+				<ul class="center">
+					<li class="internal-link"><a href="" class="toolbar-icon" id="prev">Previous</a></li>
+					<li class="internal-link"><a href="toc" class="toolbar-icon" id="toc">Table of contents</a></li>
+					<li class="internal-link"><a href="" class="toolbar-icon" id="next">Next</a></li>
+				</ul>
+				<ul>
+					<li><input type="submit" class="toolbar-icon right" id="settings" value="Settings" /></li>
+					<li id="position" class="right"></li>
+				</ul>
 			</div>
-			<div style="clear:both"></div>
     </header>
+		<div style="clear:both; height: 40px"></div>
     <div id="main" role="main">
 		  <article></article>
     </div>
