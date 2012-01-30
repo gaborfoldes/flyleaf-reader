@@ -60,6 +60,10 @@ function EPub(bookid, paths) {
 utillib.inherits(EPub, EventEmitter);
 
 EPub.prototype.parse = function () {
+    var that = this;
+
+    console.log('Parsing:', this.bookid );
+
 
     this.containerFile = false;
     this.mimeFile = false;
@@ -73,26 +77,29 @@ EPub.prototype.parse = function () {
     this.toc = [];
     this.cover = null;
     
-    this.checkMimeType();
+    this.checkMimeType( this.getRootFiles.bind(this), function() {
+        that.emit("error", new Error("Cannot find EPUB (no mimetype)"));
+    });
+
 };
 
 
-EPub.prototype.checkMimeType = function () {
+EPub.prototype.checkMimeType = function (callback, fail) {
     var that = this;
 
     fs.readFile(this.unzippedpath + 'mimetype', function (err, data) {
         if (err) {
-            that.emit("error", new Error("Cannot find EPUB (no mime type)"));
-            return;
+            fail();
+            return false;
         }
         var txt = data.toString("utf-8").toLowerCase().trim();
 
         if (txt  !=  "application/epub+zip") {
             that.emit("error", new Error("Unsupported mime type"));
-            return;
+            return false;
         }
 
-        that.getRootFiles();
+        callback();
     });
 
 };
@@ -415,7 +422,7 @@ EPub.prototype.parseGuide = function (guide) {
                 }
                 
                 // look for id if not on spine
-                if (!element.id) {
+                if (!element.id && this.manifest[id_list[element.href]]) {
                     element.id = this.manifest[id_list[element.href]].id;
                 }
 
@@ -670,6 +677,7 @@ EPub.prototype.expandBook = function (callback) {
 
 // Generate mobile app images from cover
 EPub.prototype.createAppleTouchImages = function (callback) {
+    var that = this;
         
     var id, cover = this.metadata.cover;
     if (cover && ((this.manifest[cover]['media-type'] || "").toLowerCase().trim().substr(0, 6)  ==  "image/")) {

@@ -8,24 +8,27 @@ exports.loadBook = function (bookid) {
     var epub = exports.books[bookid] = new EPub(bookid);
 
     epub.on('error', function(err) {
-            throw err;
+        console.log('!!!Epub failed:', epub.bookid );
+//            throw err;
     });
 
-    epub.on('end', function(err) {
-        console.log('Epub loaded:', epub.bookid );
-        epub.generateContent();
-        epub.createAppleTouchImages();
-    });
-
-    epub.expandBook( function () {
-        epub.parse();
+    epub.checkMimeType( epub.parse.bind(epub), function() {
+        console.log('Unzipping:', epub.bookid );
+        epub.expandBook( function () {
+            epub.on('end', function(err) {
+                epub.generateContent();
+                epub.createAppleTouchImages();
+                console.log('Epub processed:', epub.bookid );
+            });
+            epub.parse();
+        });
     });
 }
 
-exports.loadBooks = function () {
+exports.loadBooks = function (booklist) {
     var i, len;
-    for (i = 0, len = arguments.length; i < len; i++) {
-        exports.loadBook(arguments[i]);
+    for (i = 0, len = booklist.length; i < len; i++) {
+        exports.loadBook(booklist[i]);
     }
 }
 

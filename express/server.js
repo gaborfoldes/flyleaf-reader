@@ -9,7 +9,10 @@ var express = require('express')
 
 var app = module.exports = express.createServer();
 
-bookServer.loadBooks('stevejobs', 'alice');
+var toLoad = ['stevejobs', 'alice'];
+for( var i = 1; i <= 100; i++ ) { toLoad.push( i.toString() ); }
+
+bookServer.loadBooks(toLoad);
 
 // Configuration
 
