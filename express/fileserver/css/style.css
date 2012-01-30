@@ -223,12 +223,13 @@ header { background: black; position: fixed; top: 0; left: 0; width: 100%; heigh
 
 .toolbar #back { background-position: 0px 0px; }
 .toolbar #forward { background-position: -32px 0px; }
-.toolbar #fontup { background-position: -64px 0px; }
-.toolbar #fontdown { background-position: -96px 0px; }
-.toolbar #prev { background-position: -128px 0px; }
-.toolbar #toc { background-position: -160px 0px; }
-.toolbar #next { background-position: -192px 0px; }
-.toolbar #settings { background-position: -224px 0px; }
+.toolbar #home { background-position: -64px 0px; }
+.toolbar #fontup { background-position: -96px 0px; }
+.toolbar #fontdown { background-position: -128px 0px; }
+.toolbar #prev { background-position: -160px 0px; }
+.toolbar #toc { background-position: -192px 0px; }
+.toolbar #next { background-position: -224px 0px; }
+.toolbar #settings { background-position: -256px 0px; }
 .toolbar #position { color: gray; vertical-align: middle; line-height: 40px; padding-right: 2%; }
 
 .toolbar .right { float: right;}

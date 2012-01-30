@@ -288,6 +288,9 @@ EPub.prototype.parseMetadata = function (metadata) {
                 this.metadata.creator = String(metadata[keys[i]]["#"] || metadata[keys[i]] || "").trim();
                 this.metadata.creatorFileAs = String(metadata[keys[i]]['@'] && metadata[keys[i]]['@']["opf:file-as"] || this.metadata.creator).trim();
             }
+            this.metadata.creator = this.metadata.creator.replace(/(.*)(\s*,\s*)(.*)/g, function (o, a, b, c) {
+                return c + ' ' + a;
+            });
             break;
         case "date":
             if (Array.isArray(metadata[keys[i]])) {
@@ -816,7 +819,18 @@ EPub.prototype.generateChapter = function (chapter) {
 
 // Generate wrapper for cover image
 EPub.prototype.generateCover = function () {
-    var coverxml = '<xml><article><center><img src="items/cover" /></center></article></xml>';
+    
+    var id, cover = this.metadata.cover;
+    if (cover && ((this.manifest[cover]['media-type'] || "").toLowerCase().trim().substr(0, 6)  ==  "image/")) {
+        id = cover;
+    } else {
+        id = this.guide['cover'].id;
+    }
+    if (id && ((this.manifest[id]['media-type'] || "").toLowerCase().trim().substr(0, 6)  ==  "image/")) {
+        var coverxml = '<xml><article><center><img src="items/' + id + '" /></center></article></xml>';
+    } else {
+        var coverxml = '<xml><article><center>No cover image found</center></article></xml>';
+    }
     fs.writeFile(this.processedpath + 'cover.xml', coverxml, function (err) {
         if (err) throw err;
     });

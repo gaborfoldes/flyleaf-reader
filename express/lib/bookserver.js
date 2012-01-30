@@ -19,6 +19,11 @@ exports.loadBook = function (bookid) {
                 epub.generateContent();
                 epub.createAppleTouchImages();
                 console.log('Epub processed:', epub.bookid );
+                console.log(epub.metadata);
+                console.log(epub.manifest);
+                console.log(epub.spine);
+                console.log(epub.guide);
+                console.log(epub.toc);
             });
             epub.parse();
         });
