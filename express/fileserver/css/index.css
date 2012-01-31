@@ -1,13 +1,13 @@
 body {
-  padding: 50px;
+  padding: 30px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: #eee;
 }
 
 ul { list-style: none; margin: 0; padding: 0;}
 
-a, a:visited, a:active {
-  color: #666; text-decoration: none; font-size: 12px;
+a, a:visited, a:active, a:hover {
+  color: #222; text-decoration: none;
 }
 
 
@@ -28,7 +28,7 @@ a:hover {
 	*display: inline;
 	border: solid 1px #d2d2d2;
 	padding: 3px 5px;
-	margin: 0 0 20px 0;
+	margin: 0 0 20px 15px;
 	
 	-webkit-border-radius: 2em;
 	-moz-border-radius: 2em;
@@ -82,6 +82,22 @@ a:hover {
 	-ms-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9e9e9e', endColorstr='#454545'); /* ie8 */
 }
 
+#searchresults {
+    margin: 20px;
+    line-height: 1.2em;
+}
+#searchresults a, #searchresults a:visited, #searchresults a:active {
+  color: #444; text-decoration: none; font-size: 14px;
+}
+
+#searchresults a:hover {
+  color: #719117; text-decoration: none; font-size: 14px;
+}
+
+#searchresults p {
+  color: #666; font-size: 11px; margin-bottom: 10px; max-width: 700px;
+}
+
 
 /* Browse grid */
 
@@ -105,9 +121,9 @@ a:hover {
 .browse_grid_item .browse_grid_card .elegant_price .cents{margin-left:0.2em;margin-top:-0.315em;letter-spacing:0.1em}
 .ff .browse_grid_item .browse_grid_card .elegant_price .cents{margin-top:-0.2em}
 .browse_grid_item .browse_grid_card .overlay_title_inner, .browse_grid_item .browse_grid_card .overlay_author_inner, .browse_grid_item .browse_grid_card .title_line, .browse_grid_item .browse_grid_card .author_line{color:#333; position: absolute; left: 0; width:96px; height: auto; max-height: 34px; padding:0 10px 0 10px; font-size: 11px; line-height: 16px; font-weight: 400; text-align: center; overflow: hidden; }
-.browse_grid_item .browse_grid_card .title_line{bottom: 3px;} 
+.browse_grid_item .browse_grid_card .title_line{bottom: 1px;} 
 .browse_grid_item .browse_grid_card .author_line{top: 1px;} 
-.browse_grid_item .browse_grid_card .overlay_title_inner {bottom: 3px;}
+.browse_grid_item .browse_grid_card .overlay_title_inner {bottom: 1px;}
 .browse_grid_item .browse_grid_card .overlay_author_inner {top: 3px;}
 
 .browse_grid_item .browse_grid_card .discount_sticker,.browse_grid_item .browse_grid_card .super_discount_sticker,.browse_grid_item .browse_grid_card .preorder_sticker{position:absolute;top:10px;right:-6px;width:55px;height:21px;background-color:#f3787a;fontt:italic bold 10px/19px Georgia,serif;color:white}

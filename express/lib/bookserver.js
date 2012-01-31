@@ -1,10 +1,12 @@
 
 
-var EPub = require('./epub');
+var EPub = require('./epub'),
+    request = require('request'),
+    fs = require('fs');
 
 exports.books = {};
 
-exports.loadBook = function (bookid) {
+exports.loadBook = function (bookid, callback) {
     var epub = exports.books[bookid] = new EPub(bookid);
 
     epub.on('error', function(err) {
@@ -12,18 +14,24 @@ exports.loadBook = function (bookid) {
 //            throw err;
     });
 
-    epub.checkMimeType( epub.parse.bind(epub), function() {
+//epub.parse.bind(epub);
+    epub.checkMimeType(function() {
+        epub.on('end', function() {
+            if (callback) callback();
+        }).parse();
+    }, function() {
         console.log('Unzipping:', epub.bookid );
         epub.expandBook( function () {
             epub.on('end', function(err) {
                 epub.generateContent();
                 epub.createAppleTouchImages();
                 console.log('Epub processed:', epub.bookid );
-                console.log(epub.metadata);
+/*                console.log(epub.metadata);
                 console.log(epub.manifest);
                 console.log(epub.spine);
                 console.log(epub.guide);
-                console.log(epub.toc);
+                console.log(epub.toc);*/
+                if (callback) callback();
             });
             epub.parse();
         });
@@ -35,5 +43,25 @@ exports.loadBooks = function (booklist) {
     for (i = 0, len = booklist.length; i < len; i++) {
         exports.loadBook(booklist[i]);
     }
+}
+
+exports.getFeedbooks = function (fbid, bookid, callback) {
+    fs.mkdir('fileserver/.epub/' + bookid, function() {
+        fs.mkdir('fileserver/.epub/' + bookid + '/original', function() {
+            var req = request('http://www.feedbooks.com/book/' + fbid + '.epub');
+            req.pipe(fs.createWriteStream('fileserver/.epub/' + bookid + '/original/' + bookid + '.epub'));
+            req.on('end', function() {
+                exports.loadBook(bookid, callback);
+            });
+        });
+    });
+}
+
+exports.getFeedbooksCatalog = function (query, callback) {
+    request('http://www.feedbooks.com/search.atom?query=' + escape(query.replace(' ', '+')), function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        if (callback) callback(body);
+      }
+    });
 }
 

@@ -221,6 +221,17 @@ header { background: black; position: fixed; top: 0; left: 0; width: 100%; heigh
 
 .toolbar ul {list-style-type: none; margin: 0; padding: 0;}
 
+.toolbar-icon {
+    float: left;
+    background: black url('../img/toolbar-icons.png') no-repeat;
+    zoom: 1;
+    border: 0;
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+    text-indent: -9999px;
+}
+
 .toolbar #back { background-position: 0px 0px; }
 .toolbar #forward { background-position: -32px 0px; }
 .toolbar #home { background-position: -64px 0px; }
@@ -233,18 +244,15 @@ header { background: black; position: fixed; top: 0; left: 0; width: 100%; heigh
 .toolbar #position { color: gray; vertical-align: middle; line-height: 40px; padding-right: 2%; }
 
 .toolbar .right { float: right;}
+.toolbar .center { width: 120px; margin: auto;}
 
-.toolbar .center { width: 120px; margin: auto; }
-
-.toolbar-icon {
-    float: left;
-    background: black url('../img/toolbar-icons.png') no-repeat;
-    border: 0;
-    width: 32px;
-    height: 32px;
-    margin: 4px;
-    text-indent: -9999px;
+@media handheld, only screen and (max-device-width: 480px) {
+    header { height: 32px; }
+    .toolbar-icon { zoom: 0.8; }
+    .toolbar .center { width: 96px;}
+    .toolbar #position { line-height: 32px; padding-right: 2px; visibility: hidden; }
 }
+
 
 
 #main {

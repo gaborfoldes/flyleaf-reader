@@ -1,7 +1,12 @@
-form(method='post', action='/search', class='searchform')
+
+form(class='searchform')
 	input(class="searchfield", type="text", value="Find books", onfocus="if (this.value == 'Find books') {this.value = '';}", onblur="if (this.value == '') {this.value = 'Find books';}")
 	input(class="searchbutton", type="submit", value="Go")
-p= 'Books available locally'
+
+div(id="searchresults")
+
+//h3= 'Bookshelf'
+
 ul
 	- for (var i in books)
 		li
@@ -25,8 +30,9 @@ ul
 							div(class="buy_call_to_action")= 'Start reading &rarr;'
 						div(class="overlay_title")
 							div(class="overlay_title_inner")= books[i].metadata.title
-div(style="clear:both; height: 50px")
-
+div(style="clear:both; height: 30px")
+script(src="/js/libs/jquery-1.7.1.min.js")
+script(src="/js/index.js")
 			
 //
 		a(href='/read/'+i+'/toc')

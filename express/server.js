@@ -4,15 +4,22 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
+//  , routes = require('./routes')
   , bookServer = require('./lib/bookserver');
 
 var app = module.exports = express.createServer();
 
-var toLoad = ['stevejobs', 'alice'];
-for( var i = 1; i <= 100; i++ ) { toLoad.push( i.toString() ); }
+require('child_process').exec('ls fileserver/.epub/*/unzipped/mimetype', function (error, stdout, stderr) {
+    var foundBooks = stdout.split('\n');
+    for (i in foundBooks) {
+        var bookid = foundBooks[i].match(/fileserver\/.epub\/([^\/]*)\/unzipped\/mimetype/);
+        if (bookid && bookid.length > 1) { bookServer.loadBook(bookid[1]); }
+    }
+});
 
-bookServer.loadBooks(toLoad);
+for( var i = 144; i <= 144; i++ ) { bookServer.loadBook( i.toString() ); }
+
+
 
 // Configuration
 
@@ -65,7 +72,7 @@ app.get(/\/\./, function(req, res, next) {
 // index.html
 app.get('/', function (req, res, next) { 
     res.render('index', {
-        title: 'Flyleaf Reader',
+        title: 'Flyleaf - Bookshelf',
         locals: { books: bookServer.books }
     });
 })
@@ -95,6 +102,11 @@ app.get('/read/:book/:chapter?', function(req, res, next) {
 //    res.render('reader.html');
 })
 
+app.get('/feedbooks/:fbid/:book', function(req, res, next) {
+    bookServer.getFeedbooks(req.params.fbid, req.params.book, function() {
+        res.redirect('/read/' + req.params.book + '/cover');
+    });
+})
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

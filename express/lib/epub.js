@@ -697,7 +697,7 @@ EPub.prototype.createAppleTouchImages = function (callback) {
             '-extent', '72x72',
             this.processedpath + 'apple-touch-icon-72x72-precomposed.png'
         ], function(err, metadata) {
-            if (err) throw err;
+            if (err) that.emit('error', err);
         });
         imageMagick.convert([
             this.unzippedpath + this.manifest[id].href,
@@ -707,7 +707,7 @@ EPub.prototype.createAppleTouchImages = function (callback) {
             '-extent', '114x114',
             this.processedpath + 'apple-touch-icon-114x114-precomposed.png'
         ], function(err, metadata) {
-            if (err) throw err;
+            if (err) that.emit('error', err);
         });
         imageMagick.convert([
             this.unzippedpath + this.manifest[id].href,
@@ -717,7 +717,7 @@ EPub.prototype.createAppleTouchImages = function (callback) {
             '-extent', '57x57',
             this.processedpath + 'apple-touch-icon-precomposed.png'
         ], function(err, metadata) {
-            if (err) throw err;
+            if (err) that.emit('error', err);
         });
         imageMagick.convert([
             this.unzippedpath + this.manifest[id].href,
@@ -727,7 +727,7 @@ EPub.prototype.createAppleTouchImages = function (callback) {
             '-extent', '768x1004',
             this.processedpath + 'apple-touch-startup-ipad-portrait.png'
         ], function(err, metadata) {
-            if (err) throw err;
+            if (err) that.emit('error', err);
         });
         imageMagick.convert([
             this.unzippedpath + this.manifest[id].href,
@@ -738,7 +738,7 @@ EPub.prototype.createAppleTouchImages = function (callback) {
             '-extent', '748x1024',
             this.processedpath + 'apple-touch-startup-ipad-landscape.png'
         ], function(err, metadata) {
-            if (err) throw err;
+            if (err) that.emit('error', err);
         });
         imageMagick.convert([
             this.unzippedpath + this.manifest[id].href,
@@ -748,7 +748,7 @@ EPub.prototype.createAppleTouchImages = function (callback) {
             '-extent', '320x460',
             this.processedpath + 'apple-touch-startup-iphone.png'
         ], function(err, metadata) {
-            if (err) throw err;
+            if (err) that.emit('error', err);
         });
     }
 }
