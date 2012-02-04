@@ -35,9 +35,9 @@ $(function(){
                 setSize(window.scale, true);
                 if (parseInt(ch) && parseInt(ch) > 0) { $('#prev').attr('href', parseInt(ch)-1); }
                     else { $('#prev').attr('href', (ch=='toc') ? 'cover' : '#'); } 
-                if (parseInt(ch)+1) { $('#next').attr('href', parseInt(ch)+1); }
+                if ((parseInt(ch)+1) && (parseInt(ch) < window.maxChapter)) { $('#next').attr('href', parseInt(ch)+1); }
                     else { $('#next').attr('href', (ch=='cover') ? 'toc' : ((ch=='toc') ? $('.flyleaf-toc-entry:eq(1) a').attr('href') : '#')); } 
-                if (parseInt(ch)) { $('#position').html((parseInt(ch)+1)) } else { $('#position').html(''); }
+                if (parseInt(ch)) { $('#position').html((parseInt(ch)+1) + '/' + (window.maxChapter+1)) } else { $('#position').html(''); }
                 window.localStorage.setItem(window.bookid + '-lastchapter', ch);
                 if (scrolltop) {
                     $(window).scrollTop(scrolltop);

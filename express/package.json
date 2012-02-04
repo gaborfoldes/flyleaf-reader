@@ -8,5 +8,6 @@
 		, "xml2js": "*"
 		, "imagemagick": "*"
 		, "request": "*"
+		, "hogan.js": "*"
   }
 }

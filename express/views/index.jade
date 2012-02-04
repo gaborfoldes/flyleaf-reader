@@ -1,45 +1,52 @@
 
-form(class='searchform')
-	input(class="searchfield", type="text", value="Find books", onfocus="if (this.value == 'Find books') {this.value = '';}", onblur="if (this.value == '') {this.value = 'Find books';}")
-	input(class="searchbutton", type="submit", value="Go")
+!!! 5
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/css/index.css')
+	body
 
-div(id="searchresults")
+		form(class='searchform')
+			input(class="searchfield", type="text", value="Find books", onfocus="if (this.value == 'Find books') {this.value = '';}", onblur="if (this.value == '') {this.value = 'Find books';}")
+			input(class="searchbutton", type="submit", value="Go")
 
-//h3= 'Bookshelf'
+		div(id="searchresults")
 
-ul
-	- for (var i in books)
-		li
-			div(class="browse_grid_item")
-				div(class="browse_grid_item_shadow")
-				div(class="lateral_nav_placeholder")
-				a(class="browse_grid_card", href='/read/'+i+'/cover')
-					div(class="author_line")= books[i].metadata.creator
-					div(class="cover_art_container")
-						div(class="cover_art appear", style="background: transparent url('/read/"+i+"/apple-touch-icon-114x114-precomposed.png') no-repeat center center;")
-					div(class="title_line")= books[i].metadata.title
-					div(class="cover_overlay")
-						div(class="overlay_author")
-							div(class="overlay_white_triangle")
-							div(class="overlay_dark_triangle")
-							div(class="overlay_author_inner")= books[i].metadata.creator
-						div(class="overlay_details")
-							div(class="overlay_background")
-							//div(class="overlay_title_line")= ''
-							//div(class="overlay_subtitle_line")= ''
-							div(class="buy_call_to_action")= 'Start reading &rarr;'
-						div(class="overlay_title")
-							div(class="overlay_title_inner")= books[i].metadata.title
-div(style="clear:both; height: 30px")
-script(src="/js/libs/jquery-1.7.1.min.js")
-script(src="/js/index.js")
+		//h3= 'Bookshelf'
+
+		ul
+			- for (var i in books)
+				li
+					div(class="browse_grid_item")
+						div(class="browse_grid_item_shadow")
+						div(class="lateral_nav_placeholder")
+						a(class="browse_grid_card", href='/read/'+i+'/cover')
+							div(class="author_line")= books[i].metadata.creator
+							div(class="cover_art_container")
+								div(class="cover_art appear", style="background: transparent url('/read/"+i+"/apple-touch-icon-114x114-precomposed.png') no-repeat center center;")
+							div(class="title_line")= books[i].metadata.title
+							div(class="cover_overlay")
+								div(class="overlay_author")
+									div(class="overlay_white_triangle")
+									div(class="overlay_dark_triangle")
+									div(class="overlay_author_inner")= books[i].metadata.creator
+								div(class="overlay_details")
+									div(class="overlay_background")
+									//div(class="overlay_title_line")= ''
+									//div(class="overlay_subtitle_line")= ''
+									div(class="buy_call_to_action")= 'Start reading &rarr;'
+								div(class="overlay_title")
+									div(class="overlay_title_inner")= books[i].metadata.title
+		div(style="clear:both; height: 30px")
+		script(src="/js/libs/jquery-1.7.1.min.js")
+		script(src="/js/index.js")
 			
-//
-		a(href='/read/'+i+'/toc')
-			= books[i].metadata.creator
-		a(href='/read/'+i+'/cover')
-			img(src='/read/'+i+'/apple-touch-icon-114x114-precomposed.png')
-		a(href='/read/'+i+'/toc')
-			= books[i].metadata.title
+		//
+				a(href='/read/'+i+'/toc')
+					= books[i].metadata.creator
+				a(href='/read/'+i+'/cover')
+					img(src='/read/'+i+'/apple-touch-icon-114x114-precomposed.png')
+				a(href='/read/'+i+'/toc')
+					= books[i].metadata.title
 
 

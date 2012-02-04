@@ -46,8 +46,8 @@ exports.loadBooks = function (booklist) {
 }
 
 exports.getFeedbooks = function (fbid, bookid, callback) {
-    fs.mkdir('fileserver/.epub/' + bookid, function() {
-        fs.mkdir('fileserver/.epub/' + bookid + '/original', function() {
+    fs.mkdir(__dirname + '/fileserver/.epub/' + bookid, function() {
+        fs.mkdir(__dirname + '/fileserver/.epub/' + bookid + '/original', function() {
             var req = request('http://www.feedbooks.com/book/' + fbid + '.epub');
             req.pipe(fs.createWriteStream('fileserver/.epub/' + bookid + '/original/' + bookid + '.epub'));
             req.on('end', function() {

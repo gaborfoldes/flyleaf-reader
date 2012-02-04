@@ -4,9 +4,11 @@
  */
 
 var express = require('express')
+  , fs = require('fs')
+  , hogan = require('./lib/expresshogan')
 //  , routes = require('./routes')
   , bookServer = require('./lib/bookserver');
-
+  
 var app = module.exports = express.createServer();
 
 require('child_process').exec('ls fileserver/.epub/*/unzipped/mimetype', function (error, stdout, stderr) {
@@ -17,31 +19,26 @@ require('child_process').exec('ls fileserver/.epub/*/unzipped/mimetype', functio
     }
 });
 
-for( var i = 144; i <= 144; i++ ) { bookServer.loadBook( i.toString() ); }
+//for( var i = 144; i <= 144; i++ ) { bookServer.loadBook( i.toString() ); }
 
-
+//var debug = fs.createWriteStream('log/debug.log');
+//debug.log = function() { debug.write(format.apply(this, arguments) + '\n') };
 
 // Configuration
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.set("view options", {layout: true});
-/*  app.register('.html', {
-    compile: function(str, options){
-      return function(locals){
-        return str;
-      };
-    }
-  });*/
-  app.use(express.logger());
+  hogan.setRoot(app.settings.views);
+  app.set("view options", {layout: false});
+  app.register('.mustache', hogan);
+  app.set('view engine', hogan);
+  app.use(express.logger(/*{stream: fs.createWriteStream('log/server.log')}*/));
 //  app.use(express.bodyParser());
 //  app.use(express.methodOverride());
   app.use(app.router);
 });
 
 app.configure('development', function(){
-//  app.use(express.staticCache());
   app.use(express.static(__dirname + '/fileserver'));
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
@@ -71,9 +68,14 @@ app.get(/\/\./, function(req, res, next) {
 
 // index.html
 app.get('/', function (req, res, next) { 
-    res.render('index', {
-        title: 'Flyleaf - Bookshelf',
-        locals: { books: bookServer.books }
+    res.render('site/index.mustache', {
+        locals: {
+            title: 'Flyleaf',
+            books: Object.keys(bookServer.books).map(function(key) { return bookServer.books[key]; })
+        },
+        partials: {
+            tombstone: 'site/tombstone.mustache'
+        }
     });
 })
 
@@ -96,17 +98,21 @@ app.get('/read/:book/apple-touch:touchimage', function(req, res, next) {
 })
 
 app.get('/read/:book/:chapter?', function(req, res, next) {
-    req.url = '/reader.html';
-    console.log('Rerouting to:', req.url);
-    return next();
-//    res.render('reader.html');
+    var book = bookServer.books[req.params.book];
+    res.render("reader/reader.mustache", {
+        locals: {
+            title: book.metadata.title,
+            max_chapter: book.flow.length-1
+        }
+    });
 })
 
+/*
 app.get('/feedbooks/:fbid/:book', function(req, res, next) {
     bookServer.getFeedbooks(req.params.fbid, req.params.book, function() {
         res.redirect('/read/' + req.params.book + '/cover');
     });
-})
+})*/
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
