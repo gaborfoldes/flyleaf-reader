@@ -161,9 +161,9 @@
                 border-radius: 6px;
         border: solid 1px #E5E5E5;
         background-color: white;
-        box-shadow: 1px 1px 5px lightgrey;
-        -moz-box-shadow: 1px 1px 5px lightgrey;
-        -webkit-box-shadow: 1px 1px 5px lightgrey;
+        box-shadow: 1px 1px 5px lightgray;
+        -moz-box-shadow: 1px 1px 5px lightgray;
+        -webkit-box-shadow: 1px 1px 5px lightgray;
         color: #362F2D;
         cursor: pointer;
         border-image: initial;
@@ -221,7 +221,7 @@ p#sign-up-for-free-trial { position: relative; top: 12px; padding: 0; margin: 0;
 			#closeMe { display: none; position: absolute; right: 10px; top: 10px; height: 11px; width: 12px; background: url(../img/closeMe.png); text-decoration: none; }
 			#create-flyleaf input, #create-flyleaf select { display:inline; height: 19px; width: 200px; margin-bottom: 9px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; color: #999999;}
 			#create-flyleaf select { height: 28px; width: 210px; }
-			#create-flyleaf input:focus { color:#666666;<section> }
+			#create-flyleaf input:focus { color:#666666; }
 			#create-flyleaf input:focus, #create-flyleaf select:focus{outline:0;border-color:rgba(129, 86, 44, 0.8);-webkit-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(129, 86, 44, 0.6);-moz-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(129, 86, 44, 0.6);box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(129, 86, 44, 0.6);}
 				#create-flyleaf input#create-my-flyleaf, 
 				#create-flyleaf input#create-my-flyleaf-active, 

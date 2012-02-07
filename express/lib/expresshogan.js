@@ -8,7 +8,6 @@ var fs = require('fs');
     expressHogan.partials = {};
 	expressHogan.compile = function(source, options) {
 		if (typeof source == 'string') {
-            if (source.search(/\./) == -1) source += '.mustache';
 			return function(options) {
 				options.locals = options.locals || {};
 				options.partials = options.partials || {};
@@ -34,10 +33,10 @@ var fs = require('fs');
 	};
 	
 	expressHogan.loadPartial = function(partial) {
-		if (!(partial in expressHogan.partials)) {
+//		if (!(partial in expressHogan.partials)) {
             if (!~partial.indexOf('.')) partial += '.mustache';
 			expressHogan.partials[partial] = fs.readFileSync(expressHogan.root + '/' + partial, 'utf-8');
-		}
+//		}
 		return expressHogan.partials[partial];
 	};
 	

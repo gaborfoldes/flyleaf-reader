@@ -29,7 +29,8 @@ require('child_process').exec('ls fileserver/.epub/*/unzipped/mimetype', functio
 app.configure(function(){
   app.set('views', __dirname + '/views');
   hogan.setRoot(app.settings.views);
-  app.set("view options", {layout: false});
+  app.set('view options', {layout: false});
+  app.set('view cache', false);
   app.register('.mustache', hogan);
   app.set('view engine', hogan);
   app.use(express.logger(/*{stream: fs.createWriteStream('log/server.log')}*/));
@@ -66,14 +67,27 @@ app.get(/\/\./, function(req, res, next) {
     //return next(new Error('Permission denied.'));
 });
 
-// index.html
-app.get('/', function (req, res, next) { 
-    res.render('site/index.mustache', {
+app.get('/', function (req, res, next) {
+    res.render('site/layout.mustache', {
+        locals: {
+            title: 'Flyleaf',
+        },
+        partials: {
+            body: 'site/index.mustache',
+            header: 'site/header.mustache'
+        }
+    })
+})
+
+app.get('/books', function (req, res, next) { 
+    res.render('site/layout.mustache', {
         locals: {
             title: 'Flyleaf',
             books: Object.keys(bookServer.books).map(function(key) { return bookServer.books[key]; })
         },
         partials: {
+            body: 'site/books.mustache',
+            header: 'site/header.mustache',
             tombstone: 'site/tombstone.mustache'
         }
     });
