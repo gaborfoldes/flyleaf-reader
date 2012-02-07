@@ -30,7 +30,7 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   hogan.setRoot(app.settings.views);
   app.set('view options', {layout: false});
-  app.set('view cache', false);
+//  app.set('view cache', false);
   app.register('.mustache', hogan);
   app.set('view engine', hogan);
   app.use(express.logger(/*{stream: fs.createWriteStream('log/server.log')}*/));
@@ -67,7 +67,7 @@ app.get(/\/\./, function(req, res, next) {
     //return next(new Error('Permission denied.'));
 });
 
-app.get('/', function (req, res, next) {
+/*app.get('/', function (req, res, next) {
     res.render('site/layout.mustache', {
         locals: {
             title: 'Flyleaf',
@@ -77,9 +77,9 @@ app.get('/', function (req, res, next) {
             header: 'site/header.mustache'
         }
     })
-})
+})*/
 
-app.get('/books', function (req, res, next) { 
+app.get('/', function (req, res, next) { 
     res.render('site/layout.mustache', {
         locals: {
             title: 'Flyleaf',

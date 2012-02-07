@@ -33,10 +33,10 @@ var fs = require('fs');
 	};
 	
 	expressHogan.loadPartial = function(partial) {
-//		if (!(partial in expressHogan.partials)) {
+		if (!(partial in expressHogan.partials)) {
             if (!~partial.indexOf('.')) partial += '.mustache';
 			expressHogan.partials[partial] = fs.readFileSync(expressHogan.root + '/' + partial, 'utf-8');
-//		}
+		}
 		return expressHogan.partials[partial];
 	};
 	
