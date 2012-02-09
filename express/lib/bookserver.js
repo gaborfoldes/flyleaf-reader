@@ -45,6 +45,15 @@ exports.loadBooks = function (booklist) {
     }
 }
 
+exports.searchBooks = function (term, value) {
+    var bookids = Object.keys(exports.books);
+    var hits = [];
+    for (var i in bookids) {
+        if (exports.books[bookids[i]].metadata[term] == value) hits.push(exports.books[bookids[i]]);
+    }
+    return hits;
+}
+
 exports.getFeedbooks = function (fbid, bookid, callback) {
     fs.mkdir(__dirname + '/fileserver/.epub/' + bookid, function() {
         fs.mkdir(__dirname + '/fileserver/.epub/' + bookid + '/original', function() {

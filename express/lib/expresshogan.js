@@ -6,6 +6,7 @@ var fs = require('fs');
 (function (expressHogan) {
     expressHogan.root = '';
     expressHogan.partials = {};
+    expressHogan.cached = true;
 	expressHogan.compile = function(source, options) {
 		if (typeof source == 'string') {
 			return function(options) {
@@ -33,15 +34,18 @@ var fs = require('fs');
 	};
 	
 	expressHogan.loadPartial = function(partial) {
-		if (!(partial in expressHogan.partials)) {
+		if (!(partial in expressHogan.partials) || !expressHogan.cached) {
             if (!~partial.indexOf('.')) partial += '.mustache';
 			expressHogan.partials[partial] = fs.readFileSync(expressHogan.root + '/' + partial, 'utf-8');
 		}
 		return expressHogan.partials[partial];
 	};
 	
-	expressHogan.setRoot = function (root) {
-	    expressHogan.root = root;
+	expressHogan.set = function (key, value) {
+	    switch (key) {
+	        case 'root': expressHogan.root = value; break;
+	        case 'cached': expressHogan.cached = value; break;
+	    }
 	}
 	
 	

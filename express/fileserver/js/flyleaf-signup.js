@@ -78,6 +78,11 @@ function signUpFormWinning() {
 			openForm();
 		}
 	});
+	
+	$('#signup-button').click(function(event){
+	    $('#username').select();
+	    event.preventDefault;
+	})
 
 	$('#user-select input[name="usertype"]').change(function(){
 	    var checked = $('#user-select input[name="usertype"]:checked').val();

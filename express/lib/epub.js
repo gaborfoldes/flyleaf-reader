@@ -36,6 +36,7 @@ var //ZipFile = require("zipfile").ZipFile,
 function EPub(bookid, paths) {
     EventEmitter.call(this);
     this.bookid = bookid;
+    this.zanza = '';
     this.paths = {
         base: 'fileserver/.epub/' + bookid + '/',
         original: 'original/',
