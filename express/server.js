@@ -94,7 +94,7 @@ app.get('/', function (req, res, next) {
             title: 'Flyleaf',
             page: {
                 username: 'QueenOfCrime',
-                fullname: 'Agatha Christy',
+                fullname: 'Agatha Christie',
                 profilepic: '/img/agatha.png',
                 about: 'Agatha Christie is known throughout the world as the Queen of crime. Her books have sold over a billion copies in the English language with another billion in 44 foreign languages. She is the most widely published author of all time in any language, out-sold by only the Bible and Shakespeare. She is the author of 79 crime novels and a short story collections, 19 plays, and 6 novels written under the name of Mary Westmacott.<br><br>Agatha Christie was born in Torquay. Her first novel, The Mysterious Affair at Styles, was written toward the end of the First World War, in which she served as a VAD. In it she created Hercules Poirot, the little Belgian detective who was destined to become the most popular detective in crime fiction since Sherlock Holmes. It was eventually published by The Bodley Head in 1920.<br><br>In 1926, after averaging a book a year, Agatha Christie wrote her masterpiece. The Murder of Roger Ackroyd was the first of her books to be published by Collins and marked the beginning of author-publisher relationship which lasted for fifty years and well over seventy books. The Murder of Roger Ackroyd was also the first of Agatha Christie\'s books to be dramatized - under the name Alibi - and to have a successful run in the West End. The Mousetrap, her most famous play of all, is the longest-running play in history.<br><br>Agatha Christie was made a Dame in 1971. Her last two books to be published were Curtain: Poirot\'s Last Case in 1975, and Sleeping Murder, featuring the deceptively mild Miss Marple, in 1976. Both were bestsellers. Agatha Christie also wrote four non-fiction works including an autobiography and the delightful Come, Tell Me How You Live, which celebrates the many expeditions she shared with her archaeologist husband Sir Max Mallowan.',
                 location: 'Wallingford, UK'
@@ -145,5 +145,5 @@ app.get('/feedbooks/:fbid/:book', function(req, res, next) {
     });
 })*/
 
-app.listen(80);
+app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

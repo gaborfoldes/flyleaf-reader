@@ -3405,7 +3405,7 @@ header {
 .header-buttons {
   display: inline-block;
   float: left;
-  margin: 40px 0 0 50px;
+  margin: 35px 0 0 50px;
   font-weight: 700;
 }
 .header-buttons .btn {
@@ -3477,7 +3477,6 @@ p#instructions {
   clear: left;
   margin: 0;
   padding-top: 20px;
-  width: 420px;
   font-size: 14px;
 }
 .errors p {
@@ -3579,9 +3578,7 @@ p#sign-up-for-free-trial {
   margin: 0;
 }
 #form-bottom {
-  margin: 0;
-  width: 440px;
-  margin-left: 170px;
+  clear: both;
   font-weight: 300;
 }
 #closeMe {
