@@ -1,0 +1,25 @@
+{
+	"name": "flyleaf",
+	"version": "0.0.1",
+	"author": "FlyLeaf <gabor@flyleaf.me>",
+	"description": "flyleaf self-publisher platform",
+	"private": "true",
+	"dependencies": {
+		"express": "2.5.5",
+		"jade": ">= 0.0.1",
+		"xml2js": "*",
+		"imagemagick": "*",
+		"request": "*",
+		"hogan.js": "*"
+	},
+	"contributors": [
+		{
+			"name": "Gabor Foldes",
+			"email": "gabor@flyleaf.me"
+		},
+		{
+			"name": "Peter Foldes",
+			"email": "peter@flyleaf.me"
+		}
+	]
+}
