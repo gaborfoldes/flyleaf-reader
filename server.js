@@ -19,6 +19,8 @@ require('child_process').exec('ls fileserver/.epub/*/unzipped/mimetype', functio
     }
 });
 
+
+
 //for( var i = 144; i <= 144; i++ ) { bookServer.loadBook( i.toString() ); }
 
 //var debug = fs.createWriteStream('log/debug.log');
@@ -41,7 +43,7 @@ app.configure(function(){
 
 app.configure('development', function(){
 	app.use(express.static(__dirname + '/fileserver'));
-	app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
@@ -79,17 +81,13 @@ app.get(/\/\./, function(req, res, next) {
     })
 })*/
 
-app.get('/', function (req, res, next) {
-	if (bookServer.size() > 0) {
-		bookServer.books['6'].zanza = 'For an instant the two trains ran together, side by side. In that frozen moment, Elspeth witnessed a murder. Helplessly, she stared out of her carriage window as a man remorselessly tightened his grip around a woman’s throat. The body crumpled. Then the other train drew away.<br><br>But who, apart from Miss Marple, would take her story seriously? After all, there were no suspects, no other witnesses . . . and no corpse.'
-	    bookServer.books['11'].zanza = 'As Miss Marple sat basking in the Caribbean sunshine, she felt mildly discontented with life. True, the warmth eased her rheumatism, but here in paradise nothing ever happened.<br><br>Eventually, her interest was aroused by an old soldier’s yarn about a murderer he had known. Infuriatingly, just as he was about to show her a snapshot of this acquaintance, the Major was suddenly interrupted. A diversion that was to prove fatal.'
-	    bookServer.books['19'].zanza = 'The villagers of Chipping Cleghorn are agog with curiosity when the Gazette advertises “A murder is announced and will take place on Friday, October 29th, at Little Paddocks at 6.30 p.m.”<br><br>A childish practical joke? Or a spiteful hoax? Unable to resist the mysterious invitation, the locals arrive at Little Paddocks at the appointed time when, without warning, the lights go out and a gun is fired. When they come back on, a gruesome scene is revealed. An impossible crime? Only Miss Marple can unravel it.'
-	    bookServer.books['23'].zanza = 'Rex Fortescue, king of a financial empire, was sipping tea in his “counting house” when he suffered an agonizing and sudden death. On later inspection, the pockets of the deceased were found to contain traces of cereals.<br><br>Yet, it was the incident in the parlor which confirmed Miss Marple’s suspicion that here she was looking at a case of crime by rhyme.'
-	    bookServer.books['43'].zanza = 'When Cora Lansquenet is savagely murdered with a hatchet, the extraordinary remark she made the previous day at her brother Richard’s funeral suddenly takes on a chilling significance. At the reading of Richard’s will, Cora was clearly heard to say, “It’s been hushed up very nicely, hasn’t it.… But he was murdered, wasn’t he?”<br><br>In desperation, the family solicitor turns to Hercule Poirot to unravel the mystery.'
-	    bookServer.books['72'].zanza = '"Ten…"<br>Ten strangers are lured to an isolated island mansion off the Devon coast by a mysterious "U.N. Owen."<br><br>"Nine…"<br>At dinner a recorded message accuses each of them in turn of having a guilty secret, and by the end of the night one of the guests is dead.<br><br>"Eight…"<br>Stranded by a violent storm, and haunted by a nursery rhyme counting down one by one . . . one by one they begin to die.<br><br>"Seven…"<br>Who among them is the killer and will any of them survive?'
-	    bookServer.books['76'].zanza = 'Among the towering red cliffs of Petra, like some monstrous swollen Buddha, sits the corpse of Mrs. Boynton. A tiny puncture mark on her wrist is the only sign of the fatal injection that killed her.<br><br>With only twenty-four hours available to solve the mystery, Hercule Poirot recalled a chance remark he’d overheard back in Jerusalem: “You see, don’t you, that she’s got to be killed?” Mrs. Boynton was, indeed, the most detestable woman he’d ever met.'
-	}
+app.get('/load', function (req, res, next) {
+  bookServer.setSample();
+  req.url = '/';
+	return next();
+});
 
+app.get('/', function (req, res, next) {
     res.render('site/layout.mustache', {
         locals: {
             title: 'Flyleaf',
@@ -118,7 +116,7 @@ app.get('/read/:book/chapters/:chapter', function(req, res, next) {
 })
 
 app.get('/read/:book/items/:itemid', function(req, res, next) {
-	req.url = '/.epub/' + req.params.book + '/unzipped/' + bookServer.books[req.params.book].manifest[req.params.itemid].href;
+	req.url = '/.epub/' + req.params.book + '/unzipped/' + bookServer.getBook(req.params.book).manifest[req.params.itemid].href;
 	console.log('Rerouting to:', req.url);
 	return next();
 })
@@ -130,13 +128,13 @@ app.get('/read/:book/apple-touch:touchimage', function(req, res, next) {
 })
 
 app.get('/read/:book/:chapter?', function(req, res, next) {
-	var book = bookServer.books[req.params.book];
-	res.render("reader/reader.mustache", {
-		locals: {
-			title: book.metadata.title,
-			max_chapter: book.flow.length-1
-		}
-	});
+	book = bookServer.getBook(req.params.book);
+  res.render("reader/reader.mustache", {
+	  locals: {
+		  title: book.metadata.title,
+		  max_chapter: book.flow.length-1
+	  }
+  });
 })
 
 /*
