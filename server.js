@@ -11,17 +11,8 @@ var express = require('express'),
 
 var app = module.exports = express.createServer();
 
-require('child_process').exec('ls fileserver/.epub/*/unzipped/mimetype', function (error, stdout, stderr) {
-    var foundBooks = stdout.split('\n');
-    for (i in foundBooks) {
-        var bookid = foundBooks[i].match(/fileserver\/.epub\/([^\/]*)\/unzipped\/mimetype/);
-        if (bookid && bookid.length > 1) { bookServer.loadBook(bookid[1]); }
-    }
-});
 
-
-
-//for( var i = 144; i <= 144; i++ ) { bookServer.loadBook( i.toString() ); }
+bookServer.loadBook('agile');
 
 //var debug = fs.createWriteStream('log/debug.log');
 //debug.log = function() { debug.write(format.apply(this, arguments) + '\n') };
@@ -81,6 +72,7 @@ app.get(/\/\./, function(req, res, next) {
     })
 })*/
 
+/*
 app.get('/load', function (req, res, next) {
   bookServer.setSample();
   req.url = '/';
@@ -108,6 +100,7 @@ app.get('/', function (req, res, next) {
         }
     });
 })
+*/
 
 app.get('/read/:book/chapters/:chapter', function(req, res, next) {
 	req.url = '/.epub/' + req.params.book + '/processed/' + req.params.chapter + '.xml';
