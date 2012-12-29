@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.smarter.cart">10.1 Iteration E1: Creating a Smarter Cart</h2>
+
+  <p id="N13C95">Associating a count with each product in our cart is going to require us to modify the <code class="cf ic">line_items</code> table. We’ve used migration before in <a href="../Text/f_0044.html#sec.apply.migration">​<em>Applying the Migration</em>​</a> to update the schema of the database. While that was as part of creating the initial scaffolding for a model, the basic approach is the same.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rails generate migration add_quantity_to_line_items quantity:integer</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13CB2">Rails can tell from the name of the migration that you are adding one or more columns to the <code class="cf ic">line_items</code> table and can pick up the names and data types for each column from the last argument. The two patterns that Rails matches on is <code class="cf ic">add_XXX_to_TABLE</code> and <code class="cf ic">remove_XXX_from_TABLE</code> where the value of XXX is ignored; what matters is the list of column names and types that appear after the migration name.</p>
+
+  <p id="N13CC4">The only thing Rails can’t tell is what a reasonable default is for this column. In many cases, a <code class="cf ic">null</code> value would do, but let’s make it the value 1 for existing carts by modifying the migration before we apply it:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_g/db/migrate/20110711000004_add_quantity_to_line_items.rb">rails31/depot_g/db/migrate/20110711000004_add_quantity_to_line_items.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> AddQuantityToLineItems &lt; ActiveRecord::Migration</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> change</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">add_column :line_items, :quantity, :integer, default: 1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13CF0">Once complete, we run the migration:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake db:migrate</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13D01">Now we need a smart <code class="cf methodname">add_product</code> method in our <code class="cf class">Cart</code>, one that checks whether our list of items already includes the product we’re adding; if it does, it bumps the quantity, and if it doesn’t, it builds a new <code class="cf class">LineItem</code>:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_g/app/models/cart.rb">rails31/depot_g/app/models/cart.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> add_product(product_id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">current_item = line_items.find_by_product_id(product_id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> current_item</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">current_item.quantity += 1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">current_item = line_items.build(product_id: product_id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">current_item</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13D3B">This code uses a clever little Active Record trick. You see that the first line of the method calls <code class="cf methodname">find_by_product_id</code>. But we don’t define a method with that name. However, Active Record notices the call to an undefined method and spots that it starts with the string <code class="cf ic">find_by</code> and ends with the name of a column. It then dynamically constructs a finder method for us, adding it to our class. We talk more about these dynamic finders starting <a href="../Text/f_0105.html#sec.dynamic.finders">​here​</a>.</p>
+
+  <p id="N13D47">We also need to modify the line item controller to make use of this method:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_g/app/controllers/line_items_controller.rb">rails31/depot_g/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.find(params[:product_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = @cart.add_product(product.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> @line_item.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to @line_item.cart,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">notice: <em class="string">'Line item was successfully created.'</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :created, location: @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { render action: <em class="string">"new"</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item.errors,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :unprocessable_entity }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13D9B">There’s one last quick change to the <code class="cf ic">show</code> view to use this new information:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_g/app/views/carts/show.html.erb">rails31/depot_g/app/views/carts/show.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h2&gt;</strong>Your Pragmatic Cart<strong class="prompt">&lt;/h2&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @cart.line_items.each <strong class="prompt">do</strong> |item| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong>&lt;%= item.quantity %&gt; &amp;times; &lt;%= item.product.title %&gt;<strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/ul&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13DE7">Now that all the pieces are in place, we can go back to the store page and hit the <code class="cf keystroke">Add to Cart</code> button for a product that is already in the cart. What we are likely to see is a mixture of individual products listed separately and a single product listed with a quantity of two. This is because we added a quantity of 1 to existing columns instead of collapsing multiple rows when possible. What we need to do next is migrate the data.</p>
+
+  <p id="N13DED">We start by creating a migration:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rails generate migration combine_items_in_cart</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13DFE">This time, Rails can’t infer what we are trying to do, so we can’t rely on the generated <code class="cf methodname">change</code> method. What we need to do instead is to replace this method with separate <code class="cf methodname">up</code> and <code class="cf methodname">down</code> methods. First the <code class="cf methodname">up</code> method:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_g/db/migrate/20110711000005_combine_items_in_cart.rb">rails31/depot_g/db/migrate/20110711000005_combine_items_in_cart.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> up</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># replace multiple items for a single product in a cart with a single item</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Cart.all.each <strong class="prompt">do</strong> |cart|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># count the number of each product in the cart</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">sums = cart.line_items.group(:product_id).sum(:quantity)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">sums.each <strong class="prompt">do</strong> |product_id, quantity|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> quantity &gt; 1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># remove individual items</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">cart.line_items.where(product_id: product_id).delete_all</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># replace with a single item</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">cart.line_items.create(product_id: product_id, quantity: quantity)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13E63">This is easily the most extensive code we’ve seen so far. Let’s look at it in small pieces:</p>
+
+  <ul>
+    <li>
+      <p id="N13E69">We start by iterating over each cart.</p>
+    </li>
+
+    <li>
+      <p id="N13E71">For each cart, we get a sum of the quantity fields for each of the line items associated with this cart, grouped by <code class="cf ic">product_id</code>. The resulting sums will be a list of ordered pairs of <code class="cf ic">product_id</code>s and quantity.</p>
+    </li>
+
+    <li>
+      <p id="N13E7B">We iterate over these sums, extracting the <code class="cf ic">product_id</code> and <code class="cf ic">quantity</code> from each.</p>
+    </li>
+
+    <li>
+      <p id="N13E85">In cases where the quantity is greater than 1, we will delete all of the individual line items associated with this cart and this product and replace them with a single line item with the correct quantity.</p>
+    </li>
+  </ul>
+
+  <p id="N13E88">Note how easily and elegantly Rails enables you to express this algorithm.</p>
+
+  <p id="N13E8B">With this code in place, we apply this migration just like any other migration:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake db:migrate</strong></code></td>
+    </tr>
+  </table>
+
+  <table class="figure" id="fig.depot.g.cart">
+    <tr>
+      <td><img alt="images/depot_g_cart.png" src="../Images/depot_g_cart.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 14. A cart with quantities</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N13EA5">We can immediately see the results by looking at the cart, as shown in Figure 14, <a href="#fig.depot.g.cart">​<em>A cart with quantities</em>​</a>. Although we have reason to be pleased with ourselves, we are not done yet. An important principle of migrations is that each step needs to be reversible, so we implement a <code class="cf methodname">down</code> too. This method finds line items with a quantity of greater than 1; adds new line items for this cart and product, each with a quantity of 1; and finally deletes the line item. The following code accomplishes that:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_g/db/migrate/20110711000005_combine_items_in_cart.rb">rails31/depot_g/db/migrate/20110711000005_combine_items_in_cart.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> down</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># split items with quantity&gt;1 into multiple items</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">LineItem.where(<em class="string">"quantity&gt;1"</em>).each <strong class="prompt">do</strong> |line_item|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># add individual items</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">line_item.quantity.times <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">LineItem.create cart_id: line_item.cart_id,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product_id: line_item.product_id, quantity: 1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># remove original item</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">line_item.destroy</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13EFA">At this point, we can just as easily roll back our migration with a single command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake db:rollback</strong></code></td>
+    </tr>
+  </table>
+
+  <table class="figure" id="fig.depot.g.cart.undo">
+    <tr>
+      <td><img alt="images/depot_g_cart_undo.png" src="../Images/depot_g_cart_undo.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 15. A cart after the migration has been rolled back</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N13F1A">Once again, we can immediately inspect the results by looking at the cart, as shown in Figure 15, <a href="#fig.depot.g.cart.undo">​<em>A cart after the migration has been rolled back</em>​</a>. Once we reapply the migration (with the <code class="cf commandname">rake db:migrate</code> command), we have a cart that maintains a count for each of the products it holds, and we have a view that displays that count.</p>
+
+  <p id="N13F30">Happy that we have something presentable, we call our customer over and show her the result of our morning’s work. She’s pleased&mdash;she can see the site starting to come together. However, she’s also troubled, having just read an article in the trade press on the way ecommerce sites are being attacked and compromised daily. She read that one kind of attack involves feeding requests with bad parameters into web applications, hoping to expose bugs and security flaws. She noticed that the link to the cart looks like <code class="cf ic">carts/</code> <span class="emph">nnn</span>, where <span class="emph">nnn</span> is our internal cart id. Feeling malicious, she manually types this request into a browser, giving it a cart id of <span class="emph">wibble</span>. She’s not impressed when our application displays the page in Figure 16, <a href="../Text/f_0063.html#fig.depot.g.exception">​<em>Our application spills its guts.</em>​</a>. This reveals way too much information about our application. It also seems fairly unprofessional. So, our next iteration will be spent making the application more resilient.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

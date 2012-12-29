@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">10.3 Iteration E3: Finishing the Cart</h2>
+
+  <p id="N1411F">We know by now that in order to implement the “empty cart” function, we have to add a link to the cart and modify the <code class="cf methodname">destroy</code> method in the carts controller to clean up the session. Let’s start with the template and again use the <code class="cf methodname">button_to</code> method to put a button on the page:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_h/app/views/carts/show.html.erb">rails31/depot_h/app/views/carts/show.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h2&gt;</strong>Your Pragmatic Cart<strong class="prompt">&lt;/h2&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @cart.line_items.each <strong class="prompt">do</strong> |item| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong>&lt;%= item.quantity %&gt; &amp;times; &lt;%= item.product.title %&gt;<strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to <em class="string">'Empty cart'</em>, @cart, method: :delete,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">confirm: <em class="string">'Are you sure?'</em> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N14194">In the controller, we’ll modify the <code class="cf methodname">destroy</code> method to ensure that the user is deleting their own cart (think about it!) and to remove the cart from the session before redirecting to the index page with a notification message:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_h/app/controllers/carts_controller.rb">rails31/depot_h/app/controllers/carts_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> destroy</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart.destroy</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">session[:cart_id] = nil</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to store_url,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">notice: <em class="string">'Your cart is currently empty'</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { head :ok }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <div class="xxxsays">
+    <div class="heading">
+      <div class="persons-picture"><img alt="David says:" src="../Images/David.png" /></div>
+
+      <div class="label">
+        David says:
+      </div>
+
+      <div class="title">
+        Battle of the Routes: product_path vs. product_url
+      </div>
+    </div>
+
+    <div class="body">
+      <p id="N141D3">It can seem hard in the beginning to know when to use <code class="cf ic">product_path</code> and when to use <code class="cf ic">product_url</code> when you want to link or redirect to a given route. In reality, it’s really quite simple.</p>
+
+      <p id="N141EB">When you use <code class="cf ic">product_url</code>, you’ll get the full enchilada with protocol and domain name, like <a href="http://example.com/products/1">http://example.com/products/1</a>. That’s the thing to use when you’re doing <code class="cf ic">redirect_to</code> because the HTTP spec requires a fully qualified URL when doing 302 Redirect and friends. You also need the full URL if you’re redirecting from one domain to another, ala <code class="cf ic">product_url(domain: "example2.com", product: product)</code>.</p>
+
+      <p id="N1421D">The rest of the time, you can happily use <code class="cf ic">product_path</code>. This will generate only the <code class="cf ic">/products/1</code> part, and that’s all you need when doing links or pointing forms, like <code class="cf ic">link_to</code> "My lovely product", <code class="cf ic">product_path(product)</code>.</p>
+
+      <p id="N14231">Now the confusing part is that oftentimes the two are interchangeable because of lenient browsers. You can do a <code class="cf ic">redirect_to</code> with a <code class="cf ic">product_path</code> and it’ll probably work, but it won’t be valid according to spec. And you can <code class="cf ic">link_to</code> a <code class="cf ic">product_url</code>, but then you’re littering up your HTML with needless characters, which is a bad idea too.</p>
+    </div>
+  </div>
+
+  <p id="N14240">And we update the corresponding test in <code class="cf filename">test/functional/carts_controller_test.rb</code>.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_i/test/functional/carts_controller_test.rb">rails31/depot_i/test/functional/carts_controller_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"should destroy cart"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_difference(<em class="string">'Cart.count'</em>, -1) <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">session[:cart_id] = @cart.id</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">delete :destroy, id: @cart.to_param</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_redirected_to store_path</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1427E">Now when we view our cart and click the <code class="cf keystroke">Empty cart</code> button, we get taken back to the catalog page, and a nice little message says this:</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/depot_h_cart_empty.png" src="../Images/depot_h_cart_empty.png" /></div>
+
+  <p id="N14287">We can also remove the flash message that is automatically generated when a line item is added:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_i/app/controllers/line_items_controller.rb">rails31/depot_i/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.find(params[:product_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = @cart.add_product(product.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> @line_item.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to @line_item.cart }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :created, location: @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { render action: <em class="string">"new"</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item.errors,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :unprocessable_entity }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N142D5">And, finally, we’ll get around to tidying up the cart display. Rather than use <code class="cf xmltag">&lt;li&gt;</code> elements for each item, let’s use a table. Again, we’ll rely on CSS to do the styling:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_i/app/views/carts/show.html.erb">rails31/depot_i/app/views/carts/show.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"cart_title"</em> <strong class="prompt">&gt;</strong>Your Cart<strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @cart.line_items.each <strong class="prompt">do</strong> |item| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= item.quantity %&gt;&amp;times;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= item.product.title %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"item_price"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(item.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr</strong> class=<em class="string">"total_line"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> colspan=<em class="string">"2"</em> <strong class="prompt">&gt;</strong>Total<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"total_cell"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(@cart.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to <em class="string">'Empty cart'</em>, @cart, method: :delete,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">confirm: <em class="string">'Are you sure?'</em> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N14386">To make this work, we need to add a method to both the <code class="cf class">LineItem</code> and <code class="cf class">Cart</code> models that returns the total price for the individual line item and entire cart, respectively. First the line item, which involves only simple multiplication:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_i/app/models/line_item.rb">rails31/depot_i/app/models/line_item.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> total_price</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.price * quantity</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N143AA">We implement the <code class="cf class">Cart</code> method using Rails’ nifty <code class="cf methodname">Array::sum</code> method to sum the prices of each item in the collection:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_i/app/models/cart.rb">rails31/depot_i/app/models/cart.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> total_price</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">line_items.to_a.sum { |item| item.total_price }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N143C8">Then we need to add a small bit to our <code class="cf filename">carts.css.scss</code> stylesheet:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_i/app/assets/stylesheets/carts.css.scss">rails31/depot_i/app/assets/stylesheets/carts.css.scss</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">Place</strong> <strong class="prompt">all</strong> <strong class="prompt">the</strong> <strong class="prompt">styles</strong> <strong class="prompt">related</strong> <strong class="prompt">to</strong> <strong class="prompt">the</strong> <strong class="prompt">Carts</strong> <strong class="prompt">controller</strong> <strong class="prompt">here</strong>.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">They</strong> <strong class="prompt">will</strong> <strong class="prompt">automatically</strong> <strong class="prompt">be</strong> <strong class="prompt">included</strong> <strong class="prompt">in</strong> <strong class="prompt">application</strong>.css.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">You</strong> <strong class="prompt">can</strong> <strong class="prompt">use</strong> <strong class="prompt">Sass</strong> (<strong class="prompt">SCSS</strong>) <strong class="prompt">here</strong>: <strong class="prompt">http</strong>://<strong class="prompt">sass-lang</strong>.com/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.carts {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.cart_title {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font: 120% bold;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.item_price, .total_line {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">text-align: right;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.total_line .total_cell {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-weight: bold;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">border-top: 1px solid #595;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+  </table>
+
+  <p id="N14455">For a nicer-looking cart, see Figure 18, <a href="#fig.depot.i.cart">​<em>Cart display with a total</em>​</a>.</p>
+
+  <table class="figure" id="fig.depot.i.cart">
+    <tr>
+      <td><img alt="images/depot_i_cart.png" src="../Images/depot_i_cart.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 18. Cart display with a total</b>
+      </td>
+    </tr>
+  </table>
+
+  <h3 id="heading_id_3">What We Just Did</h3>
+
+  <p id="N14468">Our shopping cart is now something the client is happy with. Along the way, we covered the following:</p>
+
+  <ul>
+    <li>
+      <p id="N14475">Adding a column to an existing table, with a default value</p>
+    </li>
+
+    <li>
+      <p id="N14479">Migrating existing data into the new table format</p>
+    </li>
+
+    <li>
+      <p id="N1447D">Providing a flash notice of an error that was detected</p>
+    </li>
+
+    <li>
+      <p id="N14481">Using the logger to log events</p>
+    </li>
+
+    <li>
+      <p id="N14485">Deleting a record</p>
+    </li>
+
+    <li>
+      <p id="N14489">Adjusting the way a table is rendered, using CSS</p>
+    </li>
+  </ul>
+
+  <p id="N1448C">But, just as we think we’ve wrapped this functionality up, our customer wanders over with a copy of <span class="emph">Information Technology and Golf Weekly</span>. Apparently, there’s an article about a new style of browser interface, where stuff gets updated on the fly. “Ajax,” she says, proudly. Hmmm…let’s look at that tomorrow.</p>
+
+  <h3 id="sec.smartcart.playtime">Playtime</h3>
+
+  <p id="N14497">Here’s some stuff to try on your own:</p>
+
+  <ul>
+    <li>
+      <p id="N1449D">Create a migration that copies the product price into the line item, and change the <code class="cf methodname">add_product</code> method in the <code class="cf class">Cart</code> model to capture the price whenever a new line item is created.</p>
+    </li>
+
+    <li>
+      <p id="N144A7">Add unit tests that add unique products and duplicate products. Note that you will need to modify the fixture to refer to products and carts by name, for example <code class="cf ic">product: ruby</code>.</p>
+    </li>
+
+    <li>
+      <p id="N144AE">Check products and line items for other places where a user-friendly error message would be in order.</p>
+    </li>
+
+    <li>
+      <p id="N144B2">Add the ability to delete individual line items from the cart. This will require buttons on each line, and such buttons will need to be linked to the <code class="cf methodname">destroy</code> action in the <code class="cf class">LineItemsController</code>.</p>
+    </li>
+  </ul>
+
+  <p id="N144BB">(You’ll find hints at <a href="http://www.pragprog.com/wikis/wiki/RailsPlayTime">http://www.pragprog.com/wikis/wiki/RailsPlayTime</a>.)</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_4">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0063.html#FNPTR-26" id="FOOTNOTE-26">[26]</a></td>
+
+        <td>
+          <p id="N13F67">Your line number might be different. We have some book-related formatting stuff in our source files.</p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0063.html#FNPTR-27" id="FOOTNOTE-27">[27]</a></td>
+
+        <td>
+          <p id="N13F97"><a href="http://guides.rubyonrails.org/debugging_rails_applications.html#the-logger">http://guides.rubyonrails.org/debugging_rails_applications.html#the-logger</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

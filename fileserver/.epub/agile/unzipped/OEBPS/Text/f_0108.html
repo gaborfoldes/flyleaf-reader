@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+</head>
+
+<body>
+  <h1 class="chapter-title" id="chp.actioncontroller"><span class="chapter-number">Chapter 20</span><br />
+  <span class="chapter-name">Action Dispatch and Action Controller</span></h1>
+
+  <div class="epigraph epitext">
+    <ul>
+      <li>
+        <p id="N1A9E0">Representational State Transfer (REST);</p>
+      </li>
+
+      <li>
+        <p id="N1A9E4">defining how requests are routed to controllers;</p>
+      </li>
+
+      <li>
+        <p id="N1A9E8">selecting a data representation;</p>
+      </li>
+
+      <li>
+        <p id="N1A9EC">testing routes;</p>
+      </li>
+
+      <li>
+        <p id="N1A9F0">the controller environment;</p>
+      </li>
+
+      <li>
+        <p id="N1A9F4">rendering and redirecting; and</p>
+      </li>
+
+      <li>
+        <p id="N1A9F8">sessions, flash, and filters.</p>
+      </li>
+    </ul>
+  </div>
+
+  <p id="N1A9FB">Action Pack lies at the heart of Rails applications. It consists of three Ruby modules: <code class="cf class">ActionDispatch</code>, <code class="cf class">ActionController</code>, and <code class="cf class">ActionView</code>. Action Dispatch routes requests to controllers. Action Controller converts requests into responses. Action View is used by Action Controller to format those responses.</p>
+
+  <p id="N1AA0E">As a concrete example, in the Depot application, we routed the root of the site (/) to the <code class="cf methodname">index</code> method of the <code class="cf class">StoreController</code>. At the completion of that method, the template in <code class="cf filename">app/views/store/index.html.erb</code> was rendered. Each of these activities was orchestrated by modules in the Action Pack component.</p>
+
+  <p id="N1AA1A">Working together, these three submodules provide support for processing incoming requests and generating outgoing responses. In this chapter, we’ll look at both Action Dispatch and Action Controller. In the next chapter, we will cover Action View.</p>
+
+  <p id="N1AA1D">When we looked at Active Record, we saw it could be used as a freestanding library; you can use Active Record as part of a nonweb Ruby application. Action Pack is different. Although it is possible to use it directly as a framework, you probably won’t. Instead, you’ll take advantage of the tight integration offered by Rails. Components such as Action Controller, Action View, and Active Record handle the processing of requests, and the Rails environment knits them together into a coherent (and easy-to-use) whole. For that reason, we’ll describe Action Controller in the context of Rails. Let’s start by looking at how Rails applications handle requests. We’ll then dive down into the details of routing and URL handling. We’ll continue by looking at how you write code in a controller. Finally, we will cover sessions, flash, and filters.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

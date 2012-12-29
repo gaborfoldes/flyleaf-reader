@@ -1,0 +1,1167 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">11.1 Iteration F1: Moving the Cart</h2>
+
+  <p id="N1450B">Currently, our cart is rendered by the <code class="cf ic">show</code> action in the <code class="cf class">CartController</code> and the corresponding <code class="cf fileextension">html.erb</code> template. What we’d like to do is to move that rendering into the sidebar. This means it will no longer be in its own page. Instead, we’ll render it in the layout that displays the overall catalog. And that’s easy using <span class="emph">partial templates</span>.</p>
+
+  <h3 id="heading_id_3">Partial Templates</h3>
+
+  <p id="N14525">Programming languages let you define <span class="emph">methods</span>. A method is a chunk of code with a name: invoke the method by name, and the corresponding chunk of code gets run. And, of course, you can pass parameters to a method, which lets you write one piece of code that can be used in many different circumstances.</p>
+
+  <p id="N1453C">You can think of Rails partial templates (<span class="emph">partials</span> for short) as a kind of method for views. A partial is simply a chunk of a view in its own separate file. You can invoke (render) a partial from another template or from a controller, and the partial will render itself and return the results of that rendering. And, just as with methods, you can pass parameters to a partial, so the same partial can render different results.</p>
+
+  <p id="N14542">We’ll use partials twice in this iteration. First, let’s look at the cart display itself:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_i/app/views/carts/show.html.erb">rails31/depot_i/app/views/carts/show.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"cart_title"</em> <strong class="prompt">&gt;</strong>Your Cart<strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @cart.line_items.each <strong class="prompt">do</strong> |item| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= item.quantity %&gt;&amp;times;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= item.product.title %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"item_price"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(item.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr</strong> class=<em class="string">"total_line"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> colspan=<em class="string">"2"</em> <strong class="prompt">&gt;</strong>Total<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"total_cell"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(@cart.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to <em class="string">'Empty cart'</em>, @cart, method: :delete,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">confirm: <em class="string">'Are you sure?'</em> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N145EA">It creates a list of table rows, one for each item in the cart. Whenever you find yourself iterating like this, you might want to stop and ask yourself, is this too much logic in a template? It turns out we can abstract away the loop using partials (and, as we’ll see, this also sets the stage for some Ajax magic later). To do this, we’ll make use of the fact that you can pass a collection to the method that renders partial templates, and that method will automatically invoke the partial once for each item in the collection. Let’s rewrite our cart view to use this feature:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_j/app/views/carts/show.html.erb">rails31/depot_j/app/views/carts/show.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"cart_title"</em> <strong class="prompt">&gt;</strong>Your Cart<strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(@cart.line_items) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr</strong> class=<em class="string">"total_line"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> colspan=<em class="string">"2"</em> <strong class="prompt">&gt;</strong>Total<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"total_cell"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(@cart.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to <em class="string">'Empty cart'</em>, @cart, method: :delete,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">confirm: <em class="string">'Are you sure?'</em> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N14662">That’s a lot simpler. The <code class="cf methodname">render</code> method will iterate over any collection that is passed to it. The partial template itself is simply another template file (by default in the same directory as the object being rendered and with the name of the table as the name). However, to keep the names of partials distinct from regular templates, Rails automatically prepends an underscore to the partial name when looking for the file. That means we need to name our partial <code class="cf filename">_line_item.html.erb</code> and place it in the <code class="cf dir">app/views/line_items</code> directory.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_j/app/views/line_items/_line_item.html.erb">rails31/depot_j/app/views/line_items/_line_item.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= line_item.quantity %&gt;&amp;times;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= line_item.product.title %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"item_price"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(line_item.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N146D5">There’s something subtle going on here. Inside the partial template, we refer to the current object using the variable name that matches the name of the template. In this case, the partial is named <code class="cf ic">line_item</code>, so inside the partial we expect to have a variable called <code class="cf variable">line_item</code>.</p>
+
+  <p id="N146DE">So, now we’ve tidied up the cart display, but that hasn’t moved it into the sidebar. To do that, let’s revisit our layout. If we had a partial template that could display the cart, we could simply embed a call like this within the sidebar:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">render(<em class="string">"cart"</em>)</code></td>
+    </tr>
+  </table>
+
+  <p id="N146EF">But how would the partial know where to find the cart object? One way would be for it to make an assumption. In the layout, we have access to the <code class="cf variable">@cart</code> instance variable that was set by the controller. It turns out that this is also available inside partials called from the layout. However, this is a bit like calling a method and passing it some value in a global variable. It works, but it’s ugly coding, and it increases coupling (which in turn makes your programs brittle and hard to maintain).</p>
+
+  <p id="N146F5">Now that we have a partial for a line item, let’s do the same for the cart. First, we’ll create the <code class="cf filename">_cart.html.erb</code> template. This is basically our <code class="cf filename">carts/show.html.erb</code> template but using <code class="cf variable">cart</code> instead of <code class="cf variable">@cart</code>, and without the notice. (Note that it’s OK for a partial to invoke other partials.)</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_j/app/views/carts/_cart.html.erb">rails31/depot_j/app/views/carts/_cart.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"cart_title"</em> <strong class="prompt">&gt;</strong>Your Cart<strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(cart.line_items) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr</strong> class=<em class="string">"total_line"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> colspan=<em class="string">"2"</em> <strong class="prompt">&gt;</strong>Total<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"total_cell"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(cart.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to <em class="string">'Empty cart'</em>, cart, method: :delete,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">confirm: <em class="string">'Are you sure?'</em> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1475F">As the Rails mantra goes, Don’t Repeat Yourselves (DRY), and we have just done that. At the moment the two files are in sync, so there may not seem to be much of a problem, but having one set of logic for the Ajax calls and another set of logic to handle the case where JavaScript is disabled invites problems. Let’s avoid all of that and replace the original template with code that causes the partial to be rendered:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_k/app/views/carts/show.html.erb">rails31/depot_k/app/views/carts/show.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render @cart %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N14788">Now we will change the application layout to include this new partial in the sidebar:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_k/app/views/layouts/application.html.erb">rails31/depot_k/app/views/layouts/application.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;!DOCTYPE html&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;html&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;title&gt;</strong>Pragprog Books Online Store<strong class="prompt">&lt;/title&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= stylesheet_link_tag <em class="string">"application"</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= javascript_include_tag <em class="string">"application"</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= csrf_meta_tag %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;body</strong> class=<em class="string">"</em>&lt;%= controller.controller_name %&gt;<em class="string">"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"banner"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= image_tag(<em class="string">"logo.png"</em>) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= @page_title || <em class="string">"Pragmatic Bookshelf"</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"columns"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"side"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"cart"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render @cart %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www...."</em> <strong class="prompt">&gt;</strong>Home<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www..../faq"</em> <strong class="prompt">&gt;</strong>Questions<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www..../news"</em> <strong class="prompt">&gt;</strong>News<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www..../contact"</em> <strong class="prompt">&gt;</strong>Contact<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"main"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= <strong class="prompt">yield</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/html&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1487E">Next we have to make a small change to the store controller. We’re invoking the layout while looking at the store’s <code class="cf ic">index</code> action, and that action doesn’t currently set <code class="cf variable">@cart</code>. That’s easy enough to remedy:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_k/app/controllers/store_controller.rb">rails31/depot_k/app/controllers/store_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> index</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@products = Product.order(:title)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1489F">Finally, we modify the style instructions&mdash;which currently only apply to the output produced by the <code class="cf class">CartController</code>&mdash;to also apply to the table when it appears in the sidebar. Again, SCSS enables us to make this change in one place, as it will take care of all of the nested definitions.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_k/app/assets/stylesheets/carts.css.scss">rails31/depot_k/app/assets/stylesheets/carts.css.scss</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">Place</strong> <strong class="prompt">all</strong> <strong class="prompt">the</strong> <strong class="prompt">styles</strong> <strong class="prompt">related</strong> <strong class="prompt">to</strong> <strong class="prompt">the</strong> <strong class="prompt">Carts</strong> <strong class="prompt">controller</strong> <strong class="prompt">here</strong>.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">They</strong> <strong class="prompt">will</strong> <strong class="prompt">automatically</strong> <strong class="prompt">be</strong> <strong class="prompt">included</strong> <strong class="prompt">in</strong> <strong class="prompt">application</strong>.css.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">You</strong> <strong class="prompt">can</strong> <strong class="prompt">use</strong> <strong class="prompt">Sass</strong> (<strong class="prompt">SCSS</strong>) <strong class="prompt">here</strong>: <strong class="prompt">http</strong>://<strong class="prompt">sass-lang</strong>.com/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.carts, #side #cart {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.cart_title {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font: 120% bold;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.item_price, .total_line {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">text-align: right;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.total_line .total_cell {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-weight: bold;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">border-top: 1px solid #595;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+  </table>
+
+  <p id="N1492A">While the data for the cart is common no matter where it is placed in the output, there is no requirement that the presentation needs to be identical independent of where this content is placed. In fact, black lettering on a green background is rather hard to read, so let’s provide additional rules for this table when it appears in the sidebar:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_k/app/assets/stylesheets/application.css.scss">rails31/depot_k/app/assets/stylesheets/application.css.scss</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">#side {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">float: left;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 1em 2em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">width: 13em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background: #141;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">form, div {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">display: inline;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">input {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-size: small;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">#cart {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-size: smaller;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">color: white;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">table {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">border-top: 1px dotted #595;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">border-bottom: 1px dotted #595;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin-bottom: 10px;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ul {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 0;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">li {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">list-style: none;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">a {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">color: #bfb;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-size: small;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+  </table>
+
+  <p id="N149A1">If you display the catalog after adding something to your cart, you should see something like Figure 19, <a href="#fig.depot.k.less.ugly">​<em>The cart is in the sidebar.</em>​</a>. Let’s just wait for the Webby Award nomination.</p>
+
+  <table class="figure" id="fig.depot.k.less.ugly">
+    <tr>
+      <td><img alt="images/depot_k_less_ugly.png" src="../Images/depot_k_less_ugly.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 19. The cart is in the sidebar.</b>
+      </td>
+    </tr>
+  </table>
+
+  <h3 id="sec.inlinecart">Changing the Flow</h3>
+
+  <p id="N149C0">Now that we’re displaying the cart in the sidebar, we can change the way that the <code class="cf keystroke">Add to Cart</code> button works. Rather than displaying a separate cart page, all it has to do is refresh the main index page.</p>
+
+  <p id="N149C6">The change is pretty simple: at the end of the <code class="cf ic">create</code> action, we simply redirect the browser back to the index:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_k/app/controllers/line_items_controller.rb">rails31/depot_k/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.find(params[:product_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = @cart.add_product(product.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> @line_item.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to store_url }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :created, location: @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { render action: <em class="string">"new"</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item.errors,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :unprocessable_entity }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N14A17">So, now we have a store with a cart in the sidebar. When we click to add an item to the cart, the page is redisplayed with an updated cart. However, if our catalog is large, that redisplay might take a while. It uses bandwidth, and it uses server resources. Fortunately, we can use Ajax to make this better.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

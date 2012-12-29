@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.rhtml">25.2 Generating HTML with ERb</h2>
+
+  <p id="N1F2A8">At its simplest, an ERb template is just a regular HTML file. If a template contains no dynamic content, it is simply sent as is to the user’s browser. The following is a perfectly valid <code class="cf ic">html.erb</code> template:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Hello, Dave!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">How are you, today?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1F2D2">However, applications that just render static templates tend to be a bit boring to use. We can spice them up using dynamic content:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Hello, Dave!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">It's &lt;%= Time.now %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1F2EF">If you’re a JSP programmer, you’ll recognize this as an inline expression. Erb evaluates any code between <code class="cf ic">&lt;%=</code> and <code class="cf ic">%&gt;</code>, converts the results into a string using <code class="cf methodname">to_s</code>, and finally substitutes that string into the resulting page. The expression inside the tags can be arbitrary code:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Hello, Dave!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">It's &lt;%= require <em class="string">'date'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">DAY_NAMES = <em class="string">%w{ Sunday Monday Tuesday Wednesday</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">Thursday Friday Saturday }</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">today = Date.today</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">DAY_NAMES[today.wday]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1F32C">Putting lots of business logic into a template is generally considered to be a Very Bad Thing, and you’ll risk incurring the wrath of the coding police should you get caught. We discussed a much better way of handling this with helpers <a href="../Text/f_0117.html#sec.helpers">​here​</a>.</p>
+
+  <p id="N1F332">Sometimes you need code in a template that doesn’t directly generate any output. If you leave the equals sign off the opening tag, the contents are executed, but nothing is inserted into the template. We could have written the previous example as follows:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% require <em class="string">'date'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">DAY_NAMES = <em class="string">%w{ Sunday Monday Tuesday Wednesday</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">Thursday Friday Saturday }</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">today = Date.today</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Hello, Dave!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">It's &lt;%= DAY_NAMES[today.wday] %&gt;.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Tomorrow is &lt;%= DAY_NAMES[(today + 1).wday] %&gt;.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1F366">In the JSP world, this is called a <span class="emph">scriptlet</span>. Again, many folks will chastise you if they discover you adding code to templates. Ignore them&mdash;they’re falling prey to dogma. There’s nothing wrong with putting code in a template. Just don’t put too much code in there (and especially don’t put business logic in a template). As we have already seen, you can use helper methods to successfully resist this temptation.</p>
+
+  <p id="N1F36F">You can think of the HTML text between code fragments as if each line were being written by a Ruby program. The <code class="cf ic">&lt;%…%&gt;</code> fragments are added to that same program. The HTML is interwoven with the explicit code that you write. As a result, code between <code class="cf ic">&lt;%</code> and <code class="cf ic">%&gt;</code> can affect the output of HTML in the rest of the template.</p>
+
+  <p id="N1F37B">For example, consider this template:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% 3.times <strong class="prompt">do</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Ho!<strong class="prompt">&lt;br</strong> <strong class="prompt">/&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="para.html.escaping">For safety reasons,<a href="../Text/f_0141.html#FOOTNOTE-55" id="FNPTR-55">[55]</a> when you insert a value using <code class="cf ic">&lt;%=</code>…<code class="cf ic">%&gt;</code>, the results will be HTML escaped before being placed directly into the output stream. This is generally what you want.</p>
+
+  <p id="N1F3AA">If, however, the text you’re substituting contains HTML that you <span class="emph">want</span> to be interpreted, this will cause the HTML tags to be escaped&mdash;if you create a string containing <code class="cf ic">&lt;em&gt;hello&lt;/em&gt;</code> and then substitute it into a template, the user will see <code class="cf ic">&lt;em&gt;hello&lt;/em&gt;</code> rather than <code class="cf ic"><span class="emph">hello</span></code> . Rails provides two helpers to address this case.</p>
+
+  <p id="N1F3BA">The <code class="cf methodname">raw</code> method will cause the string to pass right on through to the output without escaping. This provides the most amount of flexibility, as well as the least amount of security.</p>
+
+  <p id="N1F3CB">The <code class="cf methodname">sanitize</code> method offers some protection. It takes a string containing HTML and cleans up dangerous elements: <code class="cf xmltag">&lt;form&gt;</code> and <code class="cf xmltag">&lt;script&gt;</code> tags are escaped, and <code class="cf xmlattr">on</code> attributes and links starting <code class="cf ic">javascript:</code> are removed.</p>
+
+  <p id="N1F3E8">The product descriptions in our Depot application were rendered as HTML (that is, they were marked as safe using the <code class="cf methodname">raw</code> method). This allowed us to embed formatting information in them. If we allowed people outside our organization to enter these descriptions, it would be prudent to use the <code class="cf methodname">sanitize</code> method to reduce the risk of our site being attacked successfully.</p>
+
+  <p id="N1F3F1">These two templating engines are just two of the many gems that Rails depends on. At this point, it makes sense to talk about how such dependencies are managed.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

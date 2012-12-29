@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">2.1 Creating a New Application</h2>
+
+  <p id="N10845">When you install the Rails framework, you also get a new command-line tool, <code class="cf commandname">rails</code>, that is used to construct each new Rails application you write.</p>
+
+  <p id="N1084B">Why do we need a tool to do this? Why can’t we just hack away in our favorite editor and create the source for our application from scratch? Well, we could just hack. After all, a Rails application is just Ruby source code. But Rails also does a lot of magic behind the curtain to get our applications to work with a minimum of explicit configuration. To get this magic to work, Rails needs to find all the various components of your application. As we’ll see later (in Section 18.1, <a href="../Text/f_0100.html#sec.directory.structure">​<em>Where Things Go</em>​</a>), this means we need to create a specific directory structure, slotting the code we write into the appropriate places. The <code class="cf commandname">rails</code> command simply creates this directory structure for us and populates it with some standard Rails code.</p>
+
+  <p id="create.new.rails.app">To create your first Rails application, pop open a shell window, and navigate to a place in your filesystem where you want to create your application’s directory structure. In our example, we’ll be creating our projects in a directory called <code class="cf dir">work</code>. In that directory, use the <code class="cf commandname">rails</code> command to create an application called <code class="cf commandname">demo</code>. Be slightly careful here&mdash;if you have an existing directory called <code class="cf dir">demo</code>, you will be asked whether you want to overwrite any existing files. (Note: if you want to specify which Rails version to use, as described in Section 1.4, <a href="../Text/f_0017.html#sec.rails.versions">​<em>Choosing a Rails Version</em>​</a>, now would be the time to do so.)</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rubys&gt; <strong class="prompt">cd work</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">work&gt; <strong class="prompt">rails new demo</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create README</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create Rakefile</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create config.ru</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">: : :</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create vendor/plugins</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create vendor/plugins/.gitkeep</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">run bundle install</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Fetching source index for http://rubygems.org/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">: : :</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Your bundle is complete!</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Use `bundle show [gemname]` to see where a bundled gem is installed.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">work&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N108B3">The command has created a directory named <code class="cf dir">demo</code>. Pop down into that directory, and list its contents (using <code class="cf commandname">ls</code> on a Unix box or <code class="cf commandname">dir</code> under Windows). You should see a bunch of files and subdirectories:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">work&gt; <strong class="prompt">cd demo</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">demo&gt; <strong class="prompt">ls -p</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">app/ config.ru doc/ Gemfile.lock log/ Rakefile script/ tmp/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">config/ db/ Gemfile lib/ public/ README test/ vendor/</code></td>
+    </tr>
+  </table>
+
+  <p id="N108D9">All these directories (and the files they contain) can be intimidating to start with, but we can ignore most of them for now. In this chapter, we’ll use only one of them directly: the <code class="cf dir">app</code> directory, where we’ll write our application.</p>
+
+  <p id="N108E8">Included in these files is everything you need to start a stand-alone web server that can run our newly created Rails application. So, without further ado, let’s start our demo application:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">demo&gt; <strong class="prompt">rails server</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; Booting WEBrick</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; Rails 3.1.0 application starting on http://0.0.0.0:3000</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; Call with -d to detach</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; Ctrl-C to shutdown server</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">[2011-07-23 10:38:18] INFO WEBrick 1.3.1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">[2011-07-23 10:38:18] INFO ruby 1.9.2 (2011-05-12) [x86_64-linux]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">[2011-07-23 10:38:18] INFO WEBrick::HTTPServer#start: pid=6044 port=3000</code></td>
+    </tr>
+  </table>
+
+  <p id="N1090E">Which web server is run depends on what servers you have installed. WEBrick is a pure-Ruby web server that is distributed with Ruby itself and therefore is guaranteed to be available. However, if another web server is installed on your system (and Rails can find it), the <code class="cf commandname">rails server</code> command may use it in preference to WEBrick. You can force Rails to use WEBrick by providing an option to the <code class="cf commandname">rails</code> command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">demo&gt; <strong class="prompt">rails server webrick</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10939">As the last line of the startup tracing indicates, we just started a web server on port 3000. The <code class="cf ic">0.0.0.0</code> part of the address means that WEBrick will accept connections on all interfaces. On Dave’s OS&nbsp;X system, that means both local interfaces (127.0.0.1 and ::1) and his LAN connection. We can access the application by pointing a browser at the URL <a href="http://localhost:3000">http://localhost:3000</a>. The result is shown in <a href="#fig.demo.startscreen"></a>.</p>
+
+  <table class="figure" id="fig.demo.startscreen">
+    <tr>
+      <td><img alt="images/demo_startscreen.png" src="../Images/demo_startscreen.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 1. Newly created Rails application</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N1094E">If you look at the window where you started the server, you’ll see tracing showing you started the application. We’re going to leave the server running in this console window. Later, as we write application code and run it via our browser, we’ll be able to use this console window to trace the incoming requests. When the time comes to shut down your application, you can press Ctrl-C in this window to stop WEBrick. (Don’t do that yet&mdash;we’ll be using this particular application in a minute.)</p>
+
+  <p id="N10960">At this point, we have a new application running, but it has none of our code in it. Let’s rectify this situation.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

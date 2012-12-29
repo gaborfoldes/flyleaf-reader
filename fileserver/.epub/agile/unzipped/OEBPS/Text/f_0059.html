@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">9.3 Iteration D3: Adding a Button</h2>
+
+  <p id="N1391D">Now that that’s done, it is time to add an <code class="cf keystroke">Add to Cart</code> button for each product.</p>
+
+  <p id="N1392A">There is no need to create a new controller or even a new action. Taking a look at the actions provided by the scaffold generator, you find <code class="cf methodname">index</code>, <code class="cf methodname">show</code>, <code class="cf methodname">new</code>, <code class="cf methodname">edit</code>, <code class="cf methodname">create</code>, <code class="cf methodname">update</code>, and <code class="cf methodname">destroy</code>. The one that matches this operation is <code class="cf methodname">create</code>. (<code class="cf methodname">new</code> may sound similar, but its use is to get a form that is used to solicit input for a subsequent <code class="cf methodname">create</code> action.)</p>
+
+  <p id="N13956">Once this decision is made, the rest follows. What are we creating? Certainly not a <code class="cf class">Cart</code> or even a <code class="cf class">Product</code>. What we are creating is a <code class="cf class">LineItem</code>. Looking at the comment associated with the <code class="cf methodname">create</code> method in <code class="cf filename">app/controllers/line_items_con</code>-<code class="cf filename">troller.rb</code>, you see that this choice also determines the URL to use (<code class="cf ic">/line_items</code>) and the HTTP method (POST).</p>
+
+  <p id="N1397C">This choice even suggests the proper UI control to use. When we added links before, we used <code class="cf methodname">link_to</code>, but links default to using HTTP GET. We want to use POST, so we will add a button this time; this means we will be using the <code class="cf methodname">button_to</code> method.</p>
+
+  <p id="N13985">We could connect the button to the line item by specifying the URL, but again we can let Rails take care of this for us by simply appending <code class="cf ic">_path</code> to the controller’s name. In this case, we will use <code class="cf ic">line_items_path</code>.</p>
+
+  <p id="N13994">However, there’s a problem with this: how will the <code class="cf ic">line_items_path</code> method know <span class="emph">which</span> product to add to our cart? We’ll need to pass it the id of the product corresponding to the button. That’s easy enough&mdash;all we need to do is add the <code class="cf ic">:product_id</code> option to the <code class="cf methodname">line_items_path</code> call. We can even pass in the <code class="cf ic">product</code> instance itself&mdash;Rails knows to extract the id from the record in circumstances such as these.</p>
+
+  <p id="N139A6">In all, the <span class="emph">one</span> line that we need to add to our <code class="cf filename">index.html.erb</code> looks like this:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_f/app/views/store/index.html.erb">rails31/depot_f/app/views/store/index.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Your Pragmatic Catalog<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @products.each <strong class="prompt">do</strong> |product| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"entry"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= image_tag(product.image_url) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h3&gt;</strong>&lt;%= product.title %&gt;<strong class="prompt">&lt;/h3&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= sanitize(product.description) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"price_line"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;span</strong> class=<em class="string">"price"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(product.price) %&gt;<strong class="prompt">&lt;/span&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to <em class="string">'Add to Cart'</em>, line_items_path(product_id: product) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N13A26">There’s one more formatting issue. <code class="cf ic">button_to</code> creates an HTML <code class="cf xmltag">&lt;form&gt;</code>, and that form contains an HTML <code class="cf xmltag">&lt;div&gt;</code>. Both of these are normally block elements, which will appear on the next line. We’d like to place them next to the price, so we need to add a little CSS magic to make them inline:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_f/app/assets/stylesheets/store.css.scss">rails31/depot_f/app/assets/stylesheets/store.css.scss</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">p</strong>, <strong class="prompt">div</strong>.price_line {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin-left: 100px;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin-top: 0.5em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin-bottom: 0.8em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">form, div {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">display: inline;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+  </table>
+
+  <p id="N13A5B">The ideal place to put these lines is within the rule for <code class="cf ic">.entry</code> which itself is nested within the rule for <code class="cf ic">.store</code>.</p>
+
+  <p id="N13A64">Now our index page looks like Figure 13, <a href="#fig.depot.f.formatted.index">​<em>Now there’s an <span class="emph">Add to Cart</span> button.</em>​</a>. But before we push the button, we need to modify the <code class="cf methodname">create</code> method in the line items controller to expect a product id as a form parameter. Here’s where we start to see how important the <code class="cf ic">id</code> field is in our models. Rails identifies model objects (and the corresponding database rows) by their <code class="cf ic">id</code> fields. If we pass an id to <code class="cf methodname">create</code>, we’re uniquely identifying the product to add.</p>
+
+  <table class="figure" id="fig.depot.f.formatted.index">
+    <tr>
+      <td><img alt="images/depot_f_formatted_index.png" src="../Images/depot_f_formatted_index.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 13. Now there’s an <span class="emph">Add to Cart</span> button.</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N13A89">Why the <code class="cf methodname">create</code> method? The default HTTP method for a link is a <code class="cf ic">get</code>, the default HTTP method for a button is a <code class="cf ic">post</code>, and Rails uses these conventions to determine which method to call. See the comments inside the <code class="cf filename">app/controllers/</code> <code class="cf filename">line_items_controller.rb</code> file to see other conventions. We’ll be making extensive use of these conventions inside the Depot application.</p>
+
+  <p id="p.modify.lineitem.controller">Now let’s modify the <code class="cf class">LineItemsController</code> to find the shopping cart for the current session (creating one if there isn’t one there already), add the selected product to that cart, and display the cart contents. All we need to modify is a few lines of code in the <code class="cf methodname">create</code> method in <code class="cf filename">app/controllers/line_items_controller.rb</code>:<a href="../Text/f_0060.html#FOOTNOTE-25" id="FNPTR-25">[25]</a></p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_f/app/controllers/line_items_controller.rb">rails31/depot_f/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.find(params[:product_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = @cart.line_items.build(product: product)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> @line_item.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to @line_item.cart,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">notice: <em class="string">'Line item was successfully created.'</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :created, location: @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { render action: <em class="string">"new"</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item.errors,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :unprocessable_entity }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13AFF">We use the <code class="cf methodname">current_cart</code> method we implemented <a href="../Text/f_0057.html#page.find.cart">​here​</a> to find (or create) a cart in the session. Next, we use the <code class="cf ic">params</code> object to get the <code class="cf ic">:product_id</code> parameter from the request. The <code class="cf ic">params</code> object is important inside Rails applications. It holds all of the parameters passed in a browser request. We store the result in a local variable because there is no need to make this available to the view.</p>
+
+  <p id="N13B2D">We then pass that product we found into <code class="cf ic">@cart.line_items.build</code>. This causes a new line item relationship to be built between the <code class="cf ic">@cart</code> object and the <code class="cf ic">product</code>. You can build the relationship from either end, and Rails will take care of establishing the connections on both sides.</p>
+
+  <p id="N13B39">We save the resulting line item into an instance variable named <code class="cf ic">@line_item</code>.</p>
+
+  <p id="N13B3F">The remainder of this method takes care of XML requests, which we will cover <a href="../Text/f_0136.html#sec.builder">​here​</a>, and handling errors, which we will cover in more detail <a href="../Text/f_0063.html#sec.handling.errors">​here​</a>. But for now, we only want to modify one more thing: once the line item is created, we want to redirect you to the cart instead of back to the line item itself. Since the line item object knows how to find the cart object, all we need to do is add <code class="cf ic">.cart</code> to the method call.</p>
+
+  <p id="N13B4B">As we changed the function of our controller, we know that we will need to update the corresponding functional test. We need to pass a product id on the call to <code class="cf ic">create</code> and change what we expect for the target of the redirect. We do this by updating <code class="cf filename">test/functional/line_items_controller_test.rb</code>.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_g/test/functional/line_items_controller_test.rb">rails31/depot_g/test/functional/line_items_controller_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"should create line_item"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_difference(<em class="string">'LineItem.count'</em>) <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">post :create, product_id: products(:ruby).id</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_redirected_to cart_path(assigns(:line_item).cart)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13B7F">While we haven’t talked about the <code class="cf ic">assigns</code> method to date, that’s because it has been in generated scaffolding. This method gives us access to the instance variables that have been (or can be) assigned by controller actions for use in views.</p>
+
+  <p id="N13B8C">We now rerun the functional tests:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake test:functionals</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13B9D">Confident that the code works as intended, we try the <code class="cf keystroke">Add to Cart</code> buttons in our browser.</p>
+
+  <p id="N13BA3">And here is what we see:</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/depot_f_add_no_view.png" src="../Images/depot_f_add_no_view.png" /></div>
+
+  <p id="N13BA9">This is a bit underwhelming. Although we have scaffolding for the cart, when we created it, we didn’t provide any attributes, so the view doesn’t have anything to show. For now, let’s write a trivial template (we’ll tart it up in a minute):</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_f/app/views/carts/show.html.erb">rails31/depot_f/app/views/carts/show.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h2&gt;</strong>Your Pragmatic Cart<strong class="prompt">&lt;/h2&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @cart.line_items.each <strong class="prompt">do</strong> |item| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong>&lt;%= item.product.title %&gt;<strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/ul&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13BF2">So, with everything plumbed together, let’s hit Refresh in our browser and see our simple view displayed:</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/depot_f_dup_product.png" src="../Images/depot_f_dup_product.png" /></div>
+
+  <p id="N13BF8">Go back to <code class="cf ic">http://localhost:3000/</code>, the main catalog page, and add a different product to the cart. You’ll see the original two entries plus our new item in your cart. It looks like we have sessions working. It’s time to show our customer, so we call her over and proudly display our handsome new cart. Somewhat to our dismay, she makes that <span class="emph">tsk-tsk</span> sound that customers make just before telling you that you clearly don’t get something.</p>
+
+  <p id="N13C08">Real shopping carts, she explains, don’t show separate lines for two of the same product. Instead, they show the product line once with a quantity of 2. Looks like we’re lined up for our next iteration.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

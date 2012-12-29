@@ -1,0 +1,882 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.active.resource">24.3 A Remote Application Using Active Resource</h2>
+
+  <p id="N1ED9C">When writing an application, you may very well find yourself in a situation where not all of the data resides neatly tucked away and categorized in your database. It may not be in a database. It might not even be on your machine at all. That’s what web services are about. And Active Resource is Rails’ take on web services. Note that these are web services with a lowercase <span class="emph">w</span> and a lowercase <span class="emph">s</span>, not Web Services as in SOAP and WSDL and UDDI.</p>
+
+  <h3 id="heading_id_2">Accessing and Updating Simple Attributes</h3>
+
+  <p id="N1EDB9">We will demonstrate Active Resource with live examples, picking up where we left off with the Depot application. The key difference is that this time we will be remotely accessing the Depot application via a client application. And for a client, we will use <code class="cf commandname">rails console</code>. First, check to make sure the Depot server is running. Then let’s create the client:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">work&gt; <strong class="prompt">rails new depot_client</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">work&gt; <strong class="prompt">cd depot_client</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1EDD3">Now, let’s write a stub for the <code class="cf class">Product</code> model:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_client/app/models/product.rb">rails31/depot_client/app/models/product.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Product &lt; ActiveResource::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">self.site = <em class="string">'http://dave:secret@localhost:3000/'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1EDF0">There really isn’t much to it. The <code class="cf class">Product</code> class inherits from the <code class="cf class">ActiveResource::Base</code> class. Inside, there is a single statement that identifies the username, password, host name, and port number. In a real-life application, the user and password would be obtained separately and not hard-coded into the model, but at this point, we are just exploring the concepts. If you completed the HTTP basic exercise <a href="../Text/f_0085.html#p.http.basic">​here​</a>, you can put that stub to use:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot_client&gt; <strong class="prompt">rails console</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Loading development environment (Rails 3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">Product.find(3).title</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; "Programming Ruby 1.9"</code></td>
+    </tr>
+  </table>
+
+  <p id="N1EE24">Success! Let’s be a little bolder. How about we have a $5 off sale on this book?</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot_client&gt; <strong class="prompt">rails console</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Loading development environment (Rails 3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">p = Product.find(3)</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; #&lt;Product:0x282e7ac @prefix_options={}, ... &gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">puts p.price</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">49.5</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; nil</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">p.price = BigDecimal.new(p.price)-5</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; #&lt;BigDecimal:7f88f8ebfef0,'0.3795E2',18(36)&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">p.save</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; true</code></td>
+    </tr>
+  </table>
+
+  <p id="N1EE5F">While this is clearly a lower-level interface in that you have to convert the string representation of the price to a format that can be manipulated, you can see that it is functional. We’ll see shortly how to make the data types pass on through. Meanwhile, we can easily verify whether this worked by simply visiting the store in our browser:</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/active_resource_price.png" src="../Images/active_resource_price.png" /></div>
+
+  <p id="N1EE65">We don’t know about you, but to us Active Resource seems to be so sufficiently advanced technology as to be indistinguishable from magic.</p>
+
+  <h3 id="heading_id_3">Relationships and Collections</h3>
+
+  <p id="N1EE6C">Flush with success with <code class="cf ic">Products</code>, let’s move on to <code class="cf ic">Orders</code>. We start by writing a stub:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_client/app/models/order.rb">rails31/depot_client/app/models/order.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Order &lt; ActiveResource::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">self.site = <em class="string">'http://dave:secret@localhost:3000/'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1EE8C">Looks good. Let’s try it:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot_client&gt; <strong class="prompt">rails console</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">Order.find(1).name</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; "Dave Thomas"</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">Order.find(1).line_items</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">NoMethodError: undefined method `line_items' for #&lt;Order:0x2818970&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1EEAF">OK, at this point, we need to understand how things work under the covers. Back to theory, but not to worry, it’s not much.</p>
+
+  <p id="N1EEB2">The way the magic works is that it exploits all the REST and JSON interfaces that the scaffolding provides. To get a list of products, it goes to <a href="http://localhost:3000/products.json">http://localhost:3000/products.json</a>. To fetch product #2, it will GET <a href="http://localhost:3000/products/2.json">http://localhost:3000/products/2.json</a>. To save changes to product #2, it will PUT the updated product to <a href="http://localhost:3000/products/2.json">http://localhost:3000/products/2.json</a>.</p>
+
+  <p id="N1EEC5">So, that’s what the magic is&mdash;producing URLs, much like what was discussed in Chapter 20, <a href="../Text/f_0108.html#chp.actioncontroller">​<em>Action Dispatch and Action Controller</em>​</a>. And producing (and consuming) JSON, as we discussed in <a href="../Text/f_0109.html#sec.route.format">​<em>Selecting a Data Representation</em>​</a>. Let’s see that in action. First we make <code class="cf ic">line_items</code> a nested resource under <code class="cf ic">orders</code>. We do that by editing the <code class="cf filename">config.routes</code> file in the server application:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :orders <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :line_items</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1EEEB">Now change the line items controller to look for the <code class="cf ic">:order_id</code> in the params and treat it as part of the line item. The problem is that we changed what this method was expecting <a href="../Text/f_0059.html#p.modify.lineitem.controller">​here​</a>. So, we simply modify the code to handle both types of input:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/app/controllers/line_items_controller.rb">rails31/depot_u/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> params[:line_item]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ActiveResource</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">params[:line_item][:order_id] = params[:order_id]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = LineItem.new(params[:line_item])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># HTML forms</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.find(params[:product_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = @cart.add_product(product.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> @line_item.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to store_url }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.js { @current_item = @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :created, location: @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { render action: <em class="string">"new"</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item.errors,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :unprocessable_entity }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1EF62">Let’s fetch the data, just to see what it looks like:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">[{"cart_id":null,"created_at":"2011-06-08T12:55:47Z","id":10,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">"order_id":1,"price":"49.5","product_id":3,"quantity":1,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">"updated_at":"2011-06-08T12:56:41Z"},</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">{"cart_id":null,"created_at":"2011-06-08T13:00:34Z","id":11,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">"order_id":2,"price":"42.95","product_id":2,"quantity":2,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">"updated_at":"2011-06-08T13:00:38Z"}]</code></td>
+    </tr>
+  </table>
+
+  <p id="N1EF7F">Although the default format is JSON, you can also use XML as an alternative. First we’ll need to enable XML as a format for the actions we wish to use.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/app/controllers/line_items_controller.rb">rails31/depot_u/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> index</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_items = LineItem.all</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html <em class="comment"># index.html.erb</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_items }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.xml { render xml: @line_items }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;line-items type="array"&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;line-item&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;price type="decimal"&gt;49.5&lt;/price&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;created-at type="datetime"&gt;2010-02-11T03:11:44Z&lt;/created-at&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;product-id type="integer"&gt;3&lt;/product-id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;quantity type="integer"&gt;1&lt;/quantity&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;order-id type="integer"&gt;1&lt;/order-id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;updated-at type="datetime"&gt;2010-02-11T03:12:11Z&lt;/updated-at&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;id type="integer"&gt;10&lt;/id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;cart-id type="integer" nil="true"&gt;&lt;/cart-id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/line-item&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;line-item&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;price type="decimal"&gt;42.95&lt;/price&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;created-at type="datetime"&gt;2010-02-11T03:14:18Z&lt;/created-at&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;product-id type="integer"&gt;2&lt;/product-id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;quantity type="integer"&gt;2&lt;/quantity&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;order-id type="integer"&gt;102&lt;/order-id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;updated-at type="datetime"&gt;2010-02-11T03:14:25Z&lt;/updated-at&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;id type="integer"&gt;11&lt;/id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;cart-id type="integer" nil="true"&gt;&lt;/cart-id&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/line-item&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/line-items&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1EFFD">Note that data types are included in this output. This means that instead of seeing dates as ISO 8601/RFC 3339--formatted strings and decimals as simple strings, you will see these attributes as dates and decimals. To take advantage of this, simply set <code class="cf ic">format</code> to <code class="cf ic">:xml</code> in your client classes.</p>
+
+  <p id="N1F006">Now let’s give Dave 20 percent off on his first purchase:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">LineItem.format = :xml</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; :xml</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">li = LineItem.find(:all, :params =&gt; {:order_id=&gt;1}).first</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; #&lt;LineItem:0x2823334 @prefix_options={:order_id=&gt;1}, ... &gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">puts li.price</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">36.0</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; nil</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">li.price*=0.8</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; 28.8</code></td>
+    </tr>
+  </table>
+
+  <p id="N1F038">So, everything here is working as it should. One thing to note is the use of <code class="cf ic">:params</code>. This is processed exactly as you would expect for URL generations. Parameters that match the <code class="cf ic">site</code> template provided for the <code class="cf class">ActiveResource</code> class will be replaced. And parameters that remain will be tacked on as query parameters. The server uses the URL for routing and makes the parameters available as <code class="cf ic">params</code> array.</p>
+
+  <p id="N1F04D">If you now try to save this object, you’ll get a <code class="cf ic">406</code> response code indicating that XML is not acceptable for this action. To enable this, you would either have to set <code class="cf ic">LineItem.format</code> to <code class="cf ic">:json</code> or you could update the <code class="cf methodname">update</code> in the <code class="cf class">LineItemsController</code> to support XML as a response format.</p>
+
+  <p id="N1F05F">Finally, let’s add a line item to an order:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">li2 = LineItem.new(:order_id=&gt;1, :product_id=&gt;2, :quantity=&gt;1,</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">:price=&gt;0.0)</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; #&lt;LineItem:0x7fd986812b00 @prefix_options={},</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@attributes={"price"=&gt;0, "product_id"=&gt;2, "quantity"=&gt;1, "order_id"=&gt;1}&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">li2.save</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; true</code></td>
+    </tr>
+  </table>
+
+  <h3 id="heading_id_4">Pulling It All Together</h3>
+
+  <p id="N1F089">Although <code class="cf class">ActiveResource</code> at first seems like a bit of magic, it simply relies heavily on the concepts described earlier in this book. Here are a few pointers:</p>
+
+  <ul>
+    <li>
+      <p id="N1F092">Authentication uses the underlying authentication mechanism that your website already supports and doesn’t go against the grain of the Web, like some other protocols tend to do. In any case, nobody can do anything with Active Resource that they couldn’t already do.</p>
+
+      <p id="N1F095">Be aware that if you are using basic authentication, you want to use Transport Layer Security (TLS), also known as Secure Sockets Layer (SSL) or HTTPS, to ensure that passwords can’t be sniffed.</p>
+    </li>
+
+    <li>
+      <p id="N1F0A2">Although Active Resource doesn’t make effective use of sessions or cookies, this doesn’t mean your server isn’t continuing to produce them. Either you want to turn off sessions for the interfaces used by Active Resource or you want to make sure you use cookie-based sessions. Otherwise, the server will end up managing a lot of sessions that are never needed. See <a href="../Text/f_0111.html#sec.sessions">​<em>Rails Sessions</em>​</a> for more details.</p>
+    </li>
+
+    <li>
+      <p id="N1F0B0">In <a href="../Text/f_0109.html#sec.collections.and.members">​<em>Adding Additional Actions</em>​</a>, we described collections and members. <code class="cf class">ActiveResource</code> defines four class methods for dealing with collections and four instance methods for dealing with members. The names of these methods are <code class="cf methodname">get</code>, <code class="cf methodname">post</code>, <code class="cf methodname">put</code>, and <code class="cf methodname">delete</code>. The method names determine the underlying HTTP method used.</p>
+
+      <p id="N1F0C5">The first parameter in each of these methods is the name of the collection or member. This information is simply used to construct the URL. You may specify additional <code class="cf ic">:params</code>, which either will match values in the <code class="cf ic">self.site</code> or will be added as query parameters.</p>
+
+      <p id="N1F0CE">You will likely end up using this a lot more than you would expect. Instead of fetching all orders, you might want to provide an interface that fetches only the orders that are recent or are overdue. What you can do in any of these methods is limited only by your imagination.</p>
+    </li>
+
+    <li>
+      <p id="N1F0D2">Active Resource maps HTTP status codes into exceptions:</p>
+
+      <dl>
+        <dt>301, 302</dt>
+
+        <dd>
+          <p id="N1F0DB"><code class="cf class">ActiveResource::Redirection</code></p>
+        </dd>
+
+        <dt>400</dt>
+
+        <dd>
+          <p id="N1F0E4"><code class="cf class">ActiveResource::BadRequest</code></p>
+        </dd>
+
+        <dt>401</dt>
+
+        <dd>
+          <p id="N1F0ED"><code class="cf class">ActiveResource::UnauthorizedAccess</code></p>
+        </dd>
+
+        <dt>403</dt>
+
+        <dd>
+          <p id="N1F0F6"><code class="cf class">ActiveResource::ForbiddenAccess</code></p>
+        </dd>
+
+        <dt>404</dt>
+
+        <dd>
+          <p id="N1F0FF"><code class="cf class">ActiveResource::ResourceNotFound</code></p>
+        </dd>
+
+        <dt>405</dt>
+
+        <dd>
+          <p id="N1F108"><code class="cf class">ActiveResource::MethodNotAllowed</code></p>
+        </dd>
+
+        <dt>409</dt>
+
+        <dd>
+          <p id="N1F111"><code class="cf class">ActiveResource::ResourceConflict</code></p>
+        </dd>
+
+        <dt>422</dt>
+
+        <dd>
+          <p id="N1F11A"><code class="cf class">ActiveResource::ResourceInvalid</code></p>
+        </dd>
+
+        <dt>401..499</dt>
+
+        <dd>
+          <p id="N1F123"><code class="cf class">ActiveResource::ClientError</code></p>
+        </dd>
+      </dl>
+    </li>
+
+    <li>
+      <p id="N1F128">You can provide client-side validations by overriding validation methods in the <code class="cf class">ActiveResource</code> base class. This behaves the same as validation does in <code class="cf class">ActiveRecord</code>. Server-side validation failures result in a response code of 422, and you can access such failures in the same manner. We covered validation in Section 7.1, <a href="../Text/f_0047.html#sec.validation">​<em>Iteration B1: Validating!</em>​</a>.</p>
+    </li>
+
+    <li>
+      <p id="N1F135">In addition to <code class="cf ic">self.site</code>, you can separately set <code class="cf ic">self.user</code> and <code class="cf ic">self.password</code>.</p>
+    </li>
+
+    <li>
+      <p id="N1F142"><code class="cf ic">self.timeout</code> enables you to specify how long a web service request should wait, in seconds, before giving up and raising a <code class="cf class">Timeout::Error</code>.</p>
+    </li>
+  </ul>
+
+  <h3 id="heading_id_5">What We Just Did</h3>
+
+  <p id="N1F16A">We broke free from the constraints of the browser and accessed Active Support, Action View, and Active Record methods directly from stand-alone script. This enables us to produce scripts that can be run from the command line, integrated into existing applications, or run periodically and automatically using facilities such as <code class="cf ic">cron</code>.</p>
+
+  <p id="N1F170">Finally, we used Active Resource to break free of the constraints of needing to run your script on the same machine as the application. Although this requires slightly more setup, it provides a workable, and secure, means to access the data you have inside a Rails application.</p>
+
+  <p id="N1F173">Next up: we will explore other separately installable components that are included in the bundle when you install Rails.</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_6">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0133.html#FNPTR-54" id="FOOTNOTE-54">[54]</a></td>
+
+        <td>
+          <p id="N1EC1E"><a href="http://as.rubyonrails.org/">http://as.rubyonrails.org/</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.rack">25.4 Interfacing with the Web Server with Rack</h2>
+
+  <p id="N1F564">Rails runs your application in the context of a web server. So far, we have used two separate web servers: WEBRick, which comes built into the Ruby language itself, and Phusion Passenger, which integrates with the Apache HTTP web server. There are a number of other choices available, including Mongrel, Lighttpd, and Unicorn.</p>
+
+  <p id="N1F572">Based on this, you might come to the conclusion that Rails has code that allows it to plug into each of these web servers. In earlier releases of Rails, this was true; as of Rails 2.3, this integration was delegated to a gem named Rack.</p>
+
+  <p id="N1F575">So, Rails integrates with Rack, Rack integrates with (for example) Passenger, and Passenger integrates with Apache httpd.</p>
+
+  <p id="N1F578">Although generally this integration is invisible and taken care of for you when you run the command <code class="cf commandname">rails server</code>, a file named <code class="cf filename">config.ru</code> is provided that allows you to directly start your application under Rack:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/config.ru">rails31/depot_u/config.ru</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># This file is used by Rack-based servers to start the application.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require ::File.expand_path(<em class="string">'../config/environment'</em>, __FILE__)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">run Depot::Application</code></td>
+    </tr>
+  </table>
+
+  <p id="N1F59E">You can use this file to start your Rails server with the following command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rackup</code></td>
+    </tr>
+  </table>
+
+  <p id="N1F5B5">Starting your server in this way is completely equivalent to running <code class="cf commandname">rails server</code>. To demonstrate the power of what you can do with Rack alone, let’s start over with a bare-bones Rack application:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/app/store.rb">rails31/depot_u/app/store.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'builder'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'active_record'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ActiveRecord::Base.establish_connection(</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">adapter: <em class="string">'sqlite3'</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">database: <em class="string">'db/development.sqlite3'</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Product &lt; ActiveRecord::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> StoreApp</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> call(env)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x = Builder::XmlMarkup.new :indent=&gt;2</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.declare! :DOCTYPE, :html</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.html <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.head <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.title <em class="string">'Pragmatic Bookshelf'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.body <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.h1 <em class="string">'Pragmatic Bookshelf'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Product.all.each <strong class="prompt">do</strong> |product|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.h2 product.title</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x &lt;&lt; <em class="string">"</em> #{product.description}\n<em class="string">"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">x.p product.price</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">response = Rack::Response.new(x.target!)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">response[<em class="string">'Content-Type'</em>] = <em class="string">'text/html'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">response.finish</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1F65B">In this application, we are taking advantage of a number of things we have learned so far. The first thing we do is to directly require <code class="cf ic">active_record</code> and <code class="cf ic">builder</code>. Then we establish a connection with our database and define a class for our <code class="cf class">Product</code>. We won’t need to do any of this once we integrate this application with our Rails application, but for now we are going totally bare-bones.</p>
+
+  <p id="N1F667">Then comes the application itself. It is a simple class that defines a single method named <code class="cf methodname">call</code>. This method accepts a single parameter named <code class="cf ic">env</code> that contains information about the request and is not used by this application.</p>
+
+  <p id="N1F670">This application uses Builder to create a simple HTML rendering of a product list and then builds a response, sets the content type, and calls <code class="cf methodname">finish</code>.</p>
+
+  <p id="N1F676">By creating a new rackup file, we can run this as a stand-alone application:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/store.ru">rails31/depot_u/store.ru</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'rubygems'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'bundler/setup'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'./app/store'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">use Rack::ShowExceptions</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">map <em class="string">'/store'</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">run StoreApp.new</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1F6A9">The first thing this script does is to initialize Bundler, which will make available the right versions of all of the gems that will be required. Then it requires the store application.</p>
+
+  <p id="N1F6AC">Next, it pulls one of the standard <span class="emph">middleware</span> classes provided with Rack; this one formats a stack traceback when things go wrong. Middleware in Rack is like filters in Rails&mdash;both can inspect requests and adjust the responses produced.</p>
+
+  <p id="N1F6B2">You can see the list of middlewares that Rails provides for Rails applications using the command <code class="cf ic">rake middleware</code>.</p>
+
+  <p id="N1F6C2">Finally, we map the <code class="cf ic">store</code> URI to this application.</p>
+
+  <p id="N1F6C8">We can start this application using the <code class="cf commandname">rackup</code> command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rackup store.ru</code></td>
+    </tr>
+  </table>
+
+  <p id="N1F6D9">By default, this rackup starts servers using port 9292 instead of port 3000. You can select the port using the <code class="cf ic">-p</code> option.</p>
+
+  <p id="N1F6E8">Visiting this page using your browser results in the rather plain rendering of the product listings, as shown in Figure 53, <a href="#fig.rackup.store">​<em>A minimal, but workable, product listing</em>​</a>.</p>
+
+  <table class="figure" id="fig.rackup.store">
+    <tr>
+      <td><img alt="images/rackup_store.png" src="../Images/rackup_store.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 53. A minimal, but workable, product listing</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N1F6F7">The disadvantage of a native Rack application as compared to a Rails application is that less is taken care of for it. The primary advantage is that it therefore is possible to avoid some of the overhead of Rails and therefore process more requests per second.</p>
+
+  <p id="N1F6FA">In most cases, you won’t want to create a completely stand-alone application but will want to have portions of your site bypass Rails’ controller processing. You do this by defining a route:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/config/routes.rb">rails31/depot_u/config/routes.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'./app/store'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Depot::Application.routes.draw <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">match <em class="string">'store'</em> =&gt; StoreApp.new</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">get <em class="string">'admin'</em> =&gt; <em class="string">'admin#index'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">controller :sessions <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">get <em class="string">'login'</em> =&gt; :new</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">post <em class="string">'login'</em> =&gt; :create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">delete <em class="string">'logout'</em> =&gt; :destroy</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">scope <em class="string">'(:locale)'</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :users</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :orders <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :line_items</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :line_items</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :carts</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">resources :products <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">get :who_bought, on: :member</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">root to: <em class="string">'store#index'</em>, as: <em class="string">'store'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1F776">The server is not the only place where Rails components are used. We complete this chapter with a description of a tool you can use to orchestrate the execution of tasks.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

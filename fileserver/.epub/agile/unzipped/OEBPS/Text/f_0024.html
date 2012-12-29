@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">2.3 Linking Pages Together</h2>
+
+  <p id="N10C2A">It’s a rare web application that has just one page. Let’s see how we can add another stunning example of web design to our “Hello, World!” application.</p>
+
+  <p id="N10C2D">Normally, each page in your application will correspond to a separate view. In our case, we’ll also use a new action method to handle the page (although that isn’t always the case, as we’ll see later in the book). We’ll use the same controller for both actions. Again, this needn’t be the case, but we have no compelling reason to use a new controller right now.</p>
+
+  <p id="N10C30">We already defined a goodbye action for this controller, so all that remains is to create a new template in the directory <code class="cf dir">app/views/say</code>. This time it’s called <code class="cf filename">goodbye.html.erb</code>, because by default templates are named after their associated actions.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/work/demo4/app/views/say/goodbye.html.erb">rails31/work/demo4/app/views/say/goodbye.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Goodbye!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">It was nice having you here.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10C54">Fire up our trusty browser again, but this time point to our new view using the URL <a href="http://localhost:3000/say/goodbye">http://localhost:3000/say/goodbye</a>. You should see something like this:</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/goodbye1.png" src="../Images/goodbye1.png" /></div>
+
+  <p id="N10C5D">Now we need to link the two screens. We’ll put a link on the hello screen that takes us to the goodbye screen, and vice versa. In a real application, we might want to make these proper buttons, but for now we’ll just use hyperlinks.</p>
+
+  <p id="N10C60">We already know that Rails uses a convention to parse the URL into a target controller and an action within that controller. So, a simple approach would be to adopt this URL convention for our links.</p>
+
+  <p id="N10C63">The file <code class="cf filename">hello.html.erb</code> would contain the following:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">...</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Say <strong class="prompt">&lt;a</strong> href=<em class="string">"/say/goodbye"</em> <strong class="prompt">&gt;</strong>Goodbye<strong class="prompt">&lt;/a&gt;</strong>!</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">...</code></td>
+    </tr>
+  </table>
+
+  <p id="N10C8D">And the file <code class="cf filename">goodbye.html.erb</code> would point the other way:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">...</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Say <strong class="prompt">&lt;a</strong> href=<em class="string">"/say/hello"</em> <strong class="prompt">&gt;</strong>Hello<strong class="prompt">&lt;/a&gt;</strong>!</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">...</code></td>
+    </tr>
+  </table>
+
+  <p id="N10CB7">This approach would certainly work, but it’s a bit fragile. If we were to move our application to a different place on the web server, the URLs would no longer be valid. It also encodes assumptions about the Rails URL format into our code; it’s possible a future version of Rails might change this.</p>
+
+  <p id="para.first.link.to">Fortunately, these aren’t risks we have to take. Rails comes with a bunch of <span class="emph">helper methods</span> that can be used in view templates. Here, we’ll use the helper method <code class="cf methodname">link_to</code>, which creates a hyperlink to an action. (The <code class="cf methodname">link_to</code> method can do a lot more than this, but let’s take it gently for now.) Using <code class="cf methodname">link_to</code>, <code class="cf filename">hello.html.erb</code> becomes the following:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/work/demo5/app/views/say/hello.html.erb">rails31/work/demo5/app/views/say/hello.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Hello from Rails!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">It is now &lt;%= @time %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Time to say</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= link_to <em class="string">"Goodbye"</em>, say_goodbye_path %&gt;!</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10D0C">There’s a <code class="cf methodname">link_to</code> call within an ERB <code class="cf ic">&lt;%=…%&gt;</code> sequence. This creates a link to a URL that will invoke the <code class="cf methodname">goodbye</code> action. The first parameter in the call to <code class="cf methodname">link_to</code> is the text to be displayed in the hyperlink, and the next parameter tells Rails to generate the link to the <code class="cf ic">goodbye</code> action.</p>
+
+  <p id="N10D1E">Let’s stop for a minute to consider how we generated the link. We wrote this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">link_to <em class="string">"Goodbye!"</em>, say_goodbye_path</code></td>
+    </tr>
+  </table>
+
+  <p id="N10D2F">First, <code class="cf ic">link_to</code> is a method call. (In Rails, we call methods that make it easier to write templates <span class="emph">helpers</span>.) If you come from a language such as Java, you might be surprised that Ruby doesn’t insist on parentheses around method parameters. You can always add them if you like.</p>
+
+  <p id="p.say.goodbye.path">The <code class="cf ic">say_goodbye_path</code> is a precomputed value that Rails makes available to application views. It evaluates to the <code class="cf ic">/say/goodbye</code> path. Over time you will see that Rails provides the ability to name all the routes that you will be using in your application.</p>
+
+  <p id="N10D54">OK, back to the application. If we point our browser at our hello page, it will now contain the link to the goodbye page, as shown here:</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/hello3.png" src="../Images/hello3.png" /></div>
+
+  <p id="N10D5C">We can make the corresponding change in <code class="cf filename">goodbye.html.erb</code>, linking it back to the initial hello page:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/work/demo5/app/views/say/goodbye.html.erb">rails31/work/demo5/app/views/say/goodbye.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Goodbye!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">It was nice having you here.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Say &lt;%= link_to <em class="string">"Hello"</em>, say_hello_path %&gt; again.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10D8B">At this point, we’ve completed our toy application and in the process verified that our installation of Rails is functioning properly. After a brief recap, it is now time to move on to building a real application.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><!DOCTYPE ncx PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+<head>
+<meta content="e54194e2-59dd-11dd-84e7-001cc05a7670" name="dtb:uid"/>
+<meta content="1" name="dtb:depth"/>
+<meta content="0" name="dtb:totalPageCount"/>
+<meta content="0" name="dtb:maxPageNumber"/>
+</head>
+<docTitle>
+<text>Agile Web Development with Rails</text>
+</docTitle>
+<navMap>
+  <navPoint id="navPoint-0" playOrder="1">
+    <navLabel>
+      <text>Agile Web Development with Rails</text>
+    </navLabel>
+    <content src="Text/f_0000.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-1" playOrder="2">
+    <navLabel>
+      <text>Table of Contents</text>
+    </navLabel>
+    <content src="Text/f_0001.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-2" playOrder="3">
+    <navLabel>
+      <text/>
+    </navLabel>
+    <content src="Text/f_0002.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-3" playOrder="4">
+    <navLabel>
+      <text>Preface to the Fourth Edition</text>
+    </navLabel>
+    <content src="Text/f_0003.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-4" playOrder="5">
+    <navLabel>
+      <text>Preface to the Rails 3.1 Version of This Book</text>
+    </navLabel>
+    <content src="Text/f_0004.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-5" playOrder="6">
+    <navLabel>
+      <text>Acknowledgments</text>
+    </navLabel>
+    <content src="Text/f_0005.html"/>
+    <navPoint id="navPoint-6" playOrder="7">
+      <navLabel>
+        <text/>
+      </navLabel>
+      <content src="Text/f_0006.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-7" playOrder="8">
+    <navLabel>
+      <text>Introduction</text>
+    </navLabel>
+    <content src="Text/f_0007.html"/>
+    <navPoint id="navPoint-8" playOrder="9">
+      <navLabel>
+        <text>Rails Simply Feels Right</text>
+      </navLabel>
+      <content src="Text/f_0008.html"/>
+    </navPoint>
+    <navPoint id="navPoint-9" playOrder="10">
+      <navLabel>
+        <text>Rails Is Agile</text>
+      </navLabel>
+      <content src="Text/f_0009.html"/>
+    </navPoint>
+    <navPoint id="navPoint-10" playOrder="11">
+      <navLabel>
+        <text>Who This Book Is For</text>
+      </navLabel>
+      <content src="Text/f_0010.html"/>
+    </navPoint>
+    <navPoint id="navPoint-11" playOrder="12">
+      <navLabel>
+        <text>How To Read This Book</text>
+      </navLabel>
+      <content src="Text/f_0011.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-12" playOrder="13">
+    <navLabel>
+      <text>Part 1: Getting Started</text>
+    </navLabel>
+    <content src="Text/f_0012.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-13" playOrder="14">
+    <navLabel>
+      <text>Chapter 1: Installing Rails</text>
+    </navLabel>
+    <content src="Text/f_0013.html"/>
+    <navPoint id="navPoint-14" playOrder="15">
+      <navLabel>
+        <text>1.1 Installing on Windows</text>
+      </navLabel>
+      <content src="Text/f_0014.html"/>
+    </navPoint>
+    <navPoint id="navPoint-15" playOrder="16">
+      <navLabel>
+        <text>1.2 Installing on Mac OS X</text>
+      </navLabel>
+      <content src="Text/f_0015.html"/>
+    </navPoint>
+    <navPoint id="navPoint-16" playOrder="17">
+      <navLabel>
+        <text>1.3 Installing on Linux</text>
+      </navLabel>
+      <content src="Text/f_0016.html"/>
+    </navPoint>
+    <navPoint id="navPoint-17" playOrder="18">
+      <navLabel>
+        <text>1.4 Choosing a Rails Version</text>
+      </navLabel>
+      <content src="Text/f_0017.html"/>
+    </navPoint>
+    <navPoint id="navPoint-18" playOrder="19">
+      <navLabel>
+        <text>1.5 Setting Up Your Development Environment</text>
+      </navLabel>
+      <content src="Text/f_0018.html"/>
+    </navPoint>
+    <navPoint id="navPoint-19" playOrder="20">
+      <navLabel>
+        <text>1.6 Rails and Databases</text>
+      </navLabel>
+      <content src="Text/f_0019.html"/>
+    </navPoint>
+    <navPoint id="navPoint-20" playOrder="21">
+      <navLabel>
+        <text>1.7 What We Just Did</text>
+      </navLabel>
+      <content src="Text/f_0020.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-21" playOrder="22">
+    <navLabel>
+      <text>Chapter 2: Instant Gratification</text>
+    </navLabel>
+    <content src="Text/f_0021.html"/>
+    <navPoint id="navPoint-22" playOrder="23">
+      <navLabel>
+        <text>2.1 Creating a New Application</text>
+      </navLabel>
+      <content src="Text/f_0022.html"/>
+    </navPoint>
+    <navPoint id="navPoint-23" playOrder="24">
+      <navLabel>
+        <text>2.2 Hello, Rails!</text>
+      </navLabel>
+      <content src="Text/f_0023.html"/>
+    </navPoint>
+    <navPoint id="navPoint-24" playOrder="25">
+      <navLabel>
+        <text>2.3 Linking Pages Together</text>
+      </navLabel>
+      <content src="Text/f_0024.html"/>
+    </navPoint>
+    <navPoint id="navPoint-25" playOrder="26">
+      <navLabel>
+        <text>2.4 What We Just Did</text>
+      </navLabel>
+      <content src="Text/f_0025.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-26" playOrder="27">
+    <navLabel>
+      <text>Chapter 3: The Architecture of Rails Applications</text>
+    </navLabel>
+    <content src="Text/f_0026.html"/>
+    <navPoint id="navPoint-27" playOrder="28">
+      <navLabel>
+        <text>3.1 Models, Views, and Controllers</text>
+      </navLabel>
+      <content src="Text/f_0027.html"/>
+    </navPoint>
+    <navPoint id="navPoint-28" playOrder="29">
+      <navLabel>
+        <text>3.2 Rails Model Support</text>
+      </navLabel>
+      <content src="Text/f_0028.html"/>
+    </navPoint>
+    <navPoint id="navPoint-29" playOrder="30">
+      <navLabel>
+        <text>3.3 Action Pack: The View and Controller</text>
+      </navLabel>
+      <content src="Text/f_0029.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-30" playOrder="31">
+    <navLabel>
+      <text>Chapter 4: Introduction to Ruby</text>
+    </navLabel>
+    <content src="Text/f_0030.html"/>
+    <navPoint id="navPoint-31" playOrder="32">
+      <navLabel>
+        <text>4.1 Ruby Is an Object-Oriented Language</text>
+      </navLabel>
+      <content src="Text/f_0031.html"/>
+    </navPoint>
+    <navPoint id="navPoint-32" playOrder="33">
+      <navLabel>
+        <text>4.2 Data Types</text>
+      </navLabel>
+      <content src="Text/f_0032.html"/>
+    </navPoint>
+    <navPoint id="navPoint-33" playOrder="34">
+      <navLabel>
+        <text>4.3 Logic</text>
+      </navLabel>
+      <content src="Text/f_0033.html"/>
+    </navPoint>
+    <navPoint id="navPoint-34" playOrder="35">
+      <navLabel>
+        <text>4.4 Organizing Structures</text>
+      </navLabel>
+      <content src="Text/f_0034.html"/>
+    </navPoint>
+    <navPoint id="navPoint-35" playOrder="36">
+      <navLabel>
+        <text>4.5 Marshaling Objects</text>
+      </navLabel>
+      <content src="Text/f_0035.html"/>
+    </navPoint>
+    <navPoint id="navPoint-36" playOrder="37">
+      <navLabel>
+        <text>4.6 Pulling It All Together</text>
+      </navLabel>
+      <content src="Text/f_0036.html"/>
+    </navPoint>
+    <navPoint id="navPoint-37" playOrder="38">
+      <navLabel>
+        <text>4.7 Ruby Idioms</text>
+      </navLabel>
+      <content src="Text/f_0037.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-38" playOrder="39">
+    <navLabel>
+      <text>Part 2: Building an Application</text>
+    </navLabel>
+    <content src="Text/f_0038.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-39" playOrder="40">
+    <navLabel>
+      <text>Chapter 5: The Depot Application</text>
+    </navLabel>
+    <content src="Text/f_0039.html"/>
+    <navPoint id="navPoint-40" playOrder="41">
+      <navLabel>
+        <text>5.1 Incremental Development</text>
+      </navLabel>
+      <content src="Text/f_0040.html"/>
+    </navPoint>
+    <navPoint id="navPoint-41" playOrder="42">
+      <navLabel>
+        <text>5.2 What Depot Does</text>
+      </navLabel>
+      <content src="Text/f_0041.html"/>
+    </navPoint>
+    <navPoint id="navPoint-42" playOrder="43">
+      <navLabel>
+        <text>5.3 Let’s Code</text>
+      </navLabel>
+      <content src="Text/f_0042.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-43" playOrder="44">
+    <navLabel>
+      <text>Chapter 6: Task A: Creating the Application</text>
+    </navLabel>
+    <content src="Text/f_0043.html"/>
+    <navPoint id="navPoint-44" playOrder="45">
+      <navLabel>
+        <text>6.1 Iteration A1: Creating the Products Maintenance Application</text>
+      </navLabel>
+      <content src="Text/f_0044.html"/>
+    </navPoint>
+    <navPoint id="navPoint-45" playOrder="46">
+      <navLabel>
+        <text>6.2 Iteration A2: Making Prettier Listings</text>
+      </navLabel>
+      <content src="Text/f_0045.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-46" playOrder="47">
+    <navLabel>
+      <text>Chapter 7: Task B: Validation and Unit Testing</text>
+    </navLabel>
+    <content src="Text/f_0046.html"/>
+    <navPoint id="navPoint-47" playOrder="48">
+      <navLabel>
+        <text>7.1 Iteration B1: Validating!</text>
+      </navLabel>
+      <content src="Text/f_0047.html"/>
+    </navPoint>
+    <navPoint id="navPoint-48" playOrder="49">
+      <navLabel>
+        <text>7.2 Iteration B2: Unit Testing of Models</text>
+      </navLabel>
+      <content src="Text/f_0048.html"/>
+    </navPoint>
+    <navPoint id="navPoint-49" playOrder="50">
+      <navLabel>
+        <text>7.3 What We Just Did</text>
+      </navLabel>
+      <content src="Text/f_0049.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-50" playOrder="51">
+    <navLabel>
+      <text>Chapter 8: Task C: Catalog Display</text>
+    </navLabel>
+    <content src="Text/f_0050.html"/>
+    <navPoint id="navPoint-51" playOrder="52">
+      <navLabel>
+        <text>8.1 Iteration C1: Creating the Catalog Listing</text>
+      </navLabel>
+      <content src="Text/f_0051.html"/>
+    </navPoint>
+    <navPoint id="navPoint-52" playOrder="53">
+      <navLabel>
+        <text>8.2 Iteration C2: Adding a Page Layout</text>
+      </navLabel>
+      <content src="Text/f_0052.html"/>
+    </navPoint>
+    <navPoint id="navPoint-53" playOrder="54">
+      <navLabel>
+        <text>8.3 Iteration C3: Using a Helper to Format the Price</text>
+      </navLabel>
+      <content src="Text/f_0053.html"/>
+    </navPoint>
+    <navPoint id="navPoint-54" playOrder="55">
+      <navLabel>
+        <text>8.4 Iteration C4: Functional Testing of Controllers</text>
+      </navLabel>
+      <content src="Text/f_0054.html"/>
+    </navPoint>
+    <navPoint id="navPoint-55" playOrder="56">
+      <navLabel>
+        <text>8.5 What We Just Did</text>
+      </navLabel>
+      <content src="Text/f_0055.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-56" playOrder="57">
+    <navLabel>
+      <text>Chapter 9: Task D: Cart Creation</text>
+    </navLabel>
+    <content src="Text/f_0056.html"/>
+    <navPoint id="navPoint-57" playOrder="58">
+      <navLabel>
+        <text>9.1 Iteration D1: Finding a Cart</text>
+      </navLabel>
+      <content src="Text/f_0057.html"/>
+    </navPoint>
+    <navPoint id="navPoint-58" playOrder="59">
+      <navLabel>
+        <text>9.2 Iteration D2: Connecting Products to Carts</text>
+      </navLabel>
+      <content src="Text/f_0058.html"/>
+    </navPoint>
+    <navPoint id="navPoint-59" playOrder="60">
+      <navLabel>
+        <text>9.3 Iteration D3: Adding a Button</text>
+      </navLabel>
+      <content src="Text/f_0059.html"/>
+    </navPoint>
+    <navPoint id="navPoint-60" playOrder="61">
+      <navLabel>
+        <text>9.4 What We Just Did</text>
+      </navLabel>
+      <content src="Text/f_0060.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-61" playOrder="62">
+    <navLabel>
+      <text>Chapter 10: Task E: A Smarter Cart</text>
+    </navLabel>
+    <content src="Text/f_0061.html"/>
+    <navPoint id="navPoint-62" playOrder="63">
+      <navLabel>
+        <text>10.1 Iteration E1: Creating a Smarter Cart</text>
+      </navLabel>
+      <content src="Text/f_0062.html"/>
+    </navPoint>
+    <navPoint id="navPoint-63" playOrder="64">
+      <navLabel>
+        <text>10.2 Iteration E2: Handling Errors</text>
+      </navLabel>
+      <content src="Text/f_0063.html"/>
+    </navPoint>
+    <navPoint id="navPoint-64" playOrder="65">
+      <navLabel>
+        <text>10.3 Iteration E3: Finishing the Cart</text>
+      </navLabel>
+      <content src="Text/f_0064.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-65" playOrder="66">
+    <navLabel>
+      <text>Chapter 11: Task F: Add a Dash of Ajax</text>
+    </navLabel>
+    <content src="Text/f_0065.html"/>
+    <navPoint id="navPoint-66" playOrder="67">
+      <navLabel>
+        <text>11.1 Iteration F1: Moving the Cart</text>
+      </navLabel>
+      <content src="Text/f_0066.html"/>
+    </navPoint>
+    <navPoint id="navPoint-67" playOrder="68">
+      <navLabel>
+        <text>11.2 Iteration F2: Creating an Ajax-Based Cart</text>
+      </navLabel>
+      <content src="Text/f_0067.html"/>
+    </navPoint>
+    <navPoint id="navPoint-68" playOrder="69">
+      <navLabel>
+        <text>11.3 Iteration F3: Highlighting Changes</text>
+      </navLabel>
+      <content src="Text/f_0068.html"/>
+    </navPoint>
+    <navPoint id="navPoint-69" playOrder="70">
+      <navLabel>
+        <text>11.4 Iteration F4: Hiding an Empty Cart</text>
+      </navLabel>
+      <content src="Text/f_0069.html"/>
+    </navPoint>
+    <navPoint id="navPoint-70" playOrder="71">
+      <navLabel>
+        <text>11.5 Iteration F5: Making Images Clickable</text>
+      </navLabel>
+      <content src="Text/f_0070.html"/>
+    </navPoint>
+    <navPoint id="navPoint-71" playOrder="72">
+      <navLabel>
+        <text>11.6 Testing Ajax Changes</text>
+      </navLabel>
+      <content src="Text/f_0071.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-72" playOrder="73">
+    <navLabel>
+      <text>Chapter 12: Task G: Check Out!</text>
+    </navLabel>
+    <content src="Text/f_0072.html"/>
+    <navPoint id="navPoint-73" playOrder="74">
+      <navLabel>
+        <text>12.1 Iteration G1: Capturing an Order</text>
+      </navLabel>
+      <content src="Text/f_0073.html"/>
+    </navPoint>
+    <navPoint id="navPoint-74" playOrder="75">
+      <navLabel>
+        <text>12.2 Iteration G2: Atom Feeds</text>
+      </navLabel>
+      <content src="Text/f_0074.html"/>
+    </navPoint>
+    <navPoint id="navPoint-75" playOrder="76">
+      <navLabel>
+        <text>12.3 Iteration G3: Pagination</text>
+      </navLabel>
+      <content src="Text/f_0075.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-76" playOrder="77">
+    <navLabel>
+      <text>Chapter 13: Task H: Sending Mail</text>
+    </navLabel>
+    <content src="Text/f_0076.html"/>
+    <navPoint id="navPoint-77" playOrder="78">
+      <navLabel>
+        <text>13.1 Iteration H1: Sending Confirmation Emails</text>
+      </navLabel>
+      <content src="Text/f_0077.html"/>
+    </navPoint>
+    <navPoint id="navPoint-78" playOrder="79">
+      <navLabel>
+        <text>13.2 Iteration H2: Integration Testing of Applications</text>
+      </navLabel>
+      <content src="Text/f_0078.html"/>
+    </navPoint>
+    <navPoint id="navPoint-79" playOrder="80">
+      <navLabel>
+        <text>13.3 What We Just Did</text>
+      </navLabel>
+      <content src="Text/f_0079.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-80" playOrder="81">
+    <navLabel>
+      <text>Chapter 14: Task I: Logging In</text>
+    </navLabel>
+    <content src="Text/f_0080.html"/>
+    <navPoint id="navPoint-81" playOrder="82">
+      <navLabel>
+        <text>14.1 Iteration I1: Adding Users</text>
+      </navLabel>
+      <content src="Text/f_0081.html"/>
+    </navPoint>
+    <navPoint id="navPoint-82" playOrder="83">
+      <navLabel>
+        <text>14.2 Iteration I2: Authenticating Users</text>
+      </navLabel>
+      <content src="Text/f_0082.html"/>
+    </navPoint>
+    <navPoint id="navPoint-83" playOrder="84">
+      <navLabel>
+        <text>14.3 Iteration I3: Limiting Access</text>
+      </navLabel>
+      <content src="Text/f_0083.html"/>
+    </navPoint>
+    <navPoint id="navPoint-84" playOrder="85">
+      <navLabel>
+        <text>14.4 Iteration I4: Adding a Sidebar, More Administration</text>
+      </navLabel>
+      <content src="Text/f_0084.html"/>
+    </navPoint>
+    <navPoint id="navPoint-85" playOrder="86">
+      <navLabel>
+        <text>14.5 What We Just Did</text>
+      </navLabel>
+      <content src="Text/f_0085.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-86" playOrder="87">
+    <navLabel>
+      <text>Chapter 15: Task J: Internationalization</text>
+    </navLabel>
+    <content src="Text/f_0086.html"/>
+    <navPoint id="navPoint-87" playOrder="88">
+      <navLabel>
+        <text>15.1 Iteration J1: Selecting the Locale</text>
+      </navLabel>
+      <content src="Text/f_0087.html"/>
+    </navPoint>
+    <navPoint id="navPoint-88" playOrder="89">
+      <navLabel>
+        <text>15.2 Iteration J2: Translating the Storefront</text>
+      </navLabel>
+      <content src="Text/f_0088.html"/>
+    </navPoint>
+    <navPoint id="navPoint-89" playOrder="90">
+      <navLabel>
+        <text>15.3 Iteration J3: Translating Checkout</text>
+      </navLabel>
+      <content src="Text/f_0089.html"/>
+    </navPoint>
+    <navPoint id="navPoint-90" playOrder="91">
+      <navLabel>
+        <text>15.4 Iteration J4: Add a Locale Switcher</text>
+      </navLabel>
+      <content src="Text/f_0090.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-91" playOrder="92">
+    <navLabel>
+      <text>Chapter 16: Task K: Deployment and Production</text>
+    </navLabel>
+    <content src="Text/f_0091.html"/>
+    <navPoint id="navPoint-92" playOrder="93">
+      <navLabel>
+        <text>16.1 Iteration K1: Deploying with Phusion Passenger and MySQL</text>
+      </navLabel>
+      <content src="Text/f_0092.html"/>
+    </navPoint>
+    <navPoint id="navPoint-93" playOrder="94">
+      <navLabel>
+        <text>16.2 Iteration K2: Deploying Remotely with Capistrano</text>
+      </navLabel>
+      <content src="Text/f_0093.html"/>
+    </navPoint>
+    <navPoint id="navPoint-94" playOrder="95">
+      <navLabel>
+        <text>16.3 Iteration K3: Checking Up on a Deployed Application</text>
+      </navLabel>
+      <content src="Text/f_0094.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-95" playOrder="96">
+    <navLabel>
+      <text>Chapter 17: Depot Retrospective</text>
+    </navLabel>
+    <content src="Text/f_0095.html"/>
+    <navPoint id="navPoint-96" playOrder="97">
+      <navLabel>
+        <text>17.1 Rails Concepts</text>
+      </navLabel>
+      <content src="Text/f_0096.html"/>
+    </navPoint>
+    <navPoint id="navPoint-97" playOrder="98">
+      <navLabel>
+        <text>17.2 Documenting What We Have Done</text>
+      </navLabel>
+      <content src="Text/f_0097.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-98" playOrder="99">
+    <navLabel>
+      <text>Part 3: Rails in Depth</text>
+    </navLabel>
+    <content src="Text/f_0098.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-99" playOrder="100">
+    <navLabel>
+      <text>Chapter 18: Finding Your Way Around Rails</text>
+    </navLabel>
+    <content src="Text/f_0099.html"/>
+    <navPoint id="navPoint-100" playOrder="101">
+      <navLabel>
+        <text>18.1 Where Things Go</text>
+      </navLabel>
+      <content src="Text/f_0100.html"/>
+    </navPoint>
+    <navPoint id="navPoint-101" playOrder="102">
+      <navLabel>
+        <text>18.2 Naming Conventions</text>
+      </navLabel>
+      <content src="Text/f_0101.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-102" playOrder="103">
+    <navLabel>
+      <text>Chapter 19: Active Record</text>
+    </navLabel>
+    <content src="Text/f_0102.html"/>
+    <navPoint id="navPoint-103" playOrder="104">
+      <navLabel>
+        <text>19.1 Defining Your Data</text>
+      </navLabel>
+      <content src="Text/f_0103.html"/>
+    </navPoint>
+    <navPoint id="navPoint-104" playOrder="105">
+      <navLabel>
+        <text>19.2 Locating and Traversing Records</text>
+      </navLabel>
+      <content src="Text/f_0104.html"/>
+    </navPoint>
+    <navPoint id="navPoint-105" playOrder="106">
+      <navLabel>
+        <text>19.3 Creating, Reading, Updating, and Deleting (CRUD)</text>
+      </navLabel>
+      <content src="Text/f_0105.html"/>
+    </navPoint>
+    <navPoint id="navPoint-106" playOrder="107">
+      <navLabel>
+        <text>19.4 Participating in the Monitoring Process</text>
+      </navLabel>
+      <content src="Text/f_0106.html"/>
+    </navPoint>
+    <navPoint id="navPoint-107" playOrder="108">
+      <navLabel>
+        <text>19.5 Transactions</text>
+      </navLabel>
+      <content src="Text/f_0107.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-108" playOrder="109">
+    <navLabel>
+      <text>Chapter 20: Action Dispatch and Action Controller</text>
+    </navLabel>
+    <content src="Text/f_0108.html"/>
+    <navPoint id="navPoint-109" playOrder="110">
+      <navLabel>
+        <text>20.1 Dispatching Requests to Controllers</text>
+      </navLabel>
+      <content src="Text/f_0109.html"/>
+    </navPoint>
+    <navPoint id="navPoint-110" playOrder="111">
+      <navLabel>
+        <text>20.2 Processing of Requests</text>
+      </navLabel>
+      <content src="Text/f_0110.html"/>
+    </navPoint>
+    <navPoint id="navPoint-111" playOrder="112">
+      <navLabel>
+        <text>20.3 Objects and Operations That Span Requests</text>
+      </navLabel>
+      <content src="Text/f_0111.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-112" playOrder="113">
+    <navLabel>
+      <text>Chapter 21: Action View</text>
+    </navLabel>
+    <content src="Text/f_0112.html"/>
+    <navPoint id="navPoint-113" playOrder="114">
+      <navLabel>
+        <text>21.1 Using Templates</text>
+      </navLabel>
+      <content src="Text/f_0113.html"/>
+    </navPoint>
+    <navPoint id="navPoint-114" playOrder="115">
+      <navLabel>
+        <text>21.2 Generating Forms</text>
+      </navLabel>
+      <content src="Text/f_0114.html"/>
+    </navPoint>
+    <navPoint id="navPoint-115" playOrder="116">
+      <navLabel>
+        <text>21.3 Processing Forms</text>
+      </navLabel>
+      <content src="Text/f_0115.html"/>
+    </navPoint>
+    <navPoint id="navPoint-116" playOrder="117">
+      <navLabel>
+        <text>21.4 Uploading Files to Rails Applications</text>
+      </navLabel>
+      <content src="Text/f_0116.html"/>
+    </navPoint>
+    <navPoint id="navPoint-117" playOrder="118">
+      <navLabel>
+        <text>21.5 Using Helpers</text>
+      </navLabel>
+      <content src="Text/f_0117.html"/>
+    </navPoint>
+    <navPoint id="navPoint-118" playOrder="119">
+      <navLabel>
+        <text>21.6 Reducing Maintenance with Layouts and Partials</text>
+      </navLabel>
+      <content src="Text/f_0118.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-119" playOrder="120">
+    <navLabel>
+      <text>Chapter 22: Caching</text>
+    </navLabel>
+    <content src="Text/f_0119.html"/>
+    <navPoint id="navPoint-120" playOrder="121">
+      <navLabel>
+        <text>22.1 Playing Nice with Client Caches</text>
+      </navLabel>
+      <content src="Text/f_0120.html"/>
+    </navPoint>
+    <navPoint id="navPoint-121" playOrder="122">
+      <navLabel>
+        <text>22.2 Page Caching</text>
+      </navLabel>
+      <content src="Text/f_0121.html"/>
+    </navPoint>
+    <navPoint id="navPoint-122" playOrder="123">
+      <navLabel>
+        <text>22.3 Expiring Pages</text>
+      </navLabel>
+      <content src="Text/f_0122.html"/>
+    </navPoint>
+    <navPoint id="navPoint-123" playOrder="124">
+      <navLabel>
+        <text>22.4 Fragment Caching</text>
+      </navLabel>
+      <content src="Text/f_0123.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-124" playOrder="125">
+    <navLabel>
+      <text>Chapter 23: Migrations</text>
+    </navLabel>
+    <content src="Text/f_0124.html"/>
+    <navPoint id="navPoint-125" playOrder="126">
+      <navLabel>
+        <text>23.1 Creating and Running Migrations</text>
+      </navLabel>
+      <content src="Text/f_0125.html"/>
+    </navPoint>
+    <navPoint id="navPoint-126" playOrder="127">
+      <navLabel>
+        <text>23.2 Anatomy of a Migration</text>
+      </navLabel>
+      <content src="Text/f_0126.html"/>
+    </navPoint>
+    <navPoint id="navPoint-127" playOrder="128">
+      <navLabel>
+        <text>23.3 Managing Tables</text>
+      </navLabel>
+      <content src="Text/f_0127.html"/>
+    </navPoint>
+    <navPoint id="navPoint-128" playOrder="129">
+      <navLabel>
+        <text>23.4 Advanced Migrations</text>
+      </navLabel>
+      <content src="Text/f_0128.html"/>
+    </navPoint>
+    <navPoint id="navPoint-129" playOrder="130">
+      <navLabel>
+        <text>23.5 When Migrations Go Bad</text>
+      </navLabel>
+      <content src="Text/f_0129.html"/>
+    </navPoint>
+    <navPoint id="navPoint-130" playOrder="131">
+      <navLabel>
+        <text>23.6 Schema Manipulation Outside Migrations</text>
+      </navLabel>
+      <content src="Text/f_0130.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-131" playOrder="132">
+    <navLabel>
+      <text>Chapter 24: Nonbrowser Applications</text>
+    </navLabel>
+    <content src="Text/f_0131.html"/>
+    <navPoint id="navPoint-132" playOrder="133">
+      <navLabel>
+        <text>24.1 A Stand-Alone Application Using Active Record</text>
+      </navLabel>
+      <content src="Text/f_0132.html"/>
+    </navPoint>
+    <navPoint id="navPoint-133" playOrder="134">
+      <navLabel>
+        <text>24.2 A Library Function Using Active Support</text>
+      </navLabel>
+      <content src="Text/f_0133.html"/>
+    </navPoint>
+    <navPoint id="navPoint-134" playOrder="135">
+      <navLabel>
+        <text>24.3 A Remote Application Using Active Resource</text>
+      </navLabel>
+      <content src="Text/f_0134.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-135" playOrder="136">
+    <navLabel>
+      <text>Chapter 25: Rails’ Dependencies</text>
+    </navLabel>
+    <content src="Text/f_0135.html"/>
+    <navPoint id="navPoint-136" playOrder="137">
+      <navLabel>
+        <text>25.1 Generating XML with Builder</text>
+      </navLabel>
+      <content src="Text/f_0136.html"/>
+    </navPoint>
+    <navPoint id="navPoint-137" playOrder="138">
+      <navLabel>
+        <text>25.2 Generating HTML with ERb</text>
+      </navLabel>
+      <content src="Text/f_0137.html"/>
+    </navPoint>
+    <navPoint id="navPoint-138" playOrder="139">
+      <navLabel>
+        <text>25.3 Managing Dependencies with Bundler</text>
+      </navLabel>
+      <content src="Text/f_0138.html"/>
+    </navPoint>
+    <navPoint id="navPoint-139" playOrder="140">
+      <navLabel>
+        <text>25.4 Interfacing with the Web Server with Rack</text>
+      </navLabel>
+      <content src="Text/f_0139.html"/>
+    </navPoint>
+    <navPoint id="navPoint-140" playOrder="141">
+      <navLabel>
+        <text>25.5 Automating Tasks with Rake</text>
+      </navLabel>
+      <content src="Text/f_0140.html"/>
+    </navPoint>
+    <navPoint id="navPoint-141" playOrder="142">
+      <navLabel>
+        <text>25.6 Survey of Rails’ Dependencies</text>
+      </navLabel>
+      <content src="Text/f_0141.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-142" playOrder="143">
+    <navLabel>
+      <text>Chapter 26: Rails Plugins</text>
+    </navLabel>
+    <content src="Text/f_0142.html"/>
+    <navPoint id="navPoint-143" playOrder="144">
+      <navLabel>
+        <text>26.1 Credit Card Processing with Active Merchant</text>
+      </navLabel>
+      <content src="Text/f_0143.html"/>
+    </navPoint>
+    <navPoint id="navPoint-144" playOrder="145">
+      <navLabel>
+        <text>26.2 Beautifying Our Markup with Haml</text>
+      </navLabel>
+      <content src="Text/f_0144.html"/>
+    </navPoint>
+    <navPoint id="navPoint-145" playOrder="146">
+      <navLabel>
+        <text>26.3 Finding More at RailsPlugins.org</text>
+      </navLabel>
+      <content src="Text/f_0145.html"/>
+    </navPoint>
+  </navPoint>
+
+  <navPoint id="navPoint-146" playOrder="147">
+    <navLabel>
+      <text>Chapter 27: Where to Go from Here</text>
+    </navLabel>
+    <content src="Text/f_0146.html"/>
+  </navPoint>
+
+  <navPoint id="navPoint-147" playOrder="148">
+    <navLabel>
+      <text>Appendix 1: Bibliography</text>
+    </navLabel>
+    <content src="Text/f_0147.html"/>
+  </navPoint>
+
+</navMap>
+</ncx>

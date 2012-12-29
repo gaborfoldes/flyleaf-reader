@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">16.1 Iteration K1: Deploying with Phusion Passenger and MySQL</h2>
+
+  <p id="N17F3D">So far, as we’ve been developing a Rails application on our local machine, we’ve probably been using WEBrick or Mongrel when we run our server. For the most part, it doesn’t matter. The <code class="cf filename">rails server</code> command will sort out the most appropriate way to get our application running in development mode on port 3000. However, a deployed Rails application works a bit differently. We can’t just fire up a single Rails server process and let it do all the work. Well, we <span class="emph">could</span>, but it’s far from ideal. The reason for this is that Rails is single-threaded. It can work on only one request at a time.</p>
+
+  <p id="N17F46">The Web, however, is an extremely concurrent environment. Production web servers, such as Apache, Lighttpd, and Zeus, can work on several requests&mdash;even tens or hundreds of requests&mdash;at the same time. A single-process, single-threaded Ruby-based web server can’t possibly keep up. Luckily, it doesn’t have to keep up. Instead, the way that we deploy a Rails application into production is to use a front-end server, such as Apache, to handle requests from the client. Then, you use the HTTP proxying of Passenger to send requests that should be handled by Rails to one of any number of back-end application processes.</p>
+
+  <h3 id="heading_id_3">Installing Passenger</h3>
+
+  <p id="N17F4D">The first step is to ensure that the Apache web server is installed and running. For Mac OS X users it is already installed with the operating system, but you’ll need to enable it by going into <span class="emph">System Preferences</span> / <span class="emph">Sharing</span> and enabling <span class="emph">Web Sharing</span>. Linux users should have already installed Apache in <a href="../Text/f_0016.html#sec.installing.linux">​here​</a>.</p>
+
+  <p id="N17F69">The next step is to install Passenger:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">gem install passenger</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">passenger-install-apache2-module</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N17F87">If the necessary dependencies are not met, the latter command will tell you what you need to do. For example, on a Ubuntu 11.04 (Natty Narwhal, you will find that you need to install <code class="cf ic">libcurl4-openssl-dev</code>, <code class="cf ic">apache2-prefork-dev</code>, <code class="cf ic">libapr1-dev</code>, and <code class="cf ic">libaprutil1-dev</code>. If this happens, follow the provided instructions, and try the passenger install command again.</p>
+
+  <p id="N17F96">Once the dependencies are satisfied, this command causes a number of sources to be compiled and the configuration files to be updated. During the process, it will ask us to update our Apache configuration. The first will be to enable your freshly built module and will involve adding lines such as the following to our Apache configuration. (Note: Passenger will tell you the exact lines to copy and paste into this file, so use those, not these. Also, we’ve had to elide the path specification in the <code class="cf ic">LoadModule</code> line to make it fit the page. Be sure to use the path specification that Passenger provided for you.)</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">LoadModule passenger_module /home/rubys/.rvm/.../ext/apache2/mod_passenger.so</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">PassengerRoot /home/rubys/.rvm/gems/ruby-1.9.2-p290/gems/passenger-3.0.8</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">PassengerRuby /home/rubys/.rvm/wrappers/ruby-1.9.2-p290/ruby</code></td>
+    </tr>
+  </table>
+
+  <p id="N17FAD">To find out where your Apache configuration file is, try issuing the following command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">apachectl -V | grep HTTPD_ROOT</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">apachectl -V | grep SERVER_CONFIG_FILE</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N17FC4">On some systems, the command name is <code class="cf ic">apache2ctl</code>; on others, it’s <code class="cf ic">httpd</code>. Experiment until you find the correct command.</p>
+
+  <p id="N17FCD">If we want to serve multiple applications with the same Apache web server, we will first need to verify that the following line is present in the configuration files already:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">NameVirtualHost *:80</code></td>
+    </tr>
+  </table>
+
+  <p id="N17FDB">If this line is not present, add it before a line that contains the text <code class="cf ic">Listen 80</code>.</p>
+
+  <h3 id="heading_id_4">Deploying our Application Locally</h3>
+
+  <p id="N17FE5">The next step is to deploy our application. Whereas the previous step needs to be done only once per server, this step is actually once per application. Substitute your host’s name in the following <code class="cf ic">ServerName</code> line:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;VirtualHost *:80&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ServerName depot.yourhost.com</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">DocumentRoot /home/rubys/work/depot/public/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;Directory /somewhere/public&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">AllowOverride all</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Options -MultiViews</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/Directory&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/VirtualHost&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1800B">Note here that the <code class="cf ic">DocumentRoot</code> is set to our <code class="cf dir">public</code> directory in our Rails application.</p>
+
+  <p id="N18014">Once this is in place, repeat this <code class="cf ic">VirtualHost</code> block once per application, adjusting the <code class="cf ic">ServerName</code> and <code class="cf ic">DocumentRoot</code> in each block. We will also need to mark the public directory as readable. The final version will look something like the following:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;VirtualHost *:80&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ServerName depot.yourhost.com</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">DocumentRoot /home/rubys/work/depot/public/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;Directory /home/rubys/work/depot/public&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">AllowOverride all</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Options -MultiViews</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Order allow,deny</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Allow from all</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/Directory&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/VirtualHost&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N18049">The final step is to restart our Apache web server:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">sudo apachectl restart</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1805A">You will now need to configure your client so that it maps the host name you chose to the correct machine. This is done in a file named <code class="cf filename">/etc/hosts</code>. On Windows machines, this file can be found in <code class="cf dir">C:\windows\system32\drivers\etc\</code>. To edit this file, you will need to open the file as an administrator.</p>
+
+  <p id="N18067">A typical <code class="cf filename">/etc/hosts</code> line will look like the following:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">127.0.0.1 depot.yourhost.com</code></td>
+    </tr>
+  </table>
+
+  <p id="N18078">That’s it! We can now access our application using the host (or virtual host) we specified. Unless we used a port number other than 80, there is no longer any need for us to specify a port number on our URL.</p>
+
+  <p id="N1807B">There are a few things to be aware of:</p>
+
+  <ul>
+    <li>
+      <p id="N18081">If, when restarting your server you see a message that <code class="cf ic">The address or port is invalid</code>, this means the <code class="cf ic">NameVirtualHost</code> line is already present, perhaps in another configuration file in the same directory. If so, remove the line you added because this directive needs to be present only once.</p>
+    </li>
+
+    <li>
+      <p id="N1808B">If we want to run in an environment other than production, we can include a <code class="cf ic">RailsEnv</code> directive in each <code class="cf ic">VirtualHost</code> in our Apache configuration:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">RailsEnv development</code></td>
+        </tr>
+      </table>
+    </li>
+
+    <li>
+      <p id="N180A0">We can restart our application without restarting Apache at any time by creating a file named <code class="cf filename">restart.txt</code> in the <code class="cf dir">tmp</code> of our application:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">$ <strong class="prompt">touch tmp/restart.txt</strong></code></td>
+        </tr>
+      </table>
+
+      <p id="N180B7">Once the server restarts, this file will be deleted.</p>
+    </li>
+
+    <li>
+      <p id="N180BB">The output of the <code class="cf ic">passenger-install-apache2-module</code> command will tell us where we can find additional documentation.</p>
+    </li>
+  </ul>
+
+  <h3 id="sec.mysql">Using MySQL for the Database</h3>
+
+  <p id="N180CB">The SQLite website<a href="../Text/f_0094.html#FOOTNOTE-32" id="FNPTR-32">[32]</a> is refreshingly honest when it comes to describing what this database is good at and what it is not good at. In particular, SQLite is not recommended for high-volume, high-concurrency websites with large datasets. And, of course, we want our website to be such a website.</p>
+
+  <p id="N180E3">There are plenty of alternatives to SQLite, both free and commercial. We will go with MySQL. It is available via your native packaging tool in Linux, and an installer is provided for OS X on the MySQL website.<a href="../Text/f_0094.html#FOOTNOTE-33" id="FNPTR-33">[33]</a> We recommend that you download MySQL 5.1, as MySQL 5.5 is known not to work with Rails 3.1.</p>
+
+  <p id="N180F2">In addition to installing the MySQL database, you will also need to add the <code class="cf ic">mysql</code> gem to the <code class="cf ic">Gemfile</code>:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_t/Gemfile">rails31/depot_t/Gemfile</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">group :production do</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'mysql2'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">end</code></td>
+    </tr>
+  </table>
+
+  <p id="N18116">By putting this gem in group <code class="cf ic">production</code>, it will not be loaded when running in development or test. If you like, you can put sqlite3 gem into (separate) <code class="cf ic">development</code> and <code class="cf ic">test</code> groups.</p>
+
+  <p id="N18129">Install the gem using <code class="cf commandname">bundle install</code>. You may need to locate and install the MySQL database development files for your operating system first. On Ubuntu, for example, you will need to install <code class="cf ic">libmysqlclient-dev</code>.</p>
+
+  <p id="p.create.database">You can use the <code class="cf commandname">mysql</code> command-line client to create your database, or if you’re more comfortable with tools such as <code class="cf commandname">phpmyadmin</code> or <code class="cf commandname">CocoaMySQL</code>, go for it:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">mysql -u root</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">mysql&gt; <strong class="prompt">CREATE DATABASE depot_production;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">mysql&gt; <strong class="prompt">GRANT ALL PRIVILEGES ON depot_production.*</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">TO 'username'@'localhost' IDENTIFIED BY 'password';</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">mysql&gt; <strong class="prompt">EXIT;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N18165">If you picked a different database name, remember it, because you will need to adjust the configuration file to match the name you picked. Let’s look at that configuration file now.</p>
+
+  <p id="N18168">The <code class="cf filename">config/database.yml</code> contains information on database connections. It contains three sections, one each for the development, test, and production databases. The current production section contains the following:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">production:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">adapter: sqlite3</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">database: db/production.sqlite3</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">pool: 5</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">timeout: 5000</code></td>
+    </tr>
+  </table>
+
+  <p id="N18185">We replace that section with something like the following:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">production:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">adapter: mysql</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">encoding: utf8</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">reconnect: false</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">database: depot_production</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">pool: 5</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">username: username</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">password: password</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">host: localhost</code></td>
+    </tr>
+  </table>
+
+  <p id="N181AB">Change the username, password, and database fields as necessary.</p>
+
+  <h3 id="sec.test.db">Loading the Database</h3>
+
+  <p id="N181B3">Next, we apply our migrations:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake db:setup RAILS_ENV="production"</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N181D0">One of two things will happen. If all is set up correctly, you will see output like the following:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-- create_table("carts", {:force=&gt;true})</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">0.1722s</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-- create_table("line_items", {:force=&gt;true})</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">0.1255s</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-- create_table("orders", {:force=&gt;true})</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">0.1171s</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-- create_table("products", {:force=&gt;true})</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">0.1172s</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-- create_table("users", {:force=&gt;true})</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">0.1255s</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-- initialize_schema_migrations_table()</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">0.0006s</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-- assume_migrated_upto_version(20110711000008, "db/migrate")</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">-&gt; <strong class="prompt">0.0008s</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1821A">If, instead, you see an error of some sort, don’t panic! It’s probably a simple configuration issue. Here are some things to try:</p>
+
+  <ul>
+    <li>
+      <p id="N18226">Check the name you gave for the database in the <code class="cf ic">production:</code> section of <code class="cf filename">database.yml</code>. It should be the same as the name of the database you created (using <code class="cf commandname">mysqladmin</code> or some other database administration tool).</p>
+    </li>
+
+    <li>
+      <p id="N18233">Check that the username and password in <code class="cf filename">database.yml</code> match what you created <a href="#p.create.database">​here​</a>.</p>
+    </li>
+
+    <li>
+      <p id="N1823D">Check that your database server is running.</p>
+    </li>
+
+    <li>
+      <p id="N18241">Check that you can connect to it from the command line. If using MySQL, run the following command:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">mysql depot_production</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">mysql&gt;</code></td>
+        </tr>
+      </table>
+    </li>
+
+    <li>
+      <p id="N18257">If you can connect from the command line, can you create a dummy table? (This tests that the database user has sufficient access rights to the database.)</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">mysql&gt; <strong class="prompt">create table dummy(i int);</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">mysql&gt; <strong class="prompt">drop table dummy;</strong></code></td>
+        </tr>
+      </table>
+    </li>
+
+    <li>
+      <p id="N1826F">If you can create tables from the command line but <code class="cf ic">rake db:migrate</code> fails, double-check the <code class="cf filename">database.yml</code> file. If there are <code class="cf ic">socket:</code> directives in the file, try commenting them out by putting a hash character (#) in front of each.</p>
+    </li>
+
+    <li>
+      <p id="N1827C">If you see an error saying <code class="cf ic">No such file or directory…</code> and the filename in the error is <code class="cf filename">mysql.sock</code>, your Ruby MySQL libraries can’t find your MySQL database. This might happen if you installed the libraries before you installed the database or if you installed the libraries using a binary distribution and that distribution made the wrong assumption about the location of the MySQL socket file. To fix this, the best idea is to reinstall your Ruby MySQL libraries. If this isn’t an option, double-check that the <code class="cf ic">socket:</code> line in your <code class="cf filename">database.yml</code> file contains the correct path to the MySQL socket on your system.</p>
+    </li>
+
+    <li>
+      <p id="N1828C">If you get the error <code class="cf ic">Mysql not loaded</code>, it means you’re running an old version of the Ruby MySQL library. Rails needs at least version 2.5.</p>
+    </li>
+
+    <li>
+      <p id="N18293">Some readers also report getting the error message <code class="cf ic">Client does not support authentication protocol requested by server; consider upgrading MySQL client</code>. To resolve this incompatibility between the installed version of MySQL and the libraries used to access it, follow the instructions at <a href="http://dev.mysql.com/doc/mysql/en/old-client.html">http://dev.mysql.com/doc/mysql/en/old-client.html</a> and issue a MySQL command such as <code class="cf ic">set password for ’some_user’@’some_host’ = OLD_</code> <code class="cf ic">PASSWORD(’newpwd’);</code>.</p>
+    </li>
+
+    <li>
+      <p id="N182A2">If you’re using MySQL under Cygwin on Windows, you may have problems if you specify a host of <code class="cf ic">localhost</code>. Try using <code class="cf ic">127.0.0.1</code> instead.</p>
+    </li>
+
+    <li>
+      <p id="N182B2">Finally, you might have problems in the format of the <code class="cf filename">database.yml</code> file. The YAML library that reads this file is strangely sensitive to tab characters. If your file contains tab characters, you’ll have problems. (And you thought you’d chosen Ruby over Python because you didn’t like Python’s significant whitespace, eh?)</p>
+    </li>
+  </ul>
+
+  <p id="N182BE">Rerun the <code class="cf commandname">rake db:setup</code> as many times as you need to in order to correct any configuration issues you may have.</p>
+
+  <p id="N182C4">If all this sounds scary, don’t worry. In reality, database connections work like a charm most of the time. And once you have Rails talking to the database, you don’t have to worry about it again.</p>
+
+  <p id="N182C7">At this point, you are up and running. Nothing looks any different when you are running as a single user. The differences become apparent only when you have a large number of concurrent users or a large database.</p>
+
+  <p id="N182CA">The next step is to split our development from our production machine.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

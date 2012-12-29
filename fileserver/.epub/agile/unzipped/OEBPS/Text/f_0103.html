@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">19.1 Defining Your Data</h2>
+
+  <p id="N190C1">In Depot, we defined a number of models, including one for an <code class="cf class">Order</code>. This particular model has a number of attributes, such as an <code class="cf ic">email</code> address of type String. In addition to the attributes that we defined, Rails provided an attribute named id that contains the primary key for the record. Rails also provides several additional attributes, including attributes that track when each row was last updated. Finally, Rails supports relationships between models, such as the relationship between orders and line items.</p>
+
+  <p id="N190DA">When you think about it, Rails provides a lot of support for models. Let’s examine each in turn.</p>
+
+  <h3 id="sec.table.names">Organizing Using Tables and Columns</h3>
+
+  <p id="N190E2">Each subclass of <code class="cf class">ActiveRecord::Base</code>, such as our <code class="cf class">Order</code> class, wraps a separate database table. By default, Active Record assumes that the name of the table associated with a given class is the plural form of the name of that class. If the class name contains multiple capitalized words, the table name is assumed to have underscores between these words.</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/table_name_mapping.png" src="../Images/table_name_mapping.png" /></div>
+
+  <p id="N19100">These rules reflect DHH’s philosophy that class names should be singular while the names of tables should be plural.</p>
+
+  <p id="N1910A">Although Rails handles most irregular plurals correctly, occasionally you may stumble across one that is not handled correctly. If you encounter such a case, you can add to Rails’ understanding of the idiosyncrasies and inconsistencies of the English language by modifying the inflection file provided:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_t/config/initializers/inflections.rb">rails31/depot_t/config/initializers/inflections.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># Be sure to restart your server when you modify this file.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># Add new inflection rules using the following format</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># (all these examples are active by default):</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ActiveSupport::Inflector.inflections do |inflect|</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># inflect.plural /^(ox)$/i, '\1en'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># inflect.singular /^(ox)en/i, '\1'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># inflect.irregular 'person', 'people'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># inflect.uncountable %w( fish sheep )</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># end</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ActiveSupport::Inflector.inflections <strong class="prompt">do</strong> |inflect|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">inflect.irregular <em class="string">'tax'</em>, <em class="string">'taxes'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1915B">If you have legacy tables you have to deal with or don’t like this behavior, you can control the table name associated with a given model by setting the <code class="cf ic">table_name</code> for a given class:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Sheep &lt; ActiveRecord::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">self.table_name = <em class="string">"sheep"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N19177">Instances of Active Record classes correspond to rows in a database table. These objects have attributes corresponding to the columns in the table. You probably noticed that our definition of class <code class="cf class">Order</code> didn’t mention any of the columns in the <code class="cf sqltable">orders</code> table. That’s because Active Record determines them dynamically at runtime. Active Record reflects on the schema inside the database to configure the classes that wrap tables.</p>
+
+  <p id="N19191">In the Depot application, our <code class="cf sqltable">orders</code> table is defined by the following migration:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/db/migrate/20110711000007_create_orders.rb">rails31/depot_r/db/migrate/20110711000007_create_orders.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> CreateOrders &lt; ActiveRecord::Migration</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> change</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create_table :orders <strong class="prompt">do</strong> |t|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.string :name</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.text :address</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.string :email</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.string :pay_type</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.timestamps</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N191D0">Let’s use the handy-dandy <code class="cf commandname">rails console</code> command to play with this model. First, we’ll ask for a list of column names:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rails console</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Loading development environment (Rails 3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">Order.column_names</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; ["id", "name", "address", "email", "pay_type", "created_at", "updated_at"]</code></td>
+    </tr>
+  </table>
+
+  <p id="N191F0">Then we’ll ask for the details of the <code class="cf sqlcolumn">pay_type</code> column:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">Order.columns_hash["pay_type"]</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">=&gt; #&lt;ActiveRecord::ConnectionAdapters::SQLiteColumn:0x7fe673f7da80</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@name="pay_type", @null=true, @default=nil, @sql_type="varchar(10)",</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@type=:string, @scale=nil, @precision=nil, @primary=false,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@limit=10&gt;</code></td>
+    </tr>
+  </table>
+
+  <div class="xxxsays">
+    <div class="heading">
+      <div class="persons-picture"><img alt="David says:" src="../Images/David.png" /></div>
+
+      <div class="label">
+        David says:
+      </div>
+
+      <div class="title">
+        Where Are Our Attributes?
+      </div>
+    </div>
+
+    <div class="body">
+      <p id="N19214">The notion of a database administrator (DBA) as a separate role from programmer has led some developers to see strict boundaries between code and schema. Active Record blurs that distinction, and no other place is that more apparent than in the lack of explicit attribute definitions in the model.</p>
+
+      <p id="N19220">But fear not. Practice has shown that it makes little difference whether we’re looking at a database schema, a separate XML mapping file, or inline attributes in the model. The composite view is similar to the separations already happening in the Model-View-Control pattern&mdash;just on a smaller scale.</p>
+
+      <p id="N19223">Once the discomfort of treating the table schema as part of the model definition has dissipated, you’ll start to realize the benefits of keeping DRY. When you need to add an attribute to the model, you simply create a new migration and reload the application.</p>
+
+      <p id="N19226">Taking the “build” step out of schema evolution makes it just as agile as the rest of the code. It becomes much easier to start with a small schema and extend and change it as needed.</p>
+    </div>
+  </div>
+
+  <p id="N19229">Notice that Active Record has gleaned a fair amount of information about the <code class="cf sqlcolumn">pay_type</code> column. It knows that it’s a string of at most ten characters, it has no default value, it isn’t the primary key, and it may contain a null value. Rails obtained this information by asking the underlying database the first time we tried to use the <code class="cf class">Order</code> class.</p>
+
+  <p id="N19232">The attributes of an Active Record instance generally correspond to the data in the corresponding row of the database table. For example, our <code class="cf sqltable">orders</code> table might contain the following data:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">sqlite3 -line db/development.sqlite3 "select * from orders limit 1"</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">id = 1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">name = Dave Thomas</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">address = 123 Main St</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">email = customer@example.com</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">pay_type = Check</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">created_at = 2010-06-18 00:36:57.355069</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">updated_at = 2010-06-18 00:36:57.355069</code></td>
+    </tr>
+  </table>
+
+  <p id="N1925B">If we fetched this row into an Active Record object, that object would have seven attributes. The <code class="cf ic">id</code> attribute would be <code class="cf ic">1</code> (a <code class="cf class">Fixnum</code>), the <code class="cf ic">name</code> attribute would be the string <code class="cf ic">"Dave Thomas"</code>, and so on.</p>
+
+  <p id="N1926D">We access these attributes using accessor methods. Rails automatically constructs both attribute readers and attribute writers when it reflects on the schema:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">o = Order.find(1)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">puts o.name <em class="comment">#=&gt; "Dave Thomas"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">o.name = <em class="string">"Fred Smith"</em> <em class="comment"># set the name</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N19288">Setting the value of an attribute does not change anything in the database&mdash;we must save the object for this change to become permanent.</p>
+
+  <p id="p.before.type.cast">The value returned by the attribute readers is cast by Active Record to an appropriate Ruby type if possible (so, for example, if the database column is a timestamp, a <code class="cf class">Time</code> object will be returned). If we want to get the raw value of an attribute, we append <code class="cf ic">_before_type_cast</code> to its name, as shown in the following code:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.price_before_type_cast <em class="comment">#=&gt; "29.95", a string</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.updated_at_before_type_cast <em class="comment">#=&gt; "2008-05-13 10:13:14"</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N192A7">Inside the code of the model, we can use the <code class="cf methodname">read_attribute</code> and <code class="cf methodname">write_attribute</code> private methods. These take the attribute name as a string parameter.</p>
+
+  <p id="N192C6">We can see the mapping between SQL types and their Ruby representation in Figure 46, <a href="#tab.sqltypemap">​<em>Mapping SQL types to Ruby types</em>​</a>. Decimal and Boolean columns are slightly tricky.</p>
+
+  <table class="figure" id="tab.sqltypemap">
+    <tr>
+      <td><img alt="images/sql_type_mapping.png" src="../Images/sql_type_mapping.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 46. Mapping SQL types to Ruby types</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N192DF">Rails maps columns with Decimals with no decimal places to <code class="cf class">Fixnum</code> objects; otherwise, it maps them to <code class="cf class">BigDecimal</code> objects, ensuring that no precision is lost.</p>
+
+  <p id="N192E8">In the case of Boolean, a convenience method is provided with a question mark appended to the column name:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">user = User.find_by_name(<em class="string">"Dave"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> user.superuser?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">grant_privileges</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N19305">In addition to the attributes we define, there are a number of attributes that Rails either provides automatically or have special meaning.</p>
+
+  <h3 id="heading_id_3">Additional Columns Provided by Active Record</h3>
+
+  <p id="N1930C">A number of column names have special significance to Active Record. Here’s a summary:</p>
+
+  <dl>
+    <dt class="force-newline"><code class="cf ic">created_at, created_on, updated_at, updated_on</code></dt>
+
+    <dd>
+      <p id="N19316">This is automatically updated with the timestamp of a row’s creation or last update. Make sure the underlying database column is capable of receiving a date, datetime, or string. Rails applications conventionally use the <code class="cf ic">_on</code> suffix for date columns and the <code class="cf ic">_at</code> suffix for columns that include a time.</p>
+    </dd>
+
+    <dt class="force-newline"><code class="cf ic">lock_version</code></dt>
+
+    <dd>
+      <p id="N19325">Rails will track row version numbers and perform optimistic locking if a table contains <code class="cf ic">lock_version</code>.</p>
+    </dd>
+
+    <dt class="force-newline"><code class="cf ic">type</code></dt>
+
+    <dd>
+      <p id="N19331">Active Record can be subclassed. When you do so, all of the attributes for all of the subclasses are kept in the same table. The <code class="cf ic">type</code> attribute is used to name the column that will be used to track the type of a row.</p>
+    </dd>
+
+    <dt class="force-newline"><code class="cf ic">id</code></dt>
+
+    <dd>
+      <p id="N1933D">This is the default name of a table’s primary key column (<a href="../Text/f_0104.html#sec.primary.key">​here​</a>).</p>
+    </dd>
+
+    <dt class="force-newline"><code class="cf ic"><span class="emph">xxx_</span>id</code></dt>
+
+    <dd>
+      <p id="N1934B">This is the default name of a foreign key reference to a table named with the plural form of <code class="cf ic"><span class="emph">xxx</span></code> .</p>
+    </dd>
+
+    <dt class="force-newline"><code class="cf ic"><span class="emph">xxx_</span>count</code></dt>
+
+    <dd>
+      <p id="N1935A">This maintains a counter cache for the child table <code class="cf ic">xxx</code>.</p>
+    </dd>
+  </dl>
+
+  <p id="N19360">Additional plugins, such as <code class="cf ic">act_as_list</code>,<a href="../Text/f_0107.html#FOOTNOTE-41" id="FNPTR-41">[41]</a> may define additional columns.</p>
+
+  <p id="N1936C">Both primary keys and foreign keys play a vital role in database operations and merit additional discussion.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

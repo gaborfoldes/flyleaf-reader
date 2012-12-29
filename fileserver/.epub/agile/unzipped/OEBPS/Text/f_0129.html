@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">23.5 When Migrations Go Bad</h2>
+
+  <p id="N1E8C8">Migrations suffer from one serious problem. The underlying DDL statements that update the database schema are not transactional. This isn’t a failing in Rails&mdash;most databases just don’t support the rolling back of <code class="cf ic">create table</code>, <code class="cf ic">alter table</code>, and other DDL statements.</p>
+
+  <p id="N1E8E3">Let’s look at a migration that tries to add two tables to a database:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ExampleMigration &lt; ActiveRecord::Migration</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> change</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create_table :one <strong class="prompt">do</strong> ...</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create_table :two <strong class="prompt">do</strong> ...</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1E918">In the normal course of events, the <code class="cf methodname">up</code> method adds tables, <code class="cf sqltable">one</code> and <code class="cf sqltable">two</code>, and the <code class="cf methodname">down</code> method removes them.</p>
+
+  <p id="N1E927">But what happens if there’s a problem creating the second table? We’ll end up with a database containing table <code class="cf sqltable">one</code> but not table <code class="cf sqltable">two</code>. We can fix whatever the problem is in the migration, but now we can’t apply it&mdash;if we try, it will fail because table <code class="cf sqltable">one</code> already exists.</p>
+
+  <p id="N1E933">We could try to roll the migration back, but that won’t work. Because the original migration failed, the schema version in the database wasn’t updated, so Rails won’t try to roll it back.</p>
+
+  <p id="N1E93C">At this point, you could mess around and manually change the schema information and drop table <code class="cf sqltable">one</code>. But it probably isn’t worth it. Our recommendation in these circumstances is simply to drop the entire database, re-create it, and apply migrations to bring it back up-to-date. You’ll have lost nothing, and you’ll know you have a consistent schema.</p>
+
+  <p id="N1E942">All this discussion suggests that migrations are dangerous to use on production databases. Should you run them? We really can’t say. If you have database administrators in your organization, it’ll be their call. If it’s up to you, you’ll have to weigh the risks. But, if you decide to go for it, you really must back up your database first. Then, you can apply the migrations by going to your application’s directory on the machine with the database role on your production servers and executing this command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">RAILS_ENV=production rake db:migrate</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1E953">This is one of those times where the legal notice at the start of this book kicks in. We’re not liable if this deletes your data.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

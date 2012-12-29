@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+</head>
+
+<body>
+  <h1 class="chapter-title" id="chp.migrations"><span class="chapter-number">Chapter 23</span><br />
+  <span class="chapter-name">Migrations</span></h1>
+
+  <div class="epigraph epitext">
+    <ul>
+      <li>
+        <p id="N1DE59">naming migration files,</p>
+      </li>
+
+      <li>
+        <p id="N1DE5D">renaming and columns,</p>
+      </li>
+
+      <li>
+        <p id="N1DE61">creating and renaming tables,</p>
+      </li>
+
+      <li>
+        <p id="N1DE65">defining indices and keys,</p>
+      </li>
+
+      <li>
+        <p id="N1DE69">using native SQL.</p>
+      </li>
+    </ul>
+  </div>
+
+  <p id="N1DE6C">Rails encourages an agile, iterative style of development. We don’t expect to get everything right the first time. Instead, we write tests and interact with our customers to refine our understanding as we go.</p>
+
+  <p id="N1DE6F">For that to work, we need a supporting set of practices. We write tests to help us design our interfaces and to act as a safety net when we change things, and we use version control to store our application’s source files, allowing us to undo mistakes and to monitor what changes day to day.</p>
+
+  <p id="N1DE72">But there’s another area of the application that changes, an area that we can’t directly manage using version control. The database schema in a Rails application constantly evolves as we progress through the development: we add a table here, rename a column there, and so on. The database changes in step with the application’s code.</p>
+
+  <p id="N1DE75">With Rails, each of those steps is made possible through the use of a <span class="emph">migration</span>. You saw this in use throughout the development of the Depot application, starting when we created the first <code class="cf ic">products</code> table in <a href="../Text/f_0044.html#sec.generate.scaffold">​<em>Generating the Scaffold</em>​</a> and when we performed such tasks as adding a quantity to the <code class="cf ic">line_items</code> table in Section 10.1, <a href="../Text/f_0062.html#sec.smarter.cart">​<em>Iteration E1: Creating a Smarter Cart</em>​</a>. Now it is time to dig deeper into how migrations work and what else you can do with them.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

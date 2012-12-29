@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.connecting">24.1 A Stand-Alone Application Using Active Record</h2>
+
+  <p id="N1EA02">One of the first things you will want unfettered access to is your data. You will be pleased to know that you can make full use of Active Record from within a stand-alone application. First, we will show you the “hard” way to do so (the “scare quotes” is because it isn’t all that hard&mdash;remember it is Rails we are talking about here, after all). Then we will show you the easy way.</p>
+
+  <p id="N1EA0D">We will start with a stand-alone program that uses Active Record to wrap a table of orders in a SQLite 3 database. After finding the order with a particular id, it modifies the purchaser’s name and saves the result in the database, updating the original row.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">"rubygems"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">"active_record"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ActiveRecord::Base.establish_connection(:adapter =&gt; <em class="string">"sqlite3"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">:database =&gt; <em class="string">"db/development.sqlite3"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Order &lt; ActiveRecord::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">order = Order.find(1)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">order.name = <em class="string">"Dave Thomas"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">order.save</code></td>
+    </tr>
+  </table>
+
+  <p id="N1EA4B">That’s all there is to it&mdash;in this case no configuration information (apart from the database connection stuff) is required. Active Record figured out what we needed based on the database schema itself and took care of all of the necessary details.</p>
+
+  <p id="N1EA4E">Now that you have seen the “hard” way, let’s see the easy way&mdash;the one where Rails will handle the connection for you and load all of your models.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">"config/environment.rb"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">order = Order.find(1)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">order.name = <em class="string">"Dave Thomas"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">order.save</code></td>
+    </tr>
+  </table>
+
+  <p id="N1EA69">For this to work, Ruby will need to find the <code class="cf filename">config/environment.rb</code> for the application that you want to load. You can do this by specifying the full path to this file on the require statement or by including path in the <code class="cf ic">RUBYLIB</code> environment variable. Another environment variable to watch out for is <code class="cf ic">RAILS_ENV</code>, which is used to select from the development, test, and production environments.</p>
+
+  <p id="N1EA82">Once we have required this one file, we have access to roughly the same parts of our applications as we did when we used <code class="cf ic">rails console</code> in <a href="../Text/f_0084.html#sect.rails.console">​<em>Would the Last Admin to Leave…</em>​</a>.</p>
+
+  <p id="N1EA8B">That was done all with a single require. It couldn’t be easier. But believe it or not, at times you will want to access only a portion of the features that Rails provides, outside the context of a Rails application. We cover that next.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

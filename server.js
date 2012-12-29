@@ -137,5 +137,9 @@ app.get('/feedbooks/:fbid/:book', function(req, res, next) {
     });
 })*/
 
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+    app.listen(80, '10.0.0.182');
+//console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+//    app.listen(3001, '50.18.221.126', function() {
+//	    console.log("Listening on port %d in %s mode", app.address().port, app.settings.env);
+//	});

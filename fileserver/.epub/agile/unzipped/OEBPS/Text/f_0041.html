@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+</head>
+
+<body>
+  <h2 id="heading_id_2">5.2 What Depot Does</h2>
+
+  <p id="N11BD5">Let’s start by jotting down an outline specification for the Depot application. We’ll look at the high-level use cases and sketch out the flow through the web pages. We’ll also try working out what data the application needs (acknowledging that our initial guesses will likely be wrong).</p>
+
+  <h3 id="heading_id_3">Use Cases</h3>
+
+  <p id="N11BDC">A <span class="emph">use case</span> is simply a statement about how some entity uses a system. Consultants invent these kinds of phrases to label things we’ve all known all along&mdash;it’s a perversion of business life that fancy words always cost more than plain ones, even though the plain ones are more valuable.</p>
+
+  <p id="N11BFB">Depot’s use cases are simple (some would say tragically so). We start off by identifying two different roles or actors: the <span class="emph">buyer</span> and the <span class="emph">seller</span>.</p>
+
+  <p id="N11C04">The buyer uses Depot to browse the products we have to sell, select some to purchase, and supply the information needed to create an order.</p>
+
+  <p id="N11C07">The seller uses Depot to maintain a list of products to sell, to determine the orders that are awaiting shipping, and to mark orders as shipped. (The seller also uses Depot to make scads of money and retire to a tropical island, but that’s the subject of another book.)</p>
+
+  <p id="N11C0A">For now, that’s all the detail we need. We <span class="emph">could</span> go into excruciating detail about what it means to maintain products and what constitutes an order ready to ship, but why bother? If there are details that aren’t obvious, we’ll discover them soon enough as we reveal successive iterations of our work to the customer.</p>
+
+  <p id="N11C10">Talking of getting feedback, let’s not forget to get some right now&mdash;let’s make sure our initial (admittedly sketchy) use cases are on the mark by asking our user. Assuming the use cases pass muster, let’s work out how the application will work from the perspectives of its various users.</p>
+
+  <h3 id="heading_id_4">Page Flow</h3>
+
+  <p id="N11C17">We always like to have an idea of the main pages in our applications and to understand roughly how users navigate between them. This early in the development, these page flows are likely to be incomplete, but they still help us focus on what needs doing and know how actions are sequenced.</p>
+
+  <p id="N11C24">Some folks like to mock up web application page flows using Photoshop, Word, or (shudder) HTML. We like using a pencil and paper. It’s quicker, and the customer gets to play too, grabbing the pencil and scribbling alterations right on the paper.</p>
+
+  <table class="figure" id="fig.buyer.flow">
+    <tr>
+      <td><img alt="images/buyer_flow.png" src="../Images/buyer_flow.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 6. Flow of buyer pages</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N11C31">The first sketch of the buyer flow is shown in Figure 6, <a href="#fig.buyer.flow">​<em>Flow of buyer pages</em>​</a>. It’s pretty traditional. The buyer sees a catalog page, from which he selects one product at a time. Each product selected gets added to the cart, and the cart is displayed after each selection. The buyer can continue shopping using the catalog pages or check out and buy the contents of the cart. During checkout, we capture contact and payment details and then display a receipt page. We don’t yet know how we’re going to handle payment, so those details are fairly vague in the flow.</p>
+
+  <p id="N11C37">The seller flow, shown in Figure 7, <a href="#fig.seller.flow">​<em>Flow of seller pages</em>​</a>, is also fairly simple. After logging in, the seller sees a menu letting her create or view a product or ship existing orders. Once viewing a product, the seller may optionally edit the product information or delete the product entirely.</p>
+
+  <table class="figure" id="fig.seller.flow">
+    <tr>
+      <td><img alt="images/seller_flow.png" src="../Images/seller_flow.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 7. Flow of seller pages</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N11C47">The shipping option is very simplistic. It displays each order that has not yet been shipped, one order per page. The seller may choose to skip to the next or may ship the order, using the information from the page as appropriate.</p>
+
+  <p id="N11C4A">The shipping function is clearly not going to survive long in the real world, but shipping is also one of those areas where reality is often stranger than you might think. Overspecify it up front, and we’re likely to get it wrong. For now let’s leave it as it is, confident that we can change it as the user gains experience using our application.</p>
+
+  <h3 id="heading_id_5">Data</h3>
+
+  <p id="N11C57">Finally, we need to think about the data we’re going to be working with.</p>
+
+  <p id="N11C60">Notice that we’re not using words such as <span class="emph">schema</span> or <span class="emph">classes</span> here. We’re also not talking about databases, tables, keys, and the like. We’re simply talking about data. At this stage in the development, we don’t know whether we’ll even be using a database.</p>
+
+  <p id="N11C69">Based on the use cases and the flows, it seems likely that we’ll be working with the data shown in Figure 8, <a href="#fig.initial.data">​<em>Initial guess at application data</em>​</a>. Again, using pencil and paper seems a whole lot easier than some fancy tool, but use whatever works for you.</p>
+
+  <table class="figure" id="fig.initial.data">
+    <tr>
+      <td><img alt="images/initial_data.png" src="../Images/initial_data.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 8. Initial guess at application data</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N11C7E">Working on the data diagram raised a couple of questions. As the user buys items, we’ll need somewhere to keep the list of products they bought, so we added a cart. But apart from its use as a transient place to keep this product list, the cart seems to be something of a ghost&mdash;we couldn’t find anything meaningful to store in it. To reflect this uncertainty, we put a question mark inside the cart’s box in the diagram. We’re assuming this uncertainty will get resolved as we implement Depot.</p>
+
+  <p id="N11C87">Coming up with the high-level data also raised the question of what information should go into an order. Again, we chose to leave this fairly open for now&mdash;we’ll refine this further as we start showing the customer our early iterations.</p>
+
+  <p id="N11C8A">Finally, you might have noticed that we’ve duplicated the product’s price in the line item data. Here we’re breaking the “initially, keep it simple” rule slightly, but it’s a transgression based on experience. If the price of a product changes, that price change should not be reflected in the line item price of currently open orders, so each line item needs to reflect the price of the product at the time the order was made.</p>
+
+  <p id="N11C93">Again, at this point we’ll double-check with the customer that we’re still on the right track. (The customer was most likely sitting in the room with us while we drew these three diagrams.)</p>
+
+  <div class="sidebar">
+    <div class="sidebar-title">
+      General Recovery Advice
+    </div>
+
+    <div class="sidebar-content">
+      <p id="N11C99">Everything in this book has been tested. If you follow along with this scenario precisely, using the recommended version of Rails and SQLite3 on Linux, Mac OS X, or Windows, then everything should work as described. However, deviations from this path may occur. Typos happen to the best of us, and not only are side explorations possible, but they are positively encouraged. Be aware that this might lead you to strange places. Don’t be afraid: specific recovery actions for common problems appear in the specific sections where such problems often occur. A few additional general suggestions are included here.</p>
+
+      <p id="N11CA2">You should only ever need to restart the server in the few places where doing so is noted in the book. But if you ever get truly stumped, restarting the server might be worth trying.</p>
+
+      <p id="N11CAB">A “magic” command worth knowing, explained in detail in Part III, is <code class="cf ic">rake db:migrate:redo</code>. It will undo and reapply the last migration.</p>
+
+      <p id="N11CB1">If your server won’t accept some input on a form, refresh the form on your browser, and resubmit it.</p>
+    </div>
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

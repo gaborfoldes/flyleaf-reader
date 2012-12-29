@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">4.7 Ruby Idioms</h2>
+
+  <p id="N11A2C">A number of individual Ruby features can be combined in interesting ways, and the meaning of such idiomatic usage is often not immediately obvious to people new to the language. We use these common Ruby idioms in this book:</p>
+
+  <dl>
+    <dt class="force-newline" id="wtf.name.bang">Methods such as&nbsp;<code class="cf ic">empty!</code>&nbsp; and&nbsp;<code class="cf ic">empty?</code></dt>
+
+    <dd>
+      <p id="N11A42">Ruby method names can end with an exclamation mark (a bang method) or a question mark (a predicate method). Bang methods normally do something destructive to the receiver. Predicate methods return <code class="cf constant">true</code> or <code class="cf constant">false</code> depending on some condition.</p>
+    </dd>
+
+    <dt class="force-newline" id="wtf.or"><code class="cf ic">a || b</code></dt>
+
+    <dd>
+      <p id="N11A6A">The expression <code class="cf ic">a&nbsp;||&nbsp;b</code> evaluates <code class="cf ic">a</code>. If it isn’t <code class="cf constant">false</code> or <code class="cf constant">nil</code>, then evaluation stops, and the expression returns <code class="cf ic">a</code>. Otherwise, the statement returns <code class="cf ic">b</code>. This is a common way of returning a default value if the first value hasn’t been set.</p>
+    </dd>
+
+    <dt class="force-newline" id="wtf.or.assign"><code class="cf ic">a ||= b</code></dt>
+
+    <dd>
+      <p id="N11A90">The assignment statement supports a set of shortcuts: <code class="cf ic">a&nbsp;<span class="emph">op</span>=&nbsp;b</code> is the same as <code class="cf ic">a&nbsp;=&nbsp;a&nbsp;<span class="emph">op</span>&nbsp;b</code>. This works for most operators.</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">count += 1 <em class="comment"># same as count = count + 1</em></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">price *= discount <em class="comment"># price = price * discount</em></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">count ||= 0 <em class="comment"># count = count || 0</em></code></td>
+        </tr>
+      </table>
+
+      <p id="N11ABF">So, <code class="cf ic">count ||= 0</code> gives <code class="cf variable">count</code> the value 0 if <code class="cf variable">count</code> doesn’t already have a value.</p>
+    </dd>
+
+    <dt class="force-newline" id="wtf.self.new"><code class="cf ic">obj = self.new</code></dt>
+
+    <dd>
+      <p id="N11AD2">Sometimes a class method needs to create an instance of that class.</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Person &lt; ActiveRecord::Base</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> self.for_dave</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">Person.new(name: <em class="string">'Dave'</em>)</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+        </tr>
+      </table>
+
+      <p id="N11AFF">This works fine, returning a new <code class="cf class">Person</code> object. But later, someone might subclass our class:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Employee &lt; Person</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><em class="comment"># ..</em></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">dave = Employee.for_dave <em class="comment"># returns a Person</em></code></td>
+        </tr>
+      </table>
+
+      <p id="N11B23">The <code class="cf methodname">for_dave</code> method was hardwired to return a <code class="cf class">Person</code> object, so that’s what is returned by <code class="cf ic">Employee.for_dave</code>. Using <code class="cf ic">self.new</code> instead returns a new object of the receiver’s class, <code class="cf class">Employee</code>.</p>
+    </dd>
+
+    <dt class="force-newline" id="wtf.lambda"><code class="cf ic">lambda</code></dt>
+
+    <dd>
+      <p id="N11B3C">The <code class="cf ic">lambda</code> operator converts a block into an object of type <code class="cf class">Proc</code>. We will see this used <a href="../Text/f_0105.html#sec.scopes">​here​</a>.</p>
+    </dd>
+
+    <dt class="force-newline" id="wtf.require"><code class="cf ic">require File.dirname(__FILE__) + ’/../test_helper’</code></dt>
+
+    <dd>
+      <p id="N11B56">Ruby’s <code class="cf ic">require</code> method loads an external source file into our application. This is used to include library code and classes that our application relies on. In normal use, Ruby finds these files by searching in a list of directories, the <code class="cf constant">LOAD_PATH</code>.</p>
+
+      <p id="N11B66">Sometimes we need to be specific about what file to include. We can do that by giving <code class="cf ic">require</code> a full filesystem path. The problem is, we don’t know what that path will be&mdash;our users could install our code anywhere.</p>
+
+      <p id="N11B6C">Wherever our application ends up getting installed, the relative path between the file doing the requiring and the target file will be the same. Knowing this, we can construct the absolute path to the target by taking the absolute path to the file doing the requiring (available in the special variable <code class="cf variable">__FILE__</code>), stripping out all but the directory name, and then appending the relative path to the target file.</p>
+    </dd>
+  </dl>
+
+  <p id="N11B72">In addition, there are many good resources on the Web showing Ruby idioms and Ruby gotchas. Here are just a few:</p>
+
+  <ul>
+    <li>
+      <p id="N11B78"><a href="http://www.ruby-lang.org/en/documentation/ruby-from-other-languages/">http://www.ruby-lang.org/en/documentation/ruby-from-other-languages/</a></p>
+    </li>
+
+    <li>
+      <p id="N11B7D"><a href="http://en.wikipedia.org/wiki/Ruby_programming_language">http://en.wikipedia.org/wiki/Ruby_programming_language</a></p>
+    </li>
+
+    <li>
+      <p id="N11B82"><a href="http://www.zenspider.com/Languages/Ruby/QuickRef.html">http://www.zenspider.com/Languages/Ruby/QuickRef.html</a></p>
+    </li>
+  </ul>
+
+  <p id="N11B86">By this point, we have a firm foundation upon which to build: we’ve installed Rails, verified that we have things working with a simple application, covered a brief description of what Rails is, and reviewed (or for some of you, learned for the first time) the basics of the Ruby language. Now it is time to put this knowledge in place to build a larger application.</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_3">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0034.html#FNPTR-16" id="FOOTNOTE-16">[16]</a></td>
+
+        <td>
+          <p id="N11941"><a href="http://www.yaml.org/">http://www.yaml.org/</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

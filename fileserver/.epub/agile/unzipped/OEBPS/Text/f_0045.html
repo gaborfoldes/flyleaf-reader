@@ -1,0 +1,1046 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">6.2 Iteration A2: Making Prettier Listings</h2>
+
+  <p id="N120C7">Our customer has one more request (customers always seem to have one more request, don’t they?). The listing of all the products is ugly. Can we “pretty it up” a bit? And, while we’re in there, can we also display the product image along with the image URL?</p>
+
+  <p id="N120CA">We’re faced with a dilemma here. As developers, we’re trained to respond to these kinds of requests with a sharp intake of breath, a knowing shake of the head, and a murmured “You want what?” At the same time, we also like to show off a bit. In the end, the fact that it’s fun to make these kinds of changes using Rails wins out, and we fire up our trusty editor.</p>
+
+  <p id="N120CD">Before we get too far, though, it would be nice if we had a consistent set of test data to work with. We <span class="emph">could</span> use our scaffold-generated interface and type data in from the browser. However, if we did this, future developers working on our codebase would have to do the same. And, if we were working as part of a team on this project, each member of the team would have to enter their own data. It would be nice if we could load the data into our table in a more controlled way. It turns out that we can. Rails has the ability to import seed data.</p>
+
+  <p id="N120D3">To start, we simply modify the file in the <code class="cf dir">db</code> directory named <code class="cf filename">seeds.rb</code>.</p>
+
+  <p id="N120F1">We then add the code to populate the <code class="cf sqltable">products</code> table. This uses the <code class="cf methodname">create</code> method of the <code class="cf class">Product</code> model. The following is an extract from that file. Rather than type the file by hand, you might want to download the file from the sample code available online.<a href="#FOOTNOTE-19" id="FNPTR-19">[19]</a></p>
+
+  <p id="N12106">While you’re there, copy the images<a href="#FOOTNOTE-20" id="FNPTR-20">[20]</a> into the <code class="cf dir">app/assets/images</code> directory in your application. Be warned: this <code class="cf filename">seeds.rb</code> script removes existing data from the <code class="cf sqltable">products</code> table before loading in the new data. You might not want to run it if you’ve just spent several hours typing your own data into your application!</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/db/seeds.rb">rails31/depot_b/db/seeds.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Product.delete_all</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># . . .</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Product.create(title: 'Programming Ruby 1.9',</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%{&lt;p&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Ruby is the fastest growing and most exciting dynamic language</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">out there. If you need to get working programs delivered fast,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">you should add Ruby to your toolbox.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;/p&gt;},</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: 'ruby.jpg',</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: 49.95)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># . . .</code></td>
+    </tr>
+  </table>
+
+  <p id="N12145">(Note that this code uses <code class="cf ic">%{…}</code>. This is an alternative syntax for double-quoted string literals, convenient for use with long strings. Note also that because it uses Rails’ <code class="cf methodname">create</code> method, it will fail silently if records cannot be inserted because of validation errors.)</p>
+
+  <p id="N12157">To populate your <code class="cf sqltable">products</code> table with test data, simply run the following command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake db:seed</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N12176">Now let’s get the product listing tidied up. There are two pieces to this: defining a set of style rules, and connecting these rules to the to the page by defining an HTML <code class="cf ic">class</code> attribute on the page.</p>
+
+  <p id="N12183">We need somewhere to put our style definitions. As you will continue to find with Rails, there is a convention for this, and that the <code class="cf ic">generate scaffolding</code> command that you previously issued has already laid all of the necessary groundwork. As such, we can proceed to fill in the currently empty stylesheet <code class="cf filename">products.css.scss</code> in the directory <code class="cf dir">app/assets/stylesheets</code>.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/app/assets/stylesheets/products.css.scss">rails31/depot_b/app/assets/stylesheets/products.css.scss</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">Place</strong> <strong class="prompt">all</strong> <strong class="prompt">the</strong> <strong class="prompt">styles</strong> <strong class="prompt">related</strong> <strong class="prompt">to</strong> <strong class="prompt">the</strong> <strong class="prompt">Products</strong> <strong class="prompt">controller</strong> <strong class="prompt">here</strong>.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">They</strong> <strong class="prompt">will</strong> <strong class="prompt">automatically</strong> <strong class="prompt">be</strong> <strong class="prompt">included</strong> <strong class="prompt">in</strong> <strong class="prompt">application</strong>.css.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">// <strong class="prompt">You</strong> <strong class="prompt">can</strong> <strong class="prompt">use</strong> <strong class="prompt">Sass</strong> (<strong class="prompt">SCSS</strong>) <strong class="prompt">here</strong>: <strong class="prompt">http</strong>://<strong class="prompt">sass-lang</strong>.com/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.products {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">table {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">border-collapse: collapse;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">table tr td {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 5px;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">vertical-align: top;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.list_image {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">width: 60px;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">height: 70px;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.list_description {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">width: 60%;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">dl {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin: 0;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">dt {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">color: #244;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-weight: bold;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-size: larger;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">dd {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin: 0;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.list_actions {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-size: x-small;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">text-align: right;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding-left: 1em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.list_line_even {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background: #e0f8f8;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.list_line_odd {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background: #f8b0f8;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+  </table>
+
+  <p id="N12278">Look closely at this stylesheet and you will see that CSS rules are nested, in that the rule for <code class="cf ic">dl</code> is defined <span class="emph">inside</span> the rule for <code class="cf ic">.list_description</code>, which itself is defined inside the rule for <code class="cf ic">products</code>. This tends to make rules less repetitive, and therefore easier to read, write, understand, and maintain.</p>
+
+  <p id="N12287">At this point you are familiar with files ending with <code class="cf ic">erb</code> being preprocessed for embedded Ruby expressions and statements. If you note that this file ends with <code class="cf ic">scss</code>, you might guess that this means that the file is preprocessed as <span class="emph">Sassy CSS</span> <a href="#FOOTNOTE-21" id="FNPTR-21">[21]</a> before being served as <span class="emph">css</span>. And you would be right!</p>
+
+  <p id="N1229B">Again, just like ERb, SCSS does not interfere with writing correct CSS. What SCSS does is provide additional syntax that makes your stylesheets easier to author and easier to maintain. All of this is converted for you by SCSS to standard CSS that your browser understands.</p>
+
+  <p id="p.def.page.class">Finally, we will need to define the <code class="cf ic">products</code> class used by this stylesheet. If you look at the <code class="cf fileextension">html.erb</code> files we’ve created so far, you won’t find any reference to stylesheets. You won’t even find the HTML <code class="cf xmltag">&lt;head&gt;</code> section where such references would normally live. Instead, Rails keeps a separate file that is used to create a standard page environment for the entire application. This file, called <code class="cf filename">application.html.erb</code>, is a Rails layout and lives in the <code class="cf dir">layouts</code> directory:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/app/views/layouts/application.html.erb">rails31/depot_b/app/views/layouts/application.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">Line 1</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;!DOCTYPE html&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;html&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;title&gt;</strong>Depot<strong class="prompt">&lt;/title&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">5</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= stylesheet_link_tag <em class="string">"application"</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= javascript_include_tag <em class="string">"application"</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= csrf_meta_tags %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;body</strong> class=<em class="string">'</em>&lt;%= controller.controller_name %&gt;<em class="string">'</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">10</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= <strong class="prompt">yield</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/html&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="p.application.css">Line 5 uses a <code class="cf methodname">stylesheet_link_tag</code> helper method to create an HTML <code class="cf xmltag">&lt;link&gt;</code> tag. This causes the browser to request the <code class="cf ic">application</code> stylesheet from the <code class="cf dir">app/assets/stylesheets</code> directory:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/app/assets/stylesheets/application.css">rails31/depot_b/app/assets/stylesheets/application.css</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">/*</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">This</em> <em class="comment">is</em> <em class="comment">a</em> <em class="comment">manifest</em> <em class="comment">file</em> <em class="comment">that'll</em> <em class="comment">automatically</em> <em class="comment">include</em> <em class="comment">all</em> <em class="comment">the</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">stylesheets</em> <em class="comment">available</em> <em class="comment">in</em> <em class="comment">this</em> <em class="comment">directory</em> <em class="comment">and</em> <em class="comment">any</em> <em class="comment">sub-directories.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">You're</em> <em class="comment">free</em> <em class="comment">to</em> <em class="comment">add</em> <em class="comment">application-wide</em> <em class="comment">styles</em> <em class="comment">to</em> <em class="comment">this</em> <em class="comment">file</em> <em class="comment">and</em> <em class="comment">they'll</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">appear</em> <em class="comment">at</em> <em class="comment">the</em> <em class="comment">top</em> <em class="comment">of</em> <em class="comment">the</em> <em class="comment">compiled</em> <em class="comment">file,</em> <em class="comment">but</em> <em class="comment">it's</em> <em class="comment">generally</em> <em class="comment">better</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">to</em> <em class="comment">create</em> <em class="comment">a</em> <em class="comment">new</em> <em class="comment">file</em> <em class="comment">per</em> <em class="comment">style</em> <em class="comment">scope.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*=</em> <em class="comment">require_self</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*=</em> <em class="comment">require_tree</em> <em class="comment">.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*/</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N12402">As explained in the comments, this manifest file will automatically include all stylesheets available in this directory and in any subdirectory. This is accomplished via the <code class="cf ic">require_tree</code> directive.</p>
+
+  <p id="N12408">We could instead list the names of individual stylesheets we want to be linked in the <code class="cf methodname">stylesheet_link_tag</code>, but because we are in the layout for the entire application, and because this layout is already set up to load all stylesheets, we’ll leave it alone for now. We’ll look at the rest of the file in more detail in Section 8.2, <a href="../Text/f_0052.html#sec.depot.layouts">​<em>Iteration C2: Adding a Page Layout</em>​</a>.</p>
+
+  <p id="N12411">Because we are going to be loading all of the stylesheets all at once, we need a convention to limit controller-specific rules to pages associated with that controller. Using the <code class="cf ic">controller_name</code> as a class name is an easy way to accomplish that, and is what we have done here.</p>
+
+  <p id="N12417">Now that we have the stylesheets all in place, we will use a simple table-based template, editing the file <code class="cf filename">index.html.erb</code> in <code class="cf dir">app/views/products</code>, replacing the scaffold-generated view:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/app/views/products/index.html.erb">rails31/depot_b/app/views/products/index.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Listing products<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @products.each <strong class="prompt">do</strong> |product| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr</strong> class=<em class="string">"</em>&lt;%= cycle(<em class="string">'list_line_odd'</em>, <em class="string">'list_line_even'</em>) %&gt;<em class="string">"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= image_tag(product.image_url, class: <em class="string">'list_image'</em>) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"list_description"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;dl&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;dt&gt;</strong>&lt;%= product.title %&gt;<strong class="prompt">&lt;/dt&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;dd&gt;</strong>&lt;%= truncate(strip_tags(product.description),</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">length: 80) %&gt;<strong class="prompt">&lt;/dd&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/dl&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"list_actions"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= link_to <em class="string">'Show'</em>, product %&gt;<strong class="prompt">&lt;br</strong> <strong class="prompt">/&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= link_to <em class="string">'Edit'</em>, edit_product_path(product) %&gt;<strong class="prompt">&lt;br</strong> <strong class="prompt">/&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= link_to <em class="string">'Destroy'</em>, product,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">confirm: <em class="string">'Are you sure?'</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">method: :delete %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/table&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;br</strong> <strong class="prompt">/&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= link_to <em class="string">'New product'</em>, new_product_path %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N124E3">Even this simple template uses a number of built-in Rails features:</p>
+
+  <ul>
+    <li>
+      <p id="p.cycle">The rows in the listing have alternating background colors. The Rails helper method called <code class="cf methodname">cycle</code> does this by setting the CSS class of each row to either <code class="cf ic">list_line_even</code> or <code class="cf ic">list_line_odd</code>, automatically toggling between the two style names on successive lines.</p>
+    </li>
+
+    <li>
+      <p id="N12502">The <code class="cf methodname">truncate</code> helper is used to display just the first eighty characters of the description. But before we call <code class="cf methodname">truncate</code>, we called <code class="cf methodname">strip_tags</code> in order to remove the HTML tags from the description.</p>
+    </li>
+
+    <li>
+      <p id="N12525">Look at the <code class="cf ic">link_to ’Destroy’</code> line. See how it has the parameter <code class="cf ic">confirm: ’Are you sure?’</code>. If you click this link, Rails arranges for your browser to pop up a dialog box asking for confirmation before following the link and deleting the product. (Also, see the sidebar <a href="#sb.delete">​here​</a> for some inside scoop on this action.)</p>
+    </li>
+  </ul>
+
+  <div class="sidebar" id="sb.delete">
+    <div class="sidebar-title">
+      What's with method: :delete?
+    </div>
+
+    <div class="sidebar-content">
+      <p id="N12535">You may have noticed that the scaffold-generated Destroy link includes the parameter <code class="cf ic">method: :delete</code>. This determines which method is called in the <code class="cf class">ProductsController</code> class and also affects which HTTP method is used.</p>
+
+      <p id="N12556">Browsers use HTTP to talk with servers. HTTP defines a set of verbs that browsers can employ and defines when each can be used. A regular hyperlink, for example, uses an HTTP GET request. A GET request is defined by HTTP to be used to retrieve data; it isn’t supposed to have any side effects. Using this parameter in this way indicates that an HTTP DELETE method should be used for this hyperlink. Rails uses this information to determine which action in the controller to route this request to.</p>
+
+      <p id="N12567">Note that when used within a browser, Rails will substitute the POST HTTP method for PUT and DELETE methods and in the process tack on an additional parameter so that the router can determine the original intent. Either way, the request will not be cached or triggered by web crawlers.</p>
+    </div>
+  </div>
+
+  <p id="N1256A">We loaded some test data into the database, we rewrote the <code class="cf filename">index.html.erb</code> file that displays the listing of products, we added a <code class="cf filename">application.css.scss</code> stylesheet, and that stylesheet was loaded into our page by the layout file <code class="cf filename">application.html.erb</code>. Now, let’s bring up a browser and point to <a href="http://localhost:3000/products">http://localhost:3000/products</a>; the resulting product listing might look something like the following:</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/depot_c_list.png" src="../Images/depot_c_list.png" /></div>
+
+  <p id="N1257E">So, we proudly show our customer her new product listing, and she’s pleased. Now it is time to create the storefront.</p>
+
+  <h3 id="heading_id_3">What We Just Did</h3>
+
+  <p id="N12592">In this chapter, we laid the groundwork for our store application:</p>
+
+  <ul>
+    <li>
+      <p id="N12598">We created a development database.</p>
+    </li>
+
+    <li>
+      <p id="N1259C">We used migration to create and modify the schema in our development database.</p>
+    </li>
+
+    <li>
+      <p id="N125A0">We created the <code class="cf ic">products</code> table and used the scaffold generator to write an application to maintain it.</p>
+    </li>
+
+    <li>
+      <p id="N125A7">We updated an application-wide layout as well as a controller-specific view in order to show a list of products.</p>
+    </li>
+  </ul>
+
+  <p id="N125AA">What we’ve done did not require much effort, and it got us up and running quickly. Databases are vital to this application but need not be scary&mdash;in fact, in many cases we can defer the selection of the database to later and simply get started using the default that Rails provides.</p>
+
+  <p id="N125AD">Getting the model right is more important at this stage. As we will soon see, simple selection of data types doesn’t always fully capture the <span class="emph">essence</span> of all the properties of the model, even in this small application, so that’s what we will tackle next.</p>
+
+  <h3 id="sec.application.creation.playtime">Playtime</h3>
+
+  <p id="N125B8">Here’s some stuff to try on your own:</p>
+
+  <ul>
+    <li>
+      <p id="N125BE">If you’re feeling frisky, you can experiment with rolling back the migration. Just type the following:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake db:rollback</strong></code></td>
+        </tr>
+      </table>
+
+      <p id="N125CF">Your schema will be transported back in time, and the <code class="cf sqltable">products</code> table will be gone. Calling <code class="cf ic">rake db:migrate</code> again will re-create it. You will also want to reload the seed data. More information can be found in Chapter 23, <a href="../Text/f_0124.html#chp.migrations">​<em>Migrations</em>​</a>.</p>
+    </li>
+
+    <li>
+      <p id="N125DC">We mentioned version control in <a href="../Text/f_0018.html#sec.version.control">​<em>Version Control</em>​</a>, and now would be a great point at which to save your work. Should you happen to choose Git (highly recommended, by the way), there is a tiny bit of configuration you need to do first; basically, all you need to do is provide your name and email address. This typically goes into your home directory, with a filename of <code class="cf filename">.gitconfig</code>. Ours looks like this:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">[user]</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">name = Sam Ruby</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">email = rubys@intertwingly.net</code></td>
+        </tr>
+      </table>
+
+      <p id="N12602">You can verify the configuration with the following command:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">git repo-config --get-regexp user.*</strong></code></td>
+        </tr>
+      </table>
+
+      <p id="N12613">Rails also provides a file named <code class="cf filename">.gitignore</code>, which tells Git which files are not to be version controlled:</p>
+
+      <table class="processedcode">
+        <tr class="livecodelozenge">
+          <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/.gitignore">rails31/depot_b/.gitignore</a></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">.bundle</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">db/*.sqlite3</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">log/*.log</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">tmp/</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">.sass-cache/</code></td>
+        </tr>
+      </table>
+
+      <p id="N12631">Note that because this filename begins with a dot, Unix-based operating systems won’t show it by default in directory listings. Use <code class="cf ic">ls -a</code> to see it.</p>
+
+      <p id="N12637">At this point, you are fully configured. The only tasks that remain are to initialize a repository, add all the files, and commit them with a commit message:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">git init</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">git add .</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">git commit -m "Depot Scaffold"</strong></code></td>
+        </tr>
+      </table>
+
+      <p id="N12654">This may not seem very exciting at this point, but it does mean you are more free to experiment. Should you overwrite or delete a file that you didn’t mean to, you can get back to this point by issuing a single command:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">git checkout .</strong></code></td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+
+  <div class="footnotes">
+    <h4 id="heading_id_4">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0044.html#FNPTR-17" id="FOOTNOTE-17">[17]</a></td>
+
+        <td>
+          <p id="N11D6D"><a href="http://guides.rubyonrails.org/getting_started.html#configuring-a-database">http://guides.rubyonrails.org/getting_started.html#configuring-a-database</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0044.html#FNPTR-18" id="FOOTNOTE-18">[18]</a></td>
+
+        <td>
+          <p id="N11DB6">This command is too wide to fit comfortably on the page. To enter a command on multiple lines, simply put a backslash as the last character on all but the last line, and you will be prompted for more input. Windows users will need to substitute a caret (<code class="cf ic">^</code>) for the backslash.</p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="#FNPTR-19" id="FOOTNOTE-19">[19]</a></td>
+
+        <td>
+          <p id="N12102"><a href="http://media.pragprog.com/titles/rails4/code/depot_b/db/seeds.rb">http://media.pragprog.com/titles/rails4/code/depot_b/db/seeds.rb</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="#FNPTR-20" id="FOOTNOTE-20">[20]</a></td>
+
+        <td>
+          <p id="N1210A"><a href="http://media.pragprog.com/titles/rails4/code/depot_b/app/assets/images/">http://media.pragprog.com/titles/rails4/code/depot_b/app/assets/images/</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="#FNPTR-21" id="FOOTNOTE-21">[21]</a></td>
+
+        <td>
+          <p id="N12293"><a href="http://sass-lang.com/">http://sass-lang.com/</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

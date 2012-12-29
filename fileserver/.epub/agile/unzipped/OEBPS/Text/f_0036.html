@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">4.6 Pulling It All Together</h2>
+
+  <p id="N119B0">Let’s look at an example of how Rails applies a number of Ruby features together to make the code you need to maintain more declarative. You will see this example again in <a href="../Text/f_0044.html#sec.generate.scaffold">​<em>Generating the Scaffold</em>​</a>. For now, we will focus on the Ruby-language aspects of the example.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> CreateProducts &lt; ActiveRecord::Migration</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> change</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">create_table :products <strong class="prompt">do</strong> |t|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.string :title</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.text :description</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.string :image_url</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.decimal :price, precision: 8, scale: 2</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">t.timestamps</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N119EE">Even if you didn’t know any Ruby, you would probably be able to decipher that this code creates a table named <code class="cf ic">products</code>. The fields defined when creating this table include <code class="cf ic">title</code>, <code class="cf ic">description</code>, <code class="cf ic">image_url</code>, and <code class="cf ic">price</code> as well as a few timestamps (we’ll describe these <a href="../Text/f_0124.html#chp.migrations">​here​</a>).</p>
+
+  <p id="N11A03">Now let’s look at the same example from a Ruby perspective. A class named <code class="cf class">CreateProducts</code> is defined, which inherits from the <code class="cf class">Migration</code> class from the <code class="cf ic">ActiveRecord</code> module. One method is defined named <code class="cf methodname">change</code>. This method calls a single class method (defined in <code class="cf class">ActiveRecord::Migration</code>), passing it the name of the table in the form of a symbol.</p>
+
+  <p id="N11A15">The call to <code class="cf methodname">create_table</code> also passes a block that is to be evaluated before the table is created. This block, when called, is passed an object named <code class="cf ic">t</code>, which is used to accumulate a list of fields. Rails defines a number of methods on this object&mdash;methods with names that are named after common data types. These methods, when called, simply add a field definition to the ever-accumulating set of names.</p>
+
+  <p id="N11A1E">The definition of decimal also accepts a number of optional parameters, expressed as a hash.</p>
+
+  <p id="N11A21">To someone new to Ruby, this is a lot of heavy machinery thrown at solving such a simple problem. To someone familiar with Ruby, none of this machinery is particularly heavy. In any case, Rails makes extensive use of the facilities provided by Ruby to make defining operations (for example, migration tasks) as simple and as declarative as possible. Even small features of the language, such as optional parentheses and braces, contribute to the overall readability and ease of authoring.</p>
+
+  <p id="N11A24">Finally, there are a number of small features, or rather idiomatic combinations of features, that are often not immediately obvious to people new to the Ruby language. We close this chapter with them.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

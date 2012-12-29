@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.ajax.cart">11.2 Iteration F2: Creating an Ajax-Based Cart</h2>
+
+  <p id="N14A26">Ajax lets us write code that runs in the browser that interacts with our server-based application. In our case, we’d like to make the <code class="cf keystroke">Add to Cart</code> buttons invoke the server <code class="cf ic">create</code> action on the <code class="cf class">LineItems</code> controller in the background. The server can then send down just the HTML for the cart, and we can replace the cart in the sidebar with the server’s updates.</p>
+
+  <p id="N14A39">Now, normally we’d do this by writing JavaScript that runs in the browser and by writing server-side code that communicated with this JavaScript (possibly using a technology such as JavaScript Object Notation [JSON]). The good news is that, with Rails, all this is hidden from us. We can do everything we need to do using Ruby (and with a whole lot of support from some Rails helper methods).</p>
+
+  <p id="N14A42">The trick when adding Ajax to an application is to take small steps. So, let’s start with the most basic one. Let’s change the catalog page to send an Ajax request to our server application and have the application respond with the HTML fragment containing the updated cart.</p>
+
+  <p id="N14A45">On the index page, we’re using <code class="cf methodname">button_to</code> to create the link to the <code class="cf ic">create</code> action. We want to change this to send an Ajax request instead. To do this, we simply add a <code class="cf ic">remote: true</code> parameter to the call.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_l/app/views/store/index.html.erb">rails31/depot_l/app/views/store/index.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Your Pragmatic Catalog<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @products.each <strong class="prompt">do</strong> |product| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"entry"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= image_tag(product.image_url) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h3&gt;</strong>&lt;%= product.title %&gt;<strong class="prompt">&lt;/h3&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= sanitize(product.description) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"price_line"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;span</strong> class=<em class="string">"price"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(product.price) %&gt;<strong class="prompt">&lt;/span&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to <em class="string">'Add to Cart'</em>, line_items_path(product_id: product),</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">remote: true %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N14ADF">So far, we’ve arranged for the browser to send an Ajax request to our application. The next step is to have the application return a response. The plan is to create the updated HTML fragment that represents the cart and to have the browser stick that HTML into the browser’s internal representation of the structure and content of the document being displayed, namely, the Document Object Model (DOM). By manipulating the DOM, we cause the display to change in front of the user’s eyes.</p>
+
+  <p id="N14AED">The first change is to stop the <code class="cf ic">create</code> action from redirecting to the index display if the request is for JavaScript. We do this by adding a call to <code class="cf methodname">respond_to</code> telling it that we want to respond with a format of <code class="cf fileextension">js</code>.</p>
+
+  <p id="N14AF9">This syntax may seem surprising at first, but it is simply a method call that is passing an optional block as an argument. Blocks are described in <a href="../Text/f_0033.html#wtf.iterating">​<em>Blocks and Iterators</em>​</a>. We will cover the <code class="cf methodname">respond_to</code> method in greater detail <a href="../Text/f_0109.html#sec.route.format">​here​</a>.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_l/app/controllers/line_items_controller.rb">rails31/depot_l/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.find(params[:product_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = @cart.add_product(product.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> @line_item.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to store_url }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.js</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :created, location: @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { render action: <em class="string">"new"</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item.errors,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :unprocessable_entity }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N14B53">Because of this change, when <code class="cf ic">create</code> finishes handling the Ajax request, Rails will look for a <code class="cf ic">create</code> template to render.</p>
+
+  <p id="N14B5C">Rails supports templates that generate JavaScript&mdash;the <span class="emph">JS</span> stands for JavaScript. A <code class="cf fileextension">js.erb</code> template is a way of getting JavaScript on the browser to do what you want, all by writing server-side Ruby code. Let’s write our first: <code class="cf filename">create.js.erb</code>. It goes in the <code class="cf dir">app/views/line_items</code> directory, just like any other view for line items:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_l/app/views/line_items/create.js.erb">rails31/depot_l/app/views/line_items/create.js.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$('#cart').html("&lt;%=j render @cart %&gt;");</code></td>
+    </tr>
+  </table>
+
+  <p id="N14B7D">This simple template tells the browser to replace the content of the element whose <code class="cf xmlattr">id="cart"</code> with that HTML.</p>
+
+  <p id="N14B91">Let’s analyze how it manages to do that.</p>
+
+  <p id="N14B94">For simplicity and conciseness, the jQuery library itself is aliased to <code class="cf ic">$</code>, and most usages of jQuery start there.</p>
+
+  <p id="N14B9A">The first call&mdash;<code class="cf ic">$(’#cart’)</code>&mdash;tells jQuery to find the HTML element that has an <code class="cf ic">id</code> of <code class="cf ic">cart</code>. The <code class="cf methodname">html</code> method<a href="../Text/f_0071.html#FOOTNOTE-28" id="FNPTR-28">[28]</a> is then called with a first argument of the desired replacement for the contents of this element. This content is formed by calling the <code class="cf methodname">render</code> method on the <code class="cf ic">@cart</code> object. The output of this method is processed by a <code class="cf methodname">j</code> helper method that converts this Ruby string into a format acceptable as input to JavaScript.</p>
+
+  <p id="N14BCE">Note that this script is executed in the browser. The only parts executed on the server are the portions within the <code class="cf ic">&lt;%=</code> and <code class="cf ic">%&gt;</code> delimiters.</p>
+
+  <p id="N14BD7">Does it work? Well, it’s hard to show in a book, but it sure does. Make sure you reload the index page in order to get the remote version of the form and the JavaScript libraries loaded into your browser. Then, click one of the <code class="cf keystroke">Add to Cart</code> buttons. You should see the cart in the sidebar update. And you <span class="emph">shouldn’t</span> see your browser show any indication of reloading the page. You’ve just created an Ajax application.</p>
+
+  <h3 id="heading_id_2">Troubleshooting</h3>
+
+  <p id="N14BEA">Although Rails makes Ajax incredibly simple, it can’t make it foolproof. And, because you’re dealing with the loose integration of a number of technologies, it can be hard to work out why your Ajax doesn’t work. That’s one of the reasons you should always add Ajax functionality one step at a time.</p>
+
+  <p id="N14BF4">Here are a few hints if your Depot application didn’t show any Ajax magic:</p>
+
+  <ul>
+    <li>
+      <p id="N14BFA">Does your browser have any special incantation to force it to reload everything on a page? Sometimes browsers hold local cached versions of page assets, and this can mess up testing. Now would be a good time to do a full reload.</p>
+    </li>
+
+    <li>
+      <p id="N14BFE">Did you have any errors reported? Look in <code class="cf filename">development.log</code> in the <code class="cf dir">logs</code> directory. Also look in the Rails server window because some errors are reported there.</p>
+    </li>
+
+    <li>
+      <p id="N14C08">Still looking at the log file, do you see incoming requests to the action <code class="cf ic">create</code>? If not, it means your browser isn’t making Ajax requests. If the JavaScript libraries have been loaded (using View Source in your browser will show you the HTML), perhaps your browser has JavaScript execution disabled?</p>
+    </li>
+
+    <li>
+      <p id="N14C15">Some readers have reported that they had to stop and start their application to get the Ajax-based cart to work.</p>
+    </li>
+
+    <li>
+      <p id="N14C19">If you’re using Internet Explorer, it might be running in what Microsoft calls <span class="emph">quirks mode</span>, which is backward compatible with old Internet Explorer releases but is also broken. Internet Explorer switches into <span class="emph">standards mode</span>, which works better with the Ajax stuff, if the first line of the downloaded page is an appropriate <code class="cf ic">DOCTYPE</code> header. Our layouts use this:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">&lt;!DOCTYPE html&gt;</code></td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+
+  <h3 id="heading_id_3">The Customer Is Never Satisfied</h3>
+
+  <p id="N14C44">We’re feeling pretty pleased with ourselves. We changed a handful of lines of code, and our boring old Web&nbsp;1.0 application now sports Web&nbsp;2.0 Ajax speed stripes. We breathlessly call the client over to come look. Without saying anything, we proudly press <code class="cf keystroke">Add to Cart</code> and look at her, eager for the praise we know will come. Instead, she looks surprised. “You called me over to show me a bug?” she asks. “You click that button, and nothing happens.”</p>
+
+  <p id="N14C4A">We patiently explain that, in fact, quite a lot happened. Just look at the cart in the sidebar. See? When we add something, the quantity changes from 4 to 5.</p>
+
+  <p id="N14C4D">“Oh,” she says, “I didn’t notice that.” And, if she didn’t notice the page update, it’s likely our customers won’t either. It’s time for some user-interface hacking.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

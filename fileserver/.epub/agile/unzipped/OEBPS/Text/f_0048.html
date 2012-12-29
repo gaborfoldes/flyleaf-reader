@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.unit.test">7.2 Iteration B2: Unit Testing of Models</h2>
+
+  <p id="N128B1">One of the real joys of the Rails framework is that it has support for testing baked right in from the start of every project. As we have seen, from the moment you create a new application using the <code class="cf commandname">rails</code> command, Rails starts generating a test infrastructure for you.</p>
+
+  <p id="N128CE">Let’s take a peek inside the <code class="cf dir">unit</code> subdirectory to see what’s already there:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">ls test/unit</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">helpers product_test.rb</code></td>
+    </tr>
+  </table>
+
+  <p id="N128E5"><code class="cf filename">product_test.rb</code> is the file that Rails created to hold the unit tests for the model we created earlier with the <code class="cf commandname">generate</code> script. This is a good start, but Rails can help us only so much.</p>
+
+  <p id="N128ED">Let’s see what kind of test goodies Rails generated inside <code class="cf filename">test/unit/product_test.rb</code> when we generated that model:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/test/unit/product_test.rb">rails31/depot_b/test/unit/product_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'test_helper'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ProductTest &lt; ActiveSupport::TestCase</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># test "the truth" do</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># assert true</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># end</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1291B">The generated <code class="cf class">ProductTest</code> is a subclass of <code class="cf class">ActiveSupport::TestCase</code>. The fact that <code class="cf class">ActiveSupport::TestCase</code> is a subclass of the <code class="cf class">Test::Unit::TestCase</code> class tells us that Rails generates tests based on the Test::Unit framework that comes preinstalled with Ruby. This is good news because it means if we’ve already been testing our Ruby programs with Test::Unit tests (and why wouldn’t we be?), then we can build on that knowledge to test Rails applications. If you’re new to Test::Unit, don’t worry. We’ll take it slow.</p>
+
+  <p id="N12931">Inside this test case, Rails generated a single commented out test called <code class="cf ic">"the truth"</code>. The <code class="cf ic">test</code>...<code class="cf ic">do</code> syntax may seem surprising at first, but here Active Support is combining a class method, optional parentheses, and a block to make defining a test method just the tiniest bit simpler for you. Sometimes it is the little things that make all the difference.</p>
+
+  <p id="N1293D">The <code class="cf ic">assert</code> line in this method is an actual test. It isn’t much of one, though&mdash;all it does is test that <code class="cf constant">true</code> is true. Clearly, this is a placeholder, one that is intended to be replaced by your actual tests.</p>
+
+  <h3 id="heading_id_2">A Real Unit Test</h3>
+
+  <p id="N12955">Let’s get onto the business of testing validation. First, if we create a product with no attributes set, we’ll expect it to be invalid and for there to be an error associated with each field. We can use the model’s <code class="cf methodname">errors</code> and <code class="cf methodname">invalid?</code> methods to see whether it validates, and we can use the <code class="cf methodname">any?</code> method of the error list to see whether there is an error associated with a particular attribute.</p>
+
+  <p id="N12968">Now that we know <span class="emph">what</span> to test, we need to know <span class="emph">how</span> to tell the test framework whether our code passes or fails. We do that using <span class="firstuseinline">assertions</span>. An assertion is simply a method call that tells the framework what we expect to be true. The simplest assertion is the method <code class="cf methodname">assert</code>, which expects its argument to be true. If it is, nothing special happens. However, if the argument to <code class="cf methodname">assert</code> is false, the assertion fails. The framework will output a message and will stop executing the test method containing the failure. In our case, we expect that an empty <code class="cf class">Product</code> model will not pass validation, so we can express that expectation by asserting that it isn’t valid.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.invalid?</code></td>
+    </tr>
+  </table>
+
+  <p id="N1299B">Replace the <code class="cf ic">the truth</code> test with the following code:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_c/test/unit/product_test.rb">rails31/depot_c/test/unit/product_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"product attributes must not be empty"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.new</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.invalid?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.errors[:title].any?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.errors[:description].any?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.errors[:price].any?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.errors[:image_url].any?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N129C8"></p>
+
+  <p id="N129CA">We can rerun just the unit tests by issuing the command <code class="cf ic">rake test:units</code>. When we do so, we now see the test executed successfully:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake test:units</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Loaded suite lib/rake/rake_test_loader</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Started</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ProductTest:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">PASS product attributes must not be empty (0.23s)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Finished in 0.231576 seconds.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">1 tests, 5 assertions, 0 failures, 0 errors, 0 skips</code></td>
+    </tr>
+  </table>
+
+  <p id="N12A03">Sure enough, the validation kicked in, and all our assertions passed.</p>
+
+  <p id="N12A06">Clearly at this point we can dig deeper and exercise individual validations. Let’s look at just three of the many possible tests.</p>
+
+  <p id="N12A09">First, we’ll check that the validation of the price works the way we expect:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_c/test/unit/product_test.rb">rails31/depot_c/test/unit/product_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"product price must be positive"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.new(title: <em class="string">"My Book Title"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">"yyy"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">"zzz.jpg"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.price = -1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.invalid?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_equal <em class="string">"must be greater than or equal to 0.01"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.errors[:price].join(<em class="string">'; '</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.price = 0</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.invalid?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_equal <em class="string">"must be greater than or equal to 0.01"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.errors[:price].join(<em class="string">'; '</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.price = 1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert product.valid?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N12A63">In this code we create a new product and then try setting its price to -1, 0, and +1, validating the product each time. If our model is working, the first two should be invalid, and we verify the error message associated with the <code class="cf ic">price</code> attribute is what we expect. Because the list of error messages is an array, we use the handy <code class="cf ic">join</code> <a href="../Text/f_0049.html#FOOTNOTE-22" id="FNPTR-22">[22]</a> method to concatenate each message, and we express the assertion this way in order to verify that there is only one such message.</p>
+
+  <p id="N12A77">The last price is acceptable, so we assert that the model is now valid. (Some folks would put these three tests into three separate test methods&mdash;that’s perfectly reasonable.)</p>
+
+  <p id="N12A83">Next, we’ll test that we’re validating that the image URL ends with one of <code class="cf fileextension">gif</code>, <code class="cf fileextension">jpg</code>, or <code class="cf fileextension">png</code>:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_c/test/unit/product_test.rb">rails31/depot_c/test/unit/product_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> new_product(image_url)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Product.new(title: <em class="string">"My Book Title"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">"yyy"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: 1,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: image_url)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"image url"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ok = <em class="string">%w{ fred.gif fred.jpg fred.png FRED.JPG FRED.Jpg</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">http://a.b.c/x/y/z/fred.gif }</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">bad = <em class="string">%w{ fred.doc fred.gif/more fred.gif.more }</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ok.each <strong class="prompt">do</strong> |name|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert new_product(name).valid?, <em class="string">"</em>#{name} <em class="string">shouldn't be invalid"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">bad.each <strong class="prompt">do</strong> |name|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert new_product(name).invalid?, <em class="string">"</em>#{name} <em class="string">shouldn't be valid"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N12AFC">Here we’ve mixed things up a bit. Rather than write out the nine separate tests, we’ve used a couple of loops&mdash;one to check the cases we expect to pass validation and the second to try cases we expect to fail. At the same time, we factored out the common code between the two loops.</p>
+
+  <p id="N12AFF">You’ll notice that we’ve also added an extra parameter to our <code class="cf ic">assert</code> method calls. All of the testing assertions accept an optional trailing parameter containing a string. This will be written along with the error message if the assertion fails and can be useful for diagnosing what went wrong.</p>
+
+  <p id="N12B05">Finally, our model contains a validation that checks that all the product titles in the database are unique. To test this one, we’re going to need to store product data in the database.</p>
+
+  <p id="N12B08">One way to do this would be to have a test create a product, save it, then create another product with the same title, and try to save it too. This would clearly work. But there’s a much simpler way&mdash;we can use Rails <span class="emph">fixtures</span>.</p>
+
+  <h3 id="heading_id_3">Test Fixtures</h3>
+
+  <p id="N12B12">In the world of testing, a <span class="emph">fixture</span> is an environment in which you can run a test. If you’re testing a circuit board, for example, you might mount it in a test fixture that provides it with the power and inputs needed to drive the function to be tested.</p>
+
+  <p id="N12B24">In the world of Rails, a test fixture is simply a specification of the initial contents of a model (or models) under test. If, for example, we want to ensure that our <code class="cf sqltable">products</code> table starts off with known data at the start of every unit test, we can specify those contents in a fixture, and Rails will take care of the rest.</p>
+
+  <p id="N12B2A">You specify fixture data in files in the <code class="cf dir">test/fixtures</code> directory. These files contain test data in either comma-separated value (CSV) or YAML format. For our tests, we’ll use YAML, the preferred format. Each fixture file contains the data for a single model. The name of the fixture file is significant; the base name of the file must match the name of a database table. Because we need some data for a <code class="cf class">Product</code> model, which is stored in the <code class="cf sqltable">products</code> table, we’ll add it to the file called <code class="cf filename">products.yml</code>.</p>
+
+  <div class="xxxsays">
+    <div class="heading">
+      <div class="persons-picture"><img alt="David says:" src="../Images/David.png" /></div>
+
+      <div class="label">
+        David says:
+      </div>
+
+      <div class="title">
+        Picking Good Fixture Names
+      </div>
+    </div>
+
+    <div class="body">
+      <p id="N12B48">Just like the names of variables in general, you want to keep the names of fixtures as self-explanatory as possible. This increases the readability of the tests when you’re asserting that <code class="cf variable">product(:valid_order_for_fred)</code> is indeed Fred’s valid order. It also makes it a lot easier to remember which fixture you’re supposed to test against without having to look up <code class="cf variable">p1</code> or <code class="cf variable">order4</code>. The more fixtures you get, the more important it is to pick good fixture names. So, starting early keeps you happy later.</p>
+
+      <p id="N12B54">But what do we do with fixtures that can’t easily get a self-explanatory name like <code class="cf variable">valid_order_for_fred</code>? Pick natural names that you have an easier time associating to a role. For example, instead of using <code class="cf variable">order1</code>, use <code class="cf variable">christmas_order</code>. Instead of <code class="cf variable">customer1</code>, use <code class="cf variable">fred</code>. Once you get into the habit of natural names, you’ll soon be weaving a nice little story about how <code class="cf variable">fred</code> is paying for his <code class="cf variable">christmas_order</code> with his <code class="cf variable">invalid_credit_card</code> first, then paying with his <code class="cf variable">valid_credit_card</code>, and finally choosing to ship it all off to <code class="cf variable">aunt_mary</code>.</p>
+
+      <p id="N12B75">Association-based stories are key to remembering large worlds of fixtures with ease.</p>
+    </div>
+  </div>
+
+  <p id="N12B78">Rails already created this fixture file when we first created the model:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_b/test/fixtures/products.yml">rails31/depot_b/test/fixtures/products.yml</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">one:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">title: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">MyText</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: <em class="string">9.99</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">two:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">title: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">MyText</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: <em class="string">9.99</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N12BBA">The fixture file contains an entry for each row that we want to insert into the database. Each row is given a name. In the case of the Rails-generated fixture, the rows are named <span class="emph">one</span> and <span class="emph">two</span>. This name has no significance as far as the database is concerned&mdash;it is not inserted into the row data. Instead, as we’ll see shortly, the name gives us a convenient way to reference test data inside our test code. They also are the names used in the generated integration tests, so for now, we’ll leave them alone.</p>
+
+  <p id="N12BC3">Inside each entry you’ll see an indented list of name/value pairs. Just like in your <code class="cf filename">config/database.yml</code>, you must use spaces, not tabs, at the start of each of the data lines, and all the lines for a row must have the same indentation. Be careful as you make changes because you will need to make sure the names of the columns are correct in each entry; a mismatch with the database column names may cause a hard-to-track-down exception.</p>
+
+  <p id="N12BC9">Let’s add some more data to the fixture file with something we can use to test our <code class="cf ic">Product</code> model:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_c/test/fixtures/products.yml">rails31/depot_c/test/fixtures/products.yml</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ruby:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">title: <em class="string">Programming Ruby 1.9</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Ruby is the fastest growing and most exciting dynamic</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">language out there. If you need to get working programs</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">delivered fast, you should add Ruby to your toolbox.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: <em class="string">49.50</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">ruby.png</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N12BF6">Now that we have a fixture file, we want Rails to load the test data into the <code class="cf sqltable">products</code> table when we run the unit test. And, in fact, Rails is already doing this (convention over configuration for the win!), but you can control which fixtures to load by specifying the following line in <code class="cf filename">test/unit/product_test.rb</code>:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ProductTest &lt; ActiveSupport::TestCase</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">fixtures :products</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">#...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N12C1F">The <code class="cf methodname">fixtures</code> directive loads the fixture data corresponding to the given model name into the corresponding database table before each test method in the test case is run. The name of the fixture file determines the table that is loaded, so using <code class="cf variable">:products</code> will cause the <code class="cf filename">products.yml</code> fixture file to be used.</p>
+
+  <p id="N12C36">Let’s say that again another way. In the case of our <code class="cf class">ProductTest</code> class, adding the <code class="cf ic">fixtures</code> directive means that the <code class="cf sqltable">products</code> table will be emptied out and then populated with the three rows defined in the fixture before each test method is run.</p>
+
+  <p id="N12C42">Note that most of the scaffolding that Rails generates doesn’t contain calls to the <code class="cf ic">fixtures</code> method. That’s because the default for tests is to load <span class="emph">all</span> fixtures before running the test. Because that default is generally the one you want, there usually isn’t any need to change it. Once again, conventions are used to eliminate the need for unnecessary configuration.</p>
+
+  <p id="N12C4B">The <code class="cf methodname">products</code> method indexes into the table created by loading the fixture. We need to change the index used to match the name we gave in the fixture itself.</p>
+
+  <p id="N12C51">So far, we’ve been doing all our work in the development database. Now that we’re running tests, though, Rails needs to use a test database. If you look in the <code class="cf filename">database.yml</code> file in the <code class="cf dir">config</code> directory, you’ll notice Rails actually created a configuration for three separate databases:</p>
+
+  <ul>
+    <li>
+      <p id="N12C63"><code class="cf ic">db/development.sqlite3</code> will be our development database. All of our programming work will be done here.</p>
+    </li>
+
+    <li>
+      <p id="N12C6F"><code class="cf ic">db/test.sqlite3</code> is a test database.</p>
+    </li>
+
+    <li>
+      <p id="N12C7B"><code class="cf ic">db/production.sqlite3</code> is the production database. Our application will use this when we put it online.</p>
+    </li>
+  </ul>
+
+  <p id="N12C80">Each test method gets a freshly initialized table in the test database, loaded from the fixtures we provide. This is automatically done by the <code class="cf ic">rake test</code> command but can be done separately by running <code class="cf ic">rake db:test:prepare</code>.</p>
+
+  <h4 id="heading_id_4">Using Fixture Data</h4>
+
+  <p id="N12C8D">Now that we know how to get fixture data into the database, we need to find ways of using it in our tests.</p>
+
+  <p id="N12C90">Clearly, one way would be to use the finder methods in the model to read the data. However, Rails makes it easier than that. For each fixture it loads into a test, Rails defines a method with the same name as the fixture. You can use this method to access preloaded model objects containing the fixture data: simply pass it the name of the row as defined in the YAML fixture file, and it’ll return a model object containing that row’s data. In the case of our product data, calling <code class="cf ic">products(:ruby)</code> returns a <code class="cf class">Product</code> model containing the data we defined in the fixture. Let’s use that to test the validation of unique product titles:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_c/test/unit/product_test.rb">rails31/depot_c/test/unit/product_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"product is not valid without a unique title"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.new(title: products(:ruby).title,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">"yyy"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: 1,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">"fred.gif"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert !product.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_equal <em class="string">"has already been taken"</em>, product.errors[:title].join(<em class="string">'; '</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N12CCF">The test assumes that the database already includes a row for the Ruby book. It gets the title of that existing row using this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">products(:ruby).title</code></td>
+    </tr>
+  </table>
+
+  <p id="N12CDD">It then creates a new <code class="cf class">Product</code> model, setting its title to that existing title. It asserts that attempting to save this model fails and that the <code class="cf ic">title</code> attribute has the correct error associated with it.</p>
+
+  <p id="N12CE6">If you want to avoid using a hard-coded string for the Active Record error, you can compare the response against its built-in error message table:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_c/test/unit/product_test.rb">rails31/depot_c/test/unit/product_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"product is not valid without a unique title - i18n"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.new(title: products(:ruby).title,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">"yyy"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: 1,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">"fred.gif"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert !product.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_equal I18n.translate(<em class="string">'activerecord.errors.messages.taken'</em>),</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product.errors[:title].join(<em class="string">'; '</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N12D28">We will cover the I18n functions in Chapter 15, <a href="../Text/f_0086.html#chp.i18n">​<em>Task J: Internationalization</em>​</a>.</p>
+
+  <p id="N12D2E">Now we can feel confident that our validation code not only works but will continue to work. Our product now has a model, a set of views, a controller, and a set of unit tests. It will serve as a good foundation upon which to build the rest of the application.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

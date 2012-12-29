@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.function.test">8.4 Iteration C4: Functional Testing of Controllers</h2>
+
+  <p id="N134BD">Now for the moment of truth. Before we focus on writing new tests, we need to determine whether we have actually broken anything. Remembering our experience after we added validation logic to our model, with some trepidation we run our tests again:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake test</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N134D5">This time, all is well. We added a lot, but we didn’t break anything. That’s a relief, but our work is not yet done; we still need tests for what we just added.</p>
+
+  <p id="N134D8">The unit testing of models that we did previously seemed straightforward enough. We called a method and compared what it returned against what we expected it to return. But now we are dealing with a server that processes requests and a user viewing responses in a browser. What we will need is <span class="emph">functional</span> tests that verify that the model, view, and controller work well together. Never fear, Rails makes this easy too.</p>
+
+  <p id="N134E5">First, let’s take a look at what Rails generated for us:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_d/test/functional/store_controller_test.rb">rails31/depot_d/test/functional/store_controller_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'test_helper'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> StoreControllerTest &lt; ActionController::TestCase</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"should get index"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">get :index</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_response :success</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13516">The <span class="emph">should get index</span> test gets the index and asserts that a successful response is expected. That certainly seems straightforward enough. That’s a reasonable beginning, but we also want to verify that the response contains our layout, our product information, and our number formatting. Let’s see what that looks like in code:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_e/test/functional/store_controller_test.rb">rails31/depot_e/test/functional/store_controller_test.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">require <em class="string">'test_helper'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> StoreControllerTest &lt; ActionController::TestCase</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">test <em class="string">"should get index"</em> <strong class="prompt">do</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">get :index</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_response :success</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_select <em class="string">'#columns #side a'</em>, minimum: 4</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_select <em class="string">'#main .entry'</em>, 3</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_select <em class="string">'h3'</em>, <em class="string">'Programming Ruby 1.9'</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">assert_select <em class="string">'.price'</em>, /\$[,\d]+\.\d\d/</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13564">The four lines we added take a look <span class="emph">into</span> the HTML that is returned, using CSS selector notation. As a refresher, selectors that start with a number sign (<code class="cf ic">#</code>) match on <code class="cf ic">id</code> attributes, selectors that start with a dot (<code class="cf ic">.</code>) match on class attributes, and selectors that contain no prefix at all match on element names.</p>
+
+  <p id="N13579">So, the first select test looks for an element named <code class="cf ic">a</code> that is contained in an element with an <code class="cf ic">id</code> with a value of <code class="cf ic">side</code>, which is contained within an element with an <code class="cf ic">id</code> with a value of <code class="cf ic">columns</code>. This test verifies that there are a minimum of four such elements. Pretty powerful stuff, <code class="cf methodname">assert_select</code>, eh?</p>
+
+  <p id="N13595">The next three lines verify that all of our products are displayed. The first verifies that there are three elements with a class name of <code class="cf ic">entry</code> inside the main portion of the page. The next line verifies that there is an <code class="cf ic">h3</code> element with the title of the Ruby book that we had entered previously. The third line verifies that the price is formatted correctly. These assertions are based on the test data that we had put inside our fixtures:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_e/test/fixtures/products.yml">rails31/depot_e/test/fixtures/products.yml</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">one:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">title: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">MyText</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: <em class="string">9.99</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">two:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">title: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description: <em class="string">MyText</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">MyString</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: <em class="string">9.99</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ruby:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">title: <em class="string">Programming Ruby 1.9</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">description:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Ruby is the fastest growing and most exciting dynamic</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">language out there. If you need to get working programs</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">delivered fast, you should add Ruby to your toolbox.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">price: <em class="string">49.50</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">image_url: <em class="string">ruby.png</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N135FD">If you noticed, the type of test that <code class="cf methodname">assert_select</code> performs varies based on the type of the second parameter. If it is a number, it will be treated as a quantity. If it is a string, it will be treated as an expected result. Another useful type of test is a regular expression, which is what we use in our final assertion. We verify that there is a price that has a value that contains a dollar sign followed by any number (but at least one), commas, or digits; followed by a decimal point; followed by two digits.</p>
+
+  <p id="N13607">One final point before we move on: both validation and functional tests will test the behavior of controllers only; they will not retroactively affect any objects that already exist in the database or in fixtures. In the previous example, two products contain the same title. Such data will cause no problems and will go undetected up to the point where such records are modified and saved.</p>
+
+  <p id="N1360A">We’ve touched on only a few things that <code class="cf methodname">assert_select</code> can do. More information can be found in the online documentation.<a href="../Text/f_0055.html#FOOTNOTE-24" id="FNPTR-24">[24]</a></p>
+
+  <p id="N13615">That’s a lot of verification in just a few lines of code. We can see that it works by rerunning just the functional tests (after all, that’s all we changed):</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake test:functionals</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N13631">Now we not only have something recognizable as a storefront, we have tests that ensure that all of the pieces&mdash;the model, view, and controller&mdash;are all working together to produce the desired result. Although this sounds like a lot, with Rails it was easy. In fact, it was mostly HTML and CSS and not much in the way of code or tests.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

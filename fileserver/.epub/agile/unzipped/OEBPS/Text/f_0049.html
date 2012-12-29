@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">7.3 What We Just Did</h2>
+
+  <p id="N12D5E">In just about a dozen lines of code, we augmented that generated code with validation:</p>
+
+  <ul>
+    <li>
+      <p id="N12D64">We ensured that required fields were present.</p>
+    </li>
+
+    <li>
+      <p id="N12D68">We ensured that price fields were numeric and at least one cent.</p>
+    </li>
+
+    <li>
+      <p id="N12D6C">We ensured that titles were unique.</p>
+    </li>
+
+    <li>
+      <p id="N12D70">We ensured that images matched a given format.</p>
+    </li>
+
+    <li>
+      <p id="N12D74">We updated the unit tests that Rails provided, both to conform to the constraints we have imposed on the model and to verify the new code that we added.</p>
+    </li>
+  </ul>
+
+  <p id="N12D77">We show this to our customer, and although she agrees that this is something an administrator could use, she says that it certainly isn’t anything that she would feel comfortable turning loose on her customers. Clearly, in the next iteration we are going to have to focus a bit on the user interface.</p>
+
+  <h3 id="sec.validation.playtime">Playtime</h3>
+
+  <p id="N12D7F">Here’s some stuff to try on your own:</p>
+
+  <ul>
+    <li>
+      <p id="N12D85">If you are using Git, now might be a good time to commit our work. You can first see what files we changed by using the <code class="cf ic">git status</code> command:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">git status</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># On branch master</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># Changes not staged for commit:</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># (use "git add &lt;file&gt;..." to update what will be committed)</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">#</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># modified: app/models/product.rb</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># modified: test/fixtures/products.yml</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># modified: test/functional/products_controller_test.rb</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># modified: test/unit/product_test.rb</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"># no changes added to commit (use "git add" and/or "git commit -a")</code></td>
+        </tr>
+      </table>
+
+      <p id="N12DB7">Since we only modified some existing files and didn’t add any new ones, we can combine the <code class="cf ic">git add</code> and <code class="cf ic">git commit</code> commands and simply issue a single <code class="cf ic">git commit</code> command with the <code class="cf ic">-a</code> option:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">git commit -a -m 'Validation!'</strong></code></td>
+        </tr>
+      </table>
+
+      <p id="N12DD4">With this done, we can play with abandon, secure in the knowledge that we can return to this state at any time using a single <code class="cf ic">git checkout .</code> command.</p>
+    </li>
+
+    <li>
+      <p id="N12DDB">The validation option <code class="cf ic">:length</code> checks the length of a model attribute. Add validation to the <code class="cf ic">Product</code> model to check that the title is at least ten characters long.</p>
+    </li>
+
+    <li>
+      <p id="N12DE5">Change the error message associated with one of your validations.</p>
+    </li>
+  </ul>
+
+  <p id="N12DE8">(You’ll find hints at <a href="http://www.pragprog.com/wikis/wiki/RailsPlayTime">http://www.pragprog.com/wikis/wiki/RailsPlayTime</a>.)</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_3">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0048.html#FNPTR-22" id="FOOTNOTE-22">[22]</a></td>
+
+        <td>
+          <p id="N12A72"><a href="http://ruby-doc.org/core/classes/Array.html#M002182">http://ruby-doc.org/core/classes/Array.html#M002182</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

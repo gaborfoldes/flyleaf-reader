@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.haml">26.2 Beautifying Our Markup with Haml</h2>
+
+  <p id="N1FB5C">Let’s take a look once again at a simple view that we use in the Depot application, in this case, one that presents our storefront:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/app/views/store/index.html.erb">rails31/depot_u/app/views/store/index.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> notice %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p</strong> id=<em class="string">"notice"</em> <strong class="prompt">&gt;</strong>&lt;%= notice %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>&lt;%= t(<em class="string">'.title_html'</em>) %&gt;<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @products.each <strong class="prompt">do</strong> |product| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"entry"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= image_tag(product.image_url) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h3&gt;</strong>&lt;%= product.title %&gt;<strong class="prompt">&lt;/h3&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= sanitize(product.description) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"price_line"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;span</strong> class=<em class="string">"price"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(product.price) %&gt;<strong class="prompt">&lt;/span&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= button_to t(<em class="string">'.add_html'</em>), line_items_path(product_id: product),</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">remote: true %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1FBEE">This code gets the job done. It contains the basic HTML, with interspersed bits of Ruby code enclosed in <code class="cf ic">&lt;%</code> and <code class="cf ic">%&gt;</code> markup. Inside that markup, an equals sign is used to indicate that the value of the expression is to be converted to HTML and displayed.</p>
+
+  <p id="N1FBF7">This is not only an adequate solution to the problem at hand; it is also all that is really needed for a large number of Rails applications. Additionally, it is an ideal place to start for books&mdash;like this one&mdash;where some knowledge of HTML may be presumed, but many of the readers are new to Rails and often to Ruby itself. The last thing you would want to do in that situation is to introduce yet another new language.</p>
+
+  <p id="N1FBFA">But now that you are past that learning curve, let’s go ahead and explore a new language&mdash;one that more closely integrates the production of markup with Ruby code, namely, HTML Abstraction Markup Language (Haml).</p>
+
+  <p id="N1FBFD">To start with, let’s remove the file we just looked at:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">rm app/views/store/index.html.erb</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1FC0E">In its place, let’s create a new file:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_v/app/views/store/index.html.haml">rails31/depot_v/app/views/store/index.html.haml</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">- if notice</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%p#notice= notice</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%h1= t('.title_html')</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">- @products.each do |product|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.entry</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">= image_tag(product.image_url)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%h3= product.title</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">= sanitize(product.description)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">.price_line</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%span.price= number_to_currency(product.price)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">= button_to t('.add_html'), line_items_path(product_id: product),</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">remote: true</code></td>
+    </tr>
+  </table>
+
+  <p id="N1FC42">Note the new extension: <code class="cf ic">.html.haml</code>. This indicates that the template is a Haml template instead of an ERB template.</p>
+
+  <p id="N1FC48">The first thing you should notice is that the file is considerably smaller. Here’s a quick overview of what is going on, based on what the first character is on each line:</p>
+
+  <ul>
+    <li>
+      <p id="N1FC4E">Dashes indicate a Ruby statement that does not produce any output</p>
+    </li>
+
+    <li>
+      <p id="N1FC52">Percent signs (<code class="cf ic">%</code>) indicate a HTML element.</p>
+    </li>
+
+    <li>
+      <p id="N1FC59">Equals signs (<code class="cf ic">=</code>) indicate a Ruby expression that does produce output to be displayed. This can be used on either lines by themselves or following HTML elements.</p>
+    </li>
+
+    <li>
+      <p id="N1FC60">Dots (<code class="cf ic">.</code>) and hash (<code class="cf ic">#</code>) characters may be used to define class and id attributes, respectively. This can be combined with percent signs or used stand-alone. When used by itself, a <code class="cf ic">div</code> element is implied.</p>
+    </li>
+
+    <li>
+      <p id="N1FC6D">A comma at the end of a line containing an expression implies a continuation. In the previous example, the <code class="cf methodname">button_to</code> call is continued across two lines.</p>
+    </li>
+  </ul>
+
+  <p id="N1FC73">An important thing to note is that indentation is important in Haml. Returning to the same level of indentation closes the if statement, loop, or tag that is currently open. In this example, the paragraph is closed before the <code class="cf ic">h1</code>, the <code class="cf ic">h1</code> is closed before the first <code class="cf ic">div</code>, but the <code class="cf ic">div</code> elements nest, with the first containing an <code class="cf ic">h3</code> element and the second containing both a <code class="cf ic">span</code> and a <code class="cf methodname">button_to</code>.</p>
+
+  <p id="N1FC8B">As you can also see, all of your familiar helpers are available, things like <code class="cf methodname">t</code>, <code class="cf methodname">image_tag</code>, and <code class="cf methodname">button_to</code>. In every meaningful way, Haml is as integrated into your application as ERB is. You can mix and match: you can have some templates using ERB and others using Haml.</p>
+
+  <p id="N1FC97">As you have already installed the Haml gem, there truly is nothing more you need to do. To see this in action, all you need to do is to visit your storefront. What you should see should match Figure 54, <a href="#fig.haml">​<em>Storefront using Haml</em>​</a>.</p>
+
+  <table class="figure" id="fig.haml">
+    <tr>
+      <td><img alt="images/i18n_selector.png" src="../Images/i18n_selector.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 54. Storefront using Haml</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N1FCA6">If that looks unremarkable, that’s because it should look <span class="emph">exactly</span> like it did before. And that, if you think about it, is all the more remarkable as the application layout continues to be implemented as a ERB template and the index itself is implemented using Haml. Despite this, everything integrates seamlessly and effortlessly.</p>
+
+  <p id="N1FCC1">Although this clearly is a deeper level of integration than simply adding a task or a helper, it still is an addition. Next, let’s explore a true replacement.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

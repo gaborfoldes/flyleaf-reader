@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">2.4 What We Just Did</h2>
+
+  <p id="N10D92">We constructed a toy application that showed us the following:</p>
+
+  <ul>
+    <li>
+      <p id="N10D98">How to create a new Rails application and how to create a new controller in that application</p>
+    </li>
+
+    <li>
+      <p id="N10D9C">How to create dynamic content in the controller and display it via the view template</p>
+    </li>
+
+    <li>
+      <p id="N10DA0">How to link pages together</p>
+    </li>
+  </ul>
+
+  <p id="N10DA3">This is a great foundation, and it didn’t really take much time or effort. This experience will continue as we move on to the next chapter and build a much bigger application.</p>
+
+  <h3 id="heading_id_3">Playtime</h3>
+
+  <p id="N10DAA">Here’s some stuff to try on your own:</p>
+
+  <ul>
+    <li>
+      <p id="N10DB0">Experiment with the following expressions:</p>
+
+      <ul>
+        <li>
+          <p id="N10DB6"><code class="cf ic">Addition: &lt;%= 1+2 %&gt;</code></p>
+        </li>
+
+        <li>
+          <p id="N10DBB"><code class="cf ic">Concatenation: &lt;%= "cow" + "boy" %&gt;</code></p>
+        </li>
+
+        <li>
+          <p id="N10DC0"><code class="cf ic">Time in one hour: &lt;%= 1.hour.from_now %&gt;</code></p>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <p id="N10DC5">A call to the following Ruby method returns a list of all the files in the current directory:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">@files = Dir.glob(<em class="string">'*'</em>)</code></td>
+        </tr>
+      </table>
+
+      <p id="N10DD6">Use it to set an instance variable in a controller action, and then write the corresponding template that displays the filenames in a list on the browser.</p>
+
+      <p id="N10DD9">Hint: you can iterate over a collection using something like this:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">for</strong> file <strong class="prompt">in</strong> @files %&gt;</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">file name is: &lt;%= file %&gt;</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+        </tr>
+      </table>
+
+      <p id="N10DF6">You might want to use a <code class="cf xmltag">&lt;ul&gt;</code> for the list.</p>
+    </li>
+  </ul>
+
+  <p id="N10DFC">(You’ll find hints at <a href="http://www.pragprog.com/wikis/wiki/RailsPlayTime">http://www.pragprog.com/wikis/wiki/RailsPlayTime</a>.)</p>
+
+  <h3 id="heading_id_4">Cleaning Up</h3>
+
+  <p id="N10E06">Maybe you’ve been following along and writing the code in this chapter. If so, chances are that the application is still running on your computer. When we start coding our next application in ten pages or so, we’ll get a conflict the first time we run it, because it will also try to use the computer’s port 3000 to talk with the browser. Now would be a good time to stop the current application by pressing Ctrl-C in the window you used to start it.</p>
+
+  <p id="N10E09">Now let’s move on to an overview of Rails.</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_5">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0023.html#FNPTR-14" id="FOOTNOTE-14">[14]</a></td>
+
+        <td>
+          <p id="N10B16">With Ruby 1.8.7, the standard format was different, and looks more like the following: <code class="cf ic">Mon Jul 25 09:43:25 -0400 2011</code>.</p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

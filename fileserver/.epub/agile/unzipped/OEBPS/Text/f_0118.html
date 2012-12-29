@@ -1,0 +1,1092 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.layouts">21.6 Reducing Maintenance with Layouts and Partials</h2>
+
+  <p id="N1CF1C">So far in this chapter we’ve looked at templates as isolated chunks of code and HTML. But one of the driving ideas behind Rails is honoring the DRY principle and eliminating the need for duplication. The average website, though, has lots of duplication.</p>
+
+  <ul>
+    <li>
+      <p id="N1CF22">Many pages share the same tops, tails, and sidebars.</p>
+    </li>
+
+    <li>
+      <p id="N1CF26">Multiple pages may contain the same snippets of rendered HTML (a blog site, for example, may display an article in multiple places).</p>
+    </li>
+
+    <li>
+      <p id="N1CF2A">The same functionality may appear in multiple places. Many sites have a standard search component, or a polling component, that appears in most of the sites’ sidebars.</p>
+    </li>
+  </ul>
+
+  <p id="N1CF2D">Rails provides both layouts and partials that reduce the need for duplication in these three situations.</p>
+
+  <h3 id="heading_id_2">Layouts</h3>
+
+  <p id="N1CF34">Rails allows you to render pages that are nested inside other rendered pages. Typically this feature is used to put the content from an action within a standard site-wide page frame (title, footer, and sidebar). In fact, if you’ve been using the <code class="cf commandname">generate</code> script to create scaffold-based applications, then you’ve been using these layouts all along.</p>
+
+  <p id="N1CF48">When Rails honors a request to render a template from within a controller, it actually renders two templates. Obviously, it renders the one you ask for (or the default template named after the action if you don’t explicitly render anything). But Rails also tries to find and render a layout template (we’ll talk about how it finds the layout in a second). If it finds the layout, it inserts the action-specific output into the HTML produced by the layout.</p>
+
+  <p id="N1CF4B">Let’s look at a layout template:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;html&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;title&gt;</strong>Form: &lt;%= controller.action_name %&gt;<strong class="prompt">&lt;/title&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= stylesheet_link_tag <em class="string">'scaffold'</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= <strong class="prompt">yield</strong> :layout %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/html&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1CF8C">The layout sets out a standard HTML page, with the head and body sections. It uses the current action name as the page title and includes a CSS file. In the body, there’s a call to <code class="cf ic">yield</code>. This is where the magic takes place. When the template for the action was rendered, Rails stored its content, labeling it <code class="cf ic">:layout</code>. Inside the layout template, calling <code class="cf ic">yield</code> retrieves this text. In fact, <code class="cf ic">:layout</code> is the default content returned when rendering, so you can write <code class="cf ic">yield</code> instead of <code class="cf ic">yield :layout</code>. We personally prefer the slightly more explicit version.</p>
+
+  <p id="N1CFB0">If the <code class="cf filename">my_action.html.erb</code> template contained this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>&lt;%= @msg %&gt;<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1CFC5">the browser would see the following HTML:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;html&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;title&gt;</strong>Form: my_action<strong class="prompt">&lt;/title&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;link</strong> href=<em class="string">"/stylesheets/scaffold.css"</em> media=<em class="string">"screen"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rel=<em class="string">"Stylesheet"</em> type=<em class="string">"text/css"</em> <strong class="prompt">/&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Hello, World!<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/html&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <h4 id="sec.layout">Locating Layout Files</h4>
+
+  <p id="N1D01D">As you’ve probably come to expect, Rails does a good job of providing defaults for layout file locations, but you can override the defaults if you need something different.</p>
+
+  <p id="N1D020">Layouts are controller-specific. If the current request is being handled by a controller called <span class="emph">store</span>, Rails will by default look for a layout called <code class="cf filename">store</code> (with the usual <code class="cf fileextension">html.erb</code> or <code class="cf fileextension">xml.builder</code> extension) in the <code class="cf dir">app/views/layouts</code> directory. If you create a layout called <code class="cf filename">application</code> in the <code class="cf dir">layouts</code> directory, it will be applied to all controllers that don’t otherwise have a layout defined for them.</p>
+
+  <p id="N1D038">You can override this using the <code class="cf ic">layout</code> declaration inside a controller. At its simplest, the declaration takes the name of a layout as a string. The following declaration will make the template in the file <code class="cf filename">standard.html.erb</code> or <code class="cf filename">standard.xml.builder</code> the layout for all actions in the store controller. The layout file will be looked for in the <code class="cf dir">app/views/layouts</code> directory.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> StoreController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">layout <em class="string">"standard"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D083">You can qualify which actions will have the layout applied to them using the <code class="cf ic">:only</code> and <code class="cf ic">:except</code> qualifiers:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> StoreController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">layout <em class="string">"standard"</em>, except: [ :rss, :atom ]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D0AE">Specifying a layout of <code class="cf constant">nil</code> turns off layouts for a controller.</p>
+
+  <p id="N1D0B4">Sometimes you need to change the appearance of a set of pages at runtime. For example, a blogging site might offer a different-looking side menu if the user is logged in, or a store site might have different-looking pages if the site is down for maintenance. Rails supports this need with dynamic layouts. If the parameter to the <code class="cf ic">layout</code> declaration is a symbol, it’s taken to be the name of a controller instance method that returns the name of the layout to be used:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> StoreController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">layout :determine_layout</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">private</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> determine_layout</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> Store.is_closed?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">"store_down"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">"standard"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D107">Subclasses of a controller use the parent’s layout unless they override it using the <code class="cf ic">layout</code> directive. Finally, individual actions can choose to render using a specific layout (or with no layout at all) by passing <code class="cf methodname">render</code> the <code class="cf ic">:layout</code> option:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> rss</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">render(layout: false) <em class="comment"># never use a layout</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> checkout</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">render(layout: <em class="string">"layouts/simple"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <h4 id="heading_id_3">Passing Data to Layouts</h4>
+
+  <p id="N1D161">Layouts have access to all the same data that’s available to conventional templates. In addition, any instance variables set in the normal template will be available in the layout (because the regular template is rendered before the layout is invoked). This might be used to parameterize headings or menus in the layout. For example, the layout might contain this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;html&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;title&gt;</strong>&lt;%= @title %&gt;<strong class="prompt">&lt;/title&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= stylesheet_link_tag <em class="string">'scaffold'</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>&lt;%= @title %&gt;<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= <strong class="prompt">yield</strong> :layout %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/html&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D1A4">An individual template could set the title by assigning to the <code class="cf variable">@title</code> variable:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% @title = <em class="string">"My Wonderful Life"</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Dear Diary:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Yesterday I had pizza for dinner. It was nice.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D1CE">In fact, we can take this further. The same mechanism that lets us use <code class="cf ic">yield :layout</code> to embed the rendering of a template into the layout also lets you generate arbitrary content in a template, which can then be embedded into any other template.</p>
+
+  <p id="N1D1D4">For example, different templates may need to add their own template-specific items to the standard page sidebar. We’ll use the <code class="cf ic">content_for</code> mechanism in those templates to define content and then use <code class="cf ic">yield</code> in the layout to embed this content into the sidebar.</p>
+
+  <p id="N1D1DD">In each regular template, use a <code class="cf ic">content_for</code> to give a name to the content rendered inside a block. This content will be stored inside Rails and will not contribute to the output generated by the template.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h1&gt;</strong>Regular Template<strong class="prompt">&lt;/h1&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% content_for(:sidebar) <strong class="prompt">do</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong>this text will be rendered<strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong>and saved for later<strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong>it may contain &lt;%= <em class="string">"dynamic"</em> %&gt; stuff<strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Here's the regular stuff that will appear on</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">the page rendered by this template.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D237">Then, in the layout, you use <code class="cf ic">yield :sidebar</code> to include this block into the page’s sidebar:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;!DOCTYPE .... &gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;html&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"sidebar"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Regular sidebar stuff</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"page-specific-sidebar"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">&lt;%= yield :sidebar %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/html&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D28A">This same technique can be used to add page-specific JavaScript functions into the <code class="cf xmltag">&lt;head&gt;</code> section of a layout, create specialized menu bars, and so on.</p>
+
+  <h3 id="sec.partial.template">Partial-Page Templates</h3>
+
+  <p id="N1D2A4">Web applications commonly display information about the same application object or objects on multiple pages. A shopping cart might display an order line item on the shopping cart page and again on the order summary page. A blog application might display the contents of an article on the main index page and again at the top of a page soliciting comments. Typically this would involve copying snippets of code between the different template pages.</p>
+
+  <p id="N1D2A7">Rails, however, eliminates this duplication with the <span class="emph">partial-page templates</span> (more frequently called <span class="emph">partials</span>). You can think of a partial as a kind of subroutine. You invoke it one or more times from within another template, potentially passing it objects to render as parameters. When the partial template finishes rendering, it returns control to the calling template.</p>
+
+  <p id="N1D2BB">Internally, a partial template looks like any other template. Externally, there’s a slight difference. The name of the file containing the template code must start with an underscore character, differentiating the source of partial templates from their more complete brothers and sisters.</p>
+
+  <p id="N1D2BE">For example, the partial to render a blog entry might be stored in the file <code class="cf filename">_article.html.erb</code> in the normal views directory, <code class="cf dir">app/views/blog</code>:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"article"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"articleheader"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h3&gt;</strong>&lt;%= article.title %&gt;<strong class="prompt">&lt;/h3&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> class=<em class="string">"articlebody"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= article.body %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D305">Other templates use the <code class="cf methodname">render(partial:)</code> method to invoke this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(partial: <em class="string">"article"</em>, object: @an_article) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h3&gt;</strong>Add Comment<strong class="prompt">&lt;/h3&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">. . .</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D32F">The <code class="cf ic">:partial</code> parameter to <code class="cf methodname">render</code> is the name of the template to render (but without the leading underscore). This name must be both a valid filename and a valid Ruby identifier (so <code class="cf filename">a-b</code> and <code class="cf filename">20042501</code> are not valid names for partials). The <code class="cf ic">:object</code> parameter identifies an object to be passed into the partial. This object will be available within the template via a local variable with the same name as the template. In this example, the <code class="cf variable">@an_article</code> object will be passed to the template, and the template can access it using the local variable <code class="cf variable">article</code>. That’s why we could write things such as <code class="cf ic">article.title</code> in the partial.</p>
+
+  <p id="N1D367">Idiomatic Rails developers use a variable named after the template (<code class="cf variable">article</code> in this instance). In fact, it’s normal to take this a step further. If the object to be passed to the partial is in a controller instance variable with the same name as the partial, you can omit the <code class="cf ic">:object</code> parameter. If, in the previous example, our controller had set up the article in the instance variable <code class="cf variable">@article</code>, the view could have rendered the partial using just this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(partial: <em class="string">"article"</em>) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;h3&gt;</strong>Add Comment<strong class="prompt">&lt;/h3&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">. . .</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D38B">You can set additional local variables in the template by passing <code class="cf methodname">render</code> a <code class="cf ic">:locals</code> parameter. This takes a hash where the entries represent the names and values of the local variables to set.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">render(partial: <em class="string">'article'</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">object: @an_article,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">locals: { authorized_by: session[:user_name],</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">from_ip: request.remote_ip })</code></td>
+    </tr>
+  </table>
+
+  <h4 id="heading_id_4">Partials and Collections</h4>
+
+  <p id="N1D3AF">Applications commonly need to display collections of formatted entries. A blog might show a series of articles, each with text, author, date, and so on. A store might display entries in a catalog, where each has an image, a description, and a price.</p>
+
+  <p id="N1D3B2">The <code class="cf ic">:collection</code> parameter to <code class="cf methodname">render</code> works in conjunction with the <code class="cf ic">:partial</code> parameter. The <code class="cf ic">:partial</code> parameter lets us use a partial to define the format of an individual entry, and the <code class="cf ic">:collection</code> parameter applies this template to each member of the collection. To display a list of article model objects using our previously defined <code class="cf filename">_article.html.erb</code> partial, we could write this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(partial: <em class="string">"article"</em>, collection: @article_list) %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D40A">Inside the partial, the local variable <code class="cf variable">article</code> will be set to the current article from the collection&mdash;the variable is named after the template. In addition, the variable <code class="cf variable">article_counter</code> will be set to the index of the current article in the collection.</p>
+
+  <p id="N1D413">The optional <code class="cf ic">:spacer_template</code> parameter lets you specify a template that will be rendered between each of the elements in the collection. For example, a view might contain the following:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/views/app/views/partial/list.html.erb">rails31/e1/views/app/views/partial/list.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(partial: <em class="string">"animal"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">collection: <em class="string">%w{ ant bee cat dog elk }</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">spacer_template: <em class="string">"spacer"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">%&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D44E">This uses <code class="cf filename">_animal.html.erb</code> to render each animal in the given list, rendering the partial <code class="cf filename">_spacer.html.erb</code> between each. If <code class="cf filename">_animal.html.erb</code> contains this:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/views/app/views/partial/_animal.html.erb">rails31/e1/views/app/views/partial/_animal.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong>The animal is &lt;%= animal %&gt;<strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D46A">and <code class="cf filename">_spacer.html.erb</code> contains this:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/views/app/views/partial/_spacer.html.erb">rails31/e1/views/app/views/partial/_spacer.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;hr</strong> <strong class="prompt">/&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D480">your users would see a list of animal names with a line between each.</p>
+
+  <h4 id="heading_id_5">Shared Templates</h4>
+
+  <p id="N1D487">If the first option or <code class="cf ic">:partial</code> parameter to a render call is a simple name, Rails assumes that the target template is in the current controller’s view directory. However, if the name contains one or more / characters, Rails assumes that the part up to the last slash is a directory name and the rest is the template name. The directory is assumed to be under <code class="cf dir">app/views</code>. This makes it easy to share partials and subtemplates across controllers.</p>
+
+  <p id="N1D4AC">The convention among Rails applications is to store these shared partials in a subdirectory of <code class="cf dir">app/views</code> called <code class="cf dir">shared</code>. Render shared partials using statements such as these:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(<em class="string">"shared/header"</em>, title: @article.title) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= render(partial: <em class="string">"shared/post"</em>, object: @article) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">. . .</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D4CC">In this previous example, the <code class="cf variable">@article</code> object will be assigned to the local variable <code class="cf variable">post</code> within the template.</p>
+
+  <h4 id="heading_id_6">Partials with Layouts</h4>
+
+  <p id="N1D4D9">Partials can be rendered with a layout, and you can apply a layout to a block within any template:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;<em class="string">%= render partial: "user", layout: "administrator" %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">&lt;%=</em> render layout: <em class="string">"administrator"</em> <strong class="prompt">do</strong> <em class="string">%&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">&lt;% end %&gt;</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D505">Partial layouts are to be found directly in the <code class="cf dir">app/views</code> directory associated with the controller, along with the customary underbar prefix, for example, <code class="cf filename">app/views/users/_administrator.html.erb</code>.</p>
+
+  <h4 id="heading_id_7">Partials and Controllers</h4>
+
+  <p id="N1D518">It isn’t just view templates that use partials. Controllers also get in on the act. Partials give controllers the ability to generate fragments from a page using the same partial template as the view itself. This is particularly important when you use Ajax support to update just part of a page from the controller&mdash;use partials, and you know your formatting for the table row or line item that you’re updating will be compatible with that used to generate its brethren initially.</p>
+
+  <p id="N1D522">Taken together, partials and layouts provide an effective way to make sure that the user interface portion of your application is maintainable. But being maintainable is only part of the story; doing so in a way that also performs well is also crucial.</p>
+
+  <h3 id="heading_id_8">What We Just Did</h3>
+
+  <p id="N1D53E">Views are the public face of Rails applications, and we have seen that Rails delivers extensive support for what you need to build robust and maintainable user and application programming interfaces.</p>
+
+  <p id="N1D541">We started with templates, of which Rails provides built-in support for four types: ERb, builder, CoffeeScript, and SCSS. Templates make it easy for us to provide HTML, XML, CSS, and JavaScript responses to any request. We will discuss adding another option in Section 26.2, <a href="../Text/f_0144.html#sec.haml">​<em>Beautifying Our Markup with Haml</em>​</a>.</p>
+
+  <p id="N1D547">We dove into forms, which are the primary means by which users will interact with your application. Along the way, we covered uploading files.</p>
+
+  <p id="N1D54A">We continued with helpers, which enable us to factor out complex application logic to allow our views to focus on presentation aspects. We explored a number of helpers that Rails provides, ranging from simple formatting to hypertext links, which are the final way in which users interact with HTML pages.</p>
+
+  <p id="N1D54D">We completed our tour of Action View by covering two related ways of factoring out large chunks of content for reuse. We use layouts to factor out the outermost layers of a view and provide a common look and feel. We use partials to factor out common inner components, such as a single form or table.</p>
+
+  <p id="N1D550">That covers how a user with a browser will access our Rails application. Next up: covering how we can use caching techniques to reduce or even eliminate the computational overhead of rendering a view when the underlying data in the database has not changed between requests.</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_9">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0114.html#FNPTR-45" id="FOOTNOTE-45">[45]</a></td>
+
+        <td>
+          <p id="N1C594"><a href="http://api.rubyonrails.org/classes/ActionView/Helpers/FormOptionsHelper.html">http://api.rubyonrails.org/classes/ActionView/Helpers/FormOptionsHelper.html</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0114.html#FNPTR-46" id="FOOTNOTE-46">[46]</a></td>
+
+        <td>
+          <p id="N1C5A3"><a href="http://api.rubyonrails.org/classes/ActionView/Helpers/DateHelper.html">http://api.rubyonrails.org/classes/ActionView/Helpers/DateHelper.html</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0114.html#FNPTR-47" id="FOOTNOTE-47">[47]</a></td>
+
+        <td>
+          <p id="N1C5BA"><a href="http://guides.rubyonrails.org/form_helpers.html">http://guides.rubyonrails.org/form_helpers.html</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0116.html#FNPTR-48" id="FOOTNOTE-48">[48]</a></td>
+
+        <td>
+          <p id="N1C8AA"><a href="https://github.com/thoughtbot/paperclip#readme">https://github.com/thoughtbot/paperclip#readme</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0116.html#FNPTR-49" id="FOOTNOTE-49">[49]</a></td>
+
+        <td>
+          <p id="N1C8B7"><a href="https://github.com/technoweenie/attachment_fu">https://github.com/technoweenie/attachment_fu</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0117.html#FNPTR-50" id="FOOTNOTE-50">[50]</a></td>
+
+        <td>
+          <p id="N1CB48"><a href="https://github.com/rtomayko/rdiscount">https://github.com/rtomayko/rdiscount</a></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0117.html#FNPTR-51" id="FOOTNOTE-51">[51]</a></td>
+
+        <td>
+          <p id="N1CB4E"><a href="http://redcloth.org/">http://redcloth.org/</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

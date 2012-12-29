@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.bundler">25.3 Managing Dependencies with Bundler</h2>
+
+  <p id="N1F404">Dependency management is a deceptively hard problem. During development, you may choose to install updated versions of gems that you depend on. Once you do this, you may find yourself not being able to reproduce problems that occur in production because your runs are picking up different versions of the gems your application depends on. Or perhaps you see problems that don’t exist in production.</p>
+
+  <p id="N1F418">It turns out that dependencies are every bit as important to manage as your application source code or database schemas. If you are developing as part of a team, you want every member of the team to be using the same version of the dependencies. When you deploy, you want to ensure that the version of the dependencies that you tested with are installed on the target machine and are the ones actually used in production.</p>
+
+  <p id="N1F41B">Bundler<a href="../Text/f_0141.html#FOOTNOTE-56" id="FNPTR-56">[56]</a> takes care of this, based on a file named <code class="cf filename">Gemfile</code> that is placed in the top of your application directory. In this file, you list the dependencies of your application. Let’s take a closer look at the <code class="cf ic">Gemfile</code> for the Depot application:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_u/Gemfile">rails31/depot_u/Gemfile</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">source 'http://rubygems.org'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'rails', '3.1.0'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># Bundle edge Rails instead:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># gem 'rails', :git =&gt; 'git://github.com/rails/rails.git'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'sqlite3'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">group :production do</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'mysql2'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">end</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># Gems used only for assets and not required</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># in production environments by default.</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">group :assets do</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'sass-rails', " ~&gt; 3.1.0.rc"</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'coffee-rails', "~&gt; 3.1.0.rc"</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'uglifier'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">end</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'jquery-rails'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># Use unicorn as the web server</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># gem 'unicorn'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># Deploy with Capistrano</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'capistrano'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># To use debugger</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># gem 'ruby-debug19', :require =&gt; 'ruby-debug'</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">group :test do</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"># Pretty printed test output</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'turn', :require =&gt; false</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">end</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">gem 'will_paginate', '~&gt; 3.0'</code></td>
+    </tr>
+  </table>
+
+  <p id="N1F497">The first line specifies where to find new gems and new versions of existing gems. Feel free to repeat this line in order to list your own private gem repositories.</p>
+
+  <p id="N1F49A">The next line lists what version of Rails to load. Note that it specifies a specific version. After this is a comment that you could use as an alternative in order to run the latest version of Rails.</p>
+
+  <p id="N1F49D">The remaining lines list a few gems that you are using and a few gems that you might consider using. Some are placed in groups named <code class="cf ic">:development</code>, <code class="cf ic">:test</code>, or <code class="cf ic">:production</code> and will be made available only in those environments. Others include an optional <code class="cf ic">:require</code> parameter, which specifies the name to use on a <code class="cf ic">require</code> statement for the cases where it differs from the gem name.</p>
+
+  <p id="N1F4B5">On the line for <code class="cf ic">sass-rails</code> you see a version specifier that is preceded by a comparison operator. Although <code class="cf ic">Gemfile</code> files support a number of such operators, only two are commonly used. <code class="cf ic">&gt;=</code> is for the unfortunately all too rare condition where the author of the <code class="cf filename">Gemfile</code> can be trusted to maintain strict backward compatibility so all that is needed to be specified is a minimum version number.</p>
+
+  <p id="N1F4C4"><code class="cf ic">~&gt;</code> is more widely recommended. Essentially all of the parts of the version, with the exception of the last part, must be matched exactly, and the last part specifies a minimum. So, <code class="cf ic">~&gt; 3.1.4</code> matches any version that starts with a <code class="cf ic">3.1</code> and is not less than <code class="cf ic">3.1.4</code>. Similarly, <code class="cf ic">~&gt; 3.0</code> means any version string that starts with a <code class="cf ic">3.</code>.</p>
+
+  <p id="N1F4D8">A <code class="cf filename">Gemfile</code> has a companion file, named <code class="cf filename">Gemfile.lock</code>. This second file is generally updated by one of two commands: <code class="cf ic">bundle install</code> and <code class="cf ic">bundle update</code>. The difference between the two is rather subtle.</p>
+
+  <p id="N1F4E7">Before proceeding, it is helpful to look at a <code class="cf ic">Gemfile.lock</code> file. Here is a small excerpt:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">GEM</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">specs:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">actionmailer (3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">actionpack (= 3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">mail (~&gt; 2.3.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">actionpack (3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">activemodel (= 3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">activesupport (= 3.1.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">builder (~&gt; 3.0.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">erubis (~&gt; 2.7.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">i18n (~&gt; 0.6)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rack (~&gt; 1.3.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rack-cache (~&gt; 1.0.1)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rack-mount (~&gt; 0.8.1)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">rack-test (~&gt; 0.6.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">sprockets (~&gt; 2.0.0)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">tzinfo (~&gt; 0.3.27)</code></td>
+    </tr>
+  </table>
+
+  <p id="N1F528"><code class="cf ic">bundle install</code> will use the <code class="cf filename">Gemfile.lock</code> as a starting point and install only the versions of the various gems as specified in this file. For this reason, it is important that this file gets checked into your version control system, because this will ensure that your colleagues and deployment targets will all be using the exact same configuration.</p>
+
+  <p id="N1F530"><code class="cf ic">bundle update</code> will (unsurprisingly) update one or more named gems and will update the <code class="cf filename">Gemfile.lock</code> accordingly. If you want to use a specific version of a particular gem, the workflow would be to edit the <code class="cf ic">Gemfile</code> to express your constraints and then run <code class="cf ic">bundle update</code> listing the gems that you want to update. If you don’t specify a list of gems, Bundler will attempt to update all gems&mdash;this is generally not recommended, particular when close to deployment.</p>
+
+  <p id="N1F547">Bundler also has a runtime component that is used to ensure that your application strictly loads only the versions of the gems listed in <code class="cf ic">Gemfile.lock</code>. We will explore that further by looking into how the server operates.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

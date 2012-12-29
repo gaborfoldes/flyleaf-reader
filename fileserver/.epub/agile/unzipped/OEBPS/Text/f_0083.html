@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.limit.access">14.3 Iteration I3: Limiting Access</h2>
+
+  <p id="N16EE7">We want to prevent people without an administrative login from accessing our site’s admin pages. It turns out that it’s easy to implement using the Rails <span class="emph">filter</span> facility.</p>
+
+  <p id="N16F04">Rails filters allow you to intercept calls to action methods, adding your own processing before they are invoked, after they return, or both. In our case, we’ll use a <span class="emph">before filter</span> to intercept all calls to the actions in our admin controller. The interceptor can check <code class="cf ic">session[:user_id]</code>. If it’s set and if it corresponds to a user in the database, the application knows an administrator is logged in, and the call can proceed. If it’s not set, the interceptor can issue a redirect, in this case to our login page.</p>
+
+  <p id="N16F11">Where should we put this method? It could sit directly in the admin controller, but, for reasons that will become apparent shortly, let’s put it instead in <code class="cf class">ApplicationController</code>, the parent class of all our controllers. This is in the file <code class="cf filename">application_controller.rb</code> in the directory <code class="cf dir">app/controllers</code>. Note too that we chose to restrict access to this method. This prevents it from ever being exposed to end users as an action.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/app/controllers/application_controller.rb">rails31/depot_r/app/controllers/application_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ApplicationController &lt; ActionController::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">before_filter :authorize</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">protected</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> authorize</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">unless</strong> User.find_by_id(session[:user_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">redirect_to login_url, notice: <em class="string">"Please log in"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N16F5B">The <code class="cf methodname">before_filter</code> line causes the <code class="cf methodname">authorization</code> to be invoked before every action in our application.</p>
+
+  <p id="N16F6F">This is going too far. We have just limited access to the store itself to administrators. That’s not good.</p>
+
+  <p id="N16F72">We could go back and change things so that we mark only those methods that specifically need authorization. Such an approach is called <span class="emph">blacklisting</span> and is prone to errors of omission. A much better approach is to “whitelist” or list methods or controllers for which authorization is <span class="emph">not</span> required. We do this simply by inserting a <code class="cf methodname">skip_before_filter</code> call within the <code class="cf class">StoreController</code>:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/app/controllers/store_controller.rb">rails31/depot_r/app/controllers/store_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> StoreController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">skip_before_filter :authorize</code></td>
+    </tr>
+  </table>
+
+  <p id="N16F9C">And again for the <code class="cf class">SessionsController</code> class:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/app/controllers/sessions_controller.rb">rails31/depot_r/app/controllers/sessions_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> SessionsController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">skip_before_filter :authorize</code></td>
+    </tr>
+  </table>
+
+  <p id="N16FB3">We’re not done yet; now we need to allow people to create, update, and delete carts:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/app/controllers/carts_controller.rb">rails31/depot_r/app/controllers/carts_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> CartsController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">skip_before_filter :authorize, only: [:create, :update, :destroy]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+  </table>
+
+  <p id="N16FC9">Create line items:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/app/controllers/line_items_controller.rb">rails31/depot_r/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> LineItemsController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">skip_before_filter :authorize, only: :create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+  </table>
+
+  <p id="N16FDF">And create orders (which includes access to the <code class="cf ic">new</code> form):</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/app/controllers/orders_controller.rb">rails31/depot_r/app/controllers/orders_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> OrdersController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">skip_before_filter :authorize, only: [:new, :create]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+  </table>
+
+  <p id="N16FF8">With the authorization logic in place, we can now navigate to <a href="http://localhost:3000/products">http://localhost:3000/products</a>. The filter method intercepts us on the way to the product listing and shows us the login screen instead.</p>
+
+  <p id="N17009">Unfortunately, this change pretty much invalidates most of our functional tests because most operations will now redirect to the login screen instead of doing the function desired. Fortunately, we can address this globally by creating a <code class="cf methodname">setup</code> method in the <code class="cf ic">test_helper</code>. While we are there, we also define some helper methods to <code class="cf methodname">login_as</code> and <code class="cf methodname">logout</code> a user.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_r/test/test_helper.rb">rails31/depot_r/test/test_helper.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ActiveSupport::TestCase</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># Add more helper methods to be used by all tests here...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> login_as(user)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">session[:user_id] = users(user).id</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> logout</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">session.delete :user_id</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> setup</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">login_as :one <strong class="prompt">if</strong> <strong class="prompt">defined?</strong> session</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1706A">Note that the <code class="cf methodname">setup</code> method will call <code class="cf methodname">login_as</code> only if <code class="cf ic">session</code> is defined. This prevents the login from being executed in tests that do not involve a controller.</p>
+
+  <p id="N17097">We show our customer and are rewarded with a big smile and a request: could we add a sidebar and put links to the user and product administration stuff in it? And while we’re there, could we add the ability to list and delete administrative users? You betcha!</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

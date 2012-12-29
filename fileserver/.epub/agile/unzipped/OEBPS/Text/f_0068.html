@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">11.3 Iteration F3: Highlighting Changes</h2>
+
+  <p id="N14C54">A number of JavaScript libraries are included with Rails. On of those libraries, namely jQuery UI<a href="../Text/f_0071.html#FOOTNOTE-29" id="FNPTR-29">[29]</a>, lets you decorate your web pages with a number of visually interesting effects. One of these effects is the (now) infamous Yellow Fade Technique. This highlights an element in a browser: by default it flashes the background yellow and then gradually fades it back to white. We can see the Yellow Fade Technique being applied to our cart in Figure 20, <a href="#fig.yft">​<em>Our cart with the Yellow Fade Technique</em>​</a>; the image at the back shows the original cart. The user clicks the <code class="cf keystroke">Add to Cart</code> button, and the count updates to 2 as the line flares brighter. It then fades back to the background color over a short period of time.</p>
+
+  <table class="figure" id="fig.yft">
+    <tr>
+      <td><img alt="images/yft.png" src="../Images/yft.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 20. Our cart with the Yellow Fade Technique</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N14C79">Including the jQuery UI library is simple enough. Simply add one line to <code class="cf filename">app/assets/javascripts/application.js</code>.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_m/app/assets/javascripts/application.js">rails31/depot_m/app/assets/javascripts/application.js</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">// Add new JavaScript/Coffee code in separate files in this directory and</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">// they'll automatically be included in the compiled file accessible from</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">// http://example.com/assets/application.js It's not advisable to add code</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">// directly here, but if you do, it'll appear at the bottom of the the</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">// compiled file.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">//</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">//= require jquery</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">//= require jquery-ui</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">//= require jquery_ujs</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">//= require_tree .</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N14CB0">We saw <code class="cf filename">assets/javascripts/application.js</code> before <a href="../Text/f_0045.html#p.application.css">​here​</a>. This file behaves similarly, just for JavaScripts instead of stylesheets. Be careful to use a dash instead of an underscore in this line, as clearly not all authors of libraries follow the same naming conventions.</p>
+
+  <p id="N14CB9">Let’s use this library to add this kind of highlight to our cart. Whenever an item in the cart is updated (either when it is added or when we change the quantity), let’s flash its background. That will make it clearer to our users that something has changed, even though the whole page hasn’t been refreshed.</p>
+
+  <p id="N14CBC">The first problem we have is identifying the most recently updated item in the cart. Right now, each item is simply a <code class="cf xmltag">&lt;tr&gt;</code> element. We need to find a way to flag the most recently changed one. The work starts in the <code class="cf class">LineItemsController</code>. Let’s pass the current line item down to the template by assigning it to an instance variable:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_m/app/controllers/line_items_controller.rb">rails31/depot_m/app/controllers/line_items_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@cart = current_cart</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">product = Product.find(params[:product_id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@line_item = @cart.add_product(product.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">respond_to <strong class="prompt">do</strong> |format|</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> @line_item.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { redirect_to store_url }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.js { @current_item = @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :created, location: @line_item }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.html { render action: <em class="string">"new"</em> }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">format.json { render json: @line_item.errors,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">status: :unprocessable_entity }</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N14D13">In the <code class="cf filename">_line_item.html.erb</code> partial, we then check to see whether the item we’re rendering is the one that just changed. If so, we tag it with an id of <code class="cf ic">current_item</code>:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_m/app/views/line_items/_line_item.html.erb">rails31/depot_m/app/views/line_items/_line_item.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">if</strong> line_item == @current_item %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr</strong> id=<em class="string">"current_item"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">else</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;tr&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= line_item.quantity %&gt;&amp;times;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td&gt;</strong>&lt;%= line_item.product.title %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;td</strong> class=<em class="string">"item_price"</em> <strong class="prompt">&gt;</strong>&lt;%= number_to_currency(line_item.total_price) %&gt;<strong class="prompt">&lt;/td&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/tr&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N14D65">As a result of these two minor changes, the <code class="cf xmltag">&lt;tr&gt;</code> element of the most recently changed item in the cart will be tagged with <code class="cf ic">id="current_item"</code>. Now we just need to tell the JavaScript to change the background color to one that will catch the eye, and then to gradually change it back.</p>
+
+  <p id="N14D6E">We do this in the existing <code class="cf filename">create.js.erb</code> template:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_m/app/views/line_items/create.js.erb">rails31/depot_m/app/views/line_items/create.js.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$('#cart').html("&lt;%=j render @cart %&gt;");</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$('#current_item').css({'background-color':'#88ff88'}).</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">animate({'background-color':'#114411'}, 1000);</code></td>
+    </tr>
+  </table>
+
+  <p id="N14D88">See how we identified the browser element that we wanted to apply the effect to by passing <code class="cf ic">’#current_item’</code> to the <code class="cf ic">$</code> function? We then called <code class="cf methodname">css</code> to set the initial background color and followed up with a call to the <code class="cf methodname">animate</code> method to transition back to the original color used by our layout over a period of <code class="cf ic">1000</code> milliseconds, more commonly known as one second.</p>
+
+  <p id="N14DB0">With that change in place, click any <code class="cf keystroke">Add to Cart</code> button and you’ll see that the changed item in the cart glows a light green before fading back to merge with the background.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

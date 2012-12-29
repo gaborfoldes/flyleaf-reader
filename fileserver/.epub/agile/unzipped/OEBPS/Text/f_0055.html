@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+</head>
+
+<body>
+  <h2 id="heading_id_2">8.5 What We Just Did</h2>
+
+  <p id="N1364C">We’ve put together the basis of the store’s catalog display. The steps were as follows:</p>
+
+  <ol>
+    <li>
+      <p id="N13652">Create a new controller to handle customer-centric interactions.</p>
+    </li>
+
+    <li>
+      <p id="N13656">Implement the default <code class="cf methodname">index</code> action.</p>
+    </li>
+
+    <li>
+      <p id="N1365D">Add a <code class="cf methodname">default_scope</code> to the <code class="cf class">Product</code> model to specify the order to list the items on the website.</p>
+    </li>
+
+    <li>
+      <p id="N13667">Implement a view (an <code class="cf fileextension">html.erb</code> file) and a layout to contain it (another <code class="cf fileextension">html.erb</code> file).</p>
+    </li>
+
+    <li>
+      <p id="N13671">Use a helper to format prices the way we want.</p>
+    </li>
+
+    <li>
+      <p id="N13675">Make use of a CSS stylesheet.</p>
+    </li>
+
+    <li>
+      <p id="N13679">Write functional tests for our controller.</p>
+    </li>
+  </ol>
+
+  <p id="N1367C">It’s time to check it all in and move on to the next task, namely, making a shopping cart!</p>
+
+  <h3 id="sec.catalog.playtime">Playtime</h3>
+
+  <p id="N13684">Here’s some stuff to try on your own:</p>
+
+  <ul>
+    <li>
+      <p id="N1368A">Add a date and time to the sidebar. It doesn’t have to update; just show the value at the time the page was displayed.</p>
+    </li>
+
+    <li>
+      <p id="N1368E">Experiment with setting various <code class="cf ic">number_to_currency</code> helper method options, and see the effect on your catalog listing.</p>
+    </li>
+
+    <li>
+      <p id="N13695">Write some functional tests for the product maintenance application using <code class="cf ic">assert_select</code>. The tests will need to be placed into the <code class="cf filename">test/functional/</code> <code class="cf filename">products_controller_test.rb</code> file.</p>
+    </li>
+
+    <li>
+      <p id="N136A1">Just a reminder&mdash;the end of an iteration is a good time to save your work using Git. If you have been following along, you have the basics you need at this point. We will pick things back up, in terms of exploring more Git functionality, in <a href="../Text/f_0093.html#sec.server.prep">​<em>Prepping Your Deployment Server</em>​</a>.</p>
+    </li>
+  </ul>
+
+  <p id="N136A7">(You’ll find hints at <a href="http://www.pragprog.com/wikis/wiki/RailsPlayTime">http://www.pragprog.com/wikis/wiki/RailsPlayTime</a>.)</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_3">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0051.html#FNPTR-23" id="FOOTNOTE-23">[23]</a></td>
+
+        <td>
+          <p id="N12F04">Windows users will want to execute <code class="cf ic">erase public\index.html</code>; if you are managing your source code using Git, you will want to use <code class="cf ic">git rm public/index.html</code>.</p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0054.html#FNPTR-24" id="FOOTNOTE-24">[24]</a></td>
+
+        <td>
+          <p id="N13611"><a href="http://api.rubyonrails.org/classes/ActionDispatch/Assertions/SelectorAssertions.html">http://api.rubyonrails.org/classes/ActionDispatch/Assertions/SelectorAssertions.html</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

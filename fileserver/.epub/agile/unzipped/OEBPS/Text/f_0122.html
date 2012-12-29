@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">22.3 Expiring Pages</h2>
+
+  <p id="N1D86F">Creating cached pages is only one half of the equation. If the content initially used to create these pages changes, the cached versions will become out-of-date, and we’ll need a way of expiring them.</p>
+
+  <p id="N1D872">The trick is to code the application to notice when the data used to create a dynamic page has changed and then to remove the cached version. The next time a request comes through for that URL, the cached page will be regenerated based on the new content.</p>
+
+  <h3 id="sec.page.expire">Expiring Pages Explicitly</h3>
+
+  <p id="N1D87A">The low-level way to remove cached pages is with the methods <code class="cf methodname">expire_page</code> and <code class="cf methodname">expire_action</code>. These take the same parameters as <code class="cf methodname">url_for</code> and expire the cached page that matches the generated URL.</p>
+
+  <p id="N1D8A1">For example, our content controller might have an action that allows us to create an article and another action that updates an existing article. When we create an article, the list of articles on the public page will become obsolete, so we call <code class="cf methodname">expire_page</code>, passing in the action name that displays the public page. When we update an existing article, the public index page remains unchanged (at least, it does in our application), but any cached version of this particular article should be deleted. Because this cache was created using <code class="cf ic">caches_action</code>, we need to expire the page using <code class="cf methodname">expire_action</code>, passing in the action name and the article id.</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/cookies/app/controllers/content_controller.rb">rails31/e1/cookies/app/controllers/content_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> create_article</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">article = Article.new(params[:article])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> article.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_page :action =&gt; <em class="string">"public_content"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> update_article</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">article = Article.find(params[:id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> article.update_attributes(params[:article])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_action :action =&gt; <em class="string">"premium_content"</em>, :id =&gt; article</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">else</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D906">The method that deletes an article does a bit more work&mdash;it has to both invalidate the public index page and remove the specific article page:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/cookies/app/controllers/content_controller.rb">rails31/e1/cookies/app/controllers/content_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> delete_article</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Article.destroy(params[:id])</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_page :action =&gt; <em class="string">"public_content"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_action :action =&gt; <em class="string">"premium_content"</em>, :id =&gt; params[:id]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <h3 id="deploy.picking.a.caching.store">Picking a Caching Store Strategy</h3>
+
+  <p id="N1D92F">Caching, like sessions, features a number of storage options. You can keep the fragments in files, in a database, in a DRb server, or in <code class="cf ic">memcached</code> servers. But whereas sessions usually contain small amounts of data and require only one row per user, fragment caching can easily create sizeable amounts of data, and you can have many per user. This makes database storage a poor fit.</p>
+
+  <p id="N1D93B">For many setups, it’s easiest to keep cache files on the filesystem. But you can’t keep these cached files locally on each server, because expiring a cache on one server would not expire it on the rest. You therefore need to set up a network drive that all the servers can share for their caching.</p>
+
+  <p id="N1D93E">As with session configuration, you can configure a file-based caching store globally in <code class="cf filename">environment.rb</code> or in a specific environment’s file:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ActionController::Base.cache_store = :file_store, <em class="string">"</em>#{RAILS_ROOT}<em class="string">/cache"</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D969">This configuration assumes that a directory named <code class="cf dir">cache</code> is available in the root of the application and that the web server has full read and write access to it. This directory can easily be symlinked to the path on the server that represents the network drive.</p>
+
+  <p id="N1D96F">Regardless of which store you pick for caching fragments, you should be aware that network bottlenecks can quickly become a problem. If your site depends heavily on fragment caching, every request will need a lot of data transferring from the network drive to the specific server before it’s again sent on to the user. To use this on a high-profile site, you really need to have a high-bandwidth internal network between your servers, or you will see slowdown.</p>
+
+  <p id="N1D972">The caching store system is available only for caching actions and fragments. Full-page caches need to be kept on the filesystem in the <code class="cf dir">public</code> directory. In this case, you will have to go the network drive route if you want to use page caching across multiple web servers. You can then symlink either the entire public directory (but that will also cause your images, stylesheets, and JavaScript to be passed over the network, which may be a problem) or just the individual directories that are needed for your page caches. In the latter case, you would, for example, symlink <code class="cf dir">public/products</code> to your network drive to keep page caches for your products controller.</p>
+
+  <h3 id="heading_id_3">Expiring Pages Implicitly</h3>
+
+  <p id="N1D97F">The <code class="cf ic">expire_</code> <span class="emph">xxx</span> methods work well, but they also couple the caching function to the code in your controllers. Every time you change something in the database, you also have to work out which cached pages this might affect. Although this is easy for smaller applications, this gets more difficult as the application grows. A change made in one controller might affect pages cached in another. Business logic in helper methods, which really shouldn’t have to know about HTML pages, now needs to worry about expiring cached pages.</p>
+
+  <p id="N1D987">Fortunately, Rails <span class="firstuseinline">sweepers</span> can simplify some of this coupling. A sweeper is a special kind of observer on your model objects. When something significant happens in the model, the sweeper expires the cached pages that depend on that model’s data.</p>
+
+  <p id="N1D99C">Your application can have as many sweepers as it needs. You’ll typically create a separate sweeper to manage the caching for each controller. Put your sweeper code in <code class="cf dir">app/sweepers</code>:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/cookies/app/sweepers/article_sweeper.rb">rails31/e1/cookies/app/sweepers/article_sweeper.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ArticleSweeper &lt; ActionController::Caching::Sweeper</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">observe Article</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># If we create a new article, the public list of articles must be regenerated</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> after_create(article)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_public_page</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># If we update an existing article, the cached version of that article is stale</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> after_update(article)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_article_page(article.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># Deleting a page means we update the public list and blow away the cached article</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> after_destroy(article)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_public_page</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_article_page(article.id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">private</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> expire_public_page</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_page(:controller =&gt; <em class="string">"content"</em>, :action =&gt; <em class="string">'public_content'</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> expire_article_page(article_id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">expire_action(:controller =&gt; <em class="string">"content"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">:action =&gt; <em class="string">"premium_content"</em>,</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">:id =&gt; article_id)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1DA32">The flow through the sweeper is somewhat convoluted:</p>
+
+  <ul>
+    <li>
+      <p id="N1DA38">You first declare the sweeper as an observer on one or more Active Record classes. In our example case, it observes the <code class="cf class">Article</code> model. (We first talked about observers back <a href="../Text/f_0106.html#sec.observer">​here​</a>.) The sweeper uses hook methods (such as <code class="cf methodname">after_update</code>) to expire cached pages if appropriate.</p>
+    </li>
+
+    <li>
+      <p id="N1DA45">The sweeper is also declared to be active in a controller using the directive <code class="cf ic">cache_sweeper</code>:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ContentController &lt; ApplicationController</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">before_filter :verify_premium_user, :except =&gt; :public_content</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">caches_page :public_content</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">caches_action :premium_content</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">cache_sweeper :article_sweeper,</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">:only =&gt; [ :create_article,</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">:update_article,</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">:delete_article ]</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+        </tr>
+      </table>
+    </li>
+
+    <li>
+      <p id="N1DA8E">If a request comes in that invokes one of the actions that the sweeper is filtering, the sweeper is activated. If any of the Active Record observer methods fires, the page and action expiry methods will be called. If the Active Record observer gets invoked but the current action is not selected as a cache sweeper, the expire calls in the sweeper are ignored. Otherwise, the expiry takes place.</p>
+    </li>
+  </ul>
+
+  <h3 id="sec.time.based.expiry">Time-Based Expiry of Cached Pages</h3>
+
+  <p id="N1DAA1">Consider a site that shows fairly volatile information such as stock quotes or news headlines. If we did the style of caching where we expired a page whenever the underlying information changed, we’d be expiring pages constantly. The cache would rarely get used, and we’d lose the benefit of having it.</p>
+
+  <p id="N1DAA4">In these circumstances, you might want to consider switching to time-based caching, where you build the cached pages exactly as we did previously but don’t expire them when their content becomes obsolete.</p>
+
+  <p id="N1DAAC">You run a separate background process that periodically goes into the cache directory and deletes the cache files. You choose how this deletion occurs&mdash;you could simply remove all files, the files created more than so many minutes ago, or the files whose names match some pattern. That part is application-specific.</p>
+
+  <p id="N1DAAF">The next time a request comes in for one of these pages, it won’t be satisfied from the cache, and the application will handle it. In the process, it’ll automatically repopulate that particular page in the cache, lightening the load for subsequent fetches of this page.</p>
+
+  <p id="N1DAB2">Where do you find the cache files to delete? Not surprisingly, this is configurable. Page cache files are by default stored in the <code class="cf dir">public</code> directory of your application. They’ll be named after the URL they are caching, with an <code class="cf fileextension">html</code> extension. For example, the page cache file for <code class="cf ic">content/show/1</code> will be here:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">app/public/content/show/1.html</code></td>
+    </tr>
+  </table>
+
+  <p id="N1DAC8">This naming scheme is no coincidence; it allows the web server to find the cache files automatically. You can, however, override the defaults using this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">config.action_controller.page_cache_directory = <em class="string">"dir/name"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">config.action_controller.page_cache_extension = <em class="string">".html"</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N1DB07">Action cache files are not by default stored in the regular filesystem directory structure and cannot be expired using this technique.</p>
+
+  <p id="N1DB22">In addition to the ability to cache a full page, Rails also provides support for caching <span class="emph">parts</span> of a page. We cover why that is useful and how to integrate it into your application next.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

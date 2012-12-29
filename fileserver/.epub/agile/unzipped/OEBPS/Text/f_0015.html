@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">1.2 Installing on Mac OS X</h2>
+
+  <p id="N103B7">Since neither Snow Leopard nor Lion prepackage Ruby 1.9.2, you’ll need to download and build it yourself. The easiest way we’ve found to do this is to use RVM. Installation of RVM is described on the RVM site<a href="../Text/f_0020.html#FOOTNOTE-8" id="FNPTR-8">[8]</a>. An overview of the steps is included here.</p>
+
+  <p id="N103C0">First, you’ll need to make sure you have Xcode 3 or later installed. If you’re running Mac OS X 10.7 (Lion), you can download Xcode 4.1<a href="../Text/f_0020.html#FOOTNOTE-9" id="FNPTR-9">[9]</a> as a free app from the Mac App Store and it’ll be automatically installed on your Mac. If you’re running Mac OS X 10.6 (Snow Leopard), you’ll need to install Xcode from the Snow Leopard DVD that came with your Mac. You’ll find Xcode in the Optional Installs directory. Verify your installation by running the following command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">xcodebuild -version</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N103D7">If you have Xcode version 3 installed, you’ll need to install the Git version control system separately. Download<a href="../Text/f_0020.html#FOOTNOTE-10" id="FNPTR-10">[10]</a> and install the version that matches your operating system and hardware. Verify your installation by running the following command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">git --version</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N103EE">Next, install RVM itself:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">bash &lt; &lt;(curl -s https://rvm.beginrescueend.com/install/rvm)</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N103FF">Follow the installation instructions that this command outputs. In particular, you’ll need to append RVM function setup instructions to your <code class="cf filename">.bash_profile</code>:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; \</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">. "$HOME/.rvm/scripts/rvm"' &gt;&gt; ~/.bash_profile</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10417">Exit your command window or Terminal application and open a new one. This will cause your <code class="cf ic">.bash_profile</code> to be reloaded. In this new window, install the Ruby interpreter itself:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">rvm install 1.9.2</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1042B">The preceding step will take a while as it downloads, configures, and compiles the necessary executables. Once it completes, <span class="emph">use</span> that environment, and install rails:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">rvm use 1.9.2</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">gem install rails</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10445">With the exception of the <code class="cf ic">rvm use</code> statement, each of the above instructions need only be done once. The <code class="cf ic">rvm use</code> statement needs to be repeated each time you open a shell window. The <code class="cf ic">use</code> keyword is optional, so you can abbreviate this to <code class="cf ic">rvm 1.9.2</code>. You can also choose to make it the default Ruby interpreter for new terminal sessions with the following command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">rvm --default 1.9.2</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10462">You can verify successful installation using the following command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">$ <strong class="prompt">rails -v</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10473">If you have trouble, try the suggestions listed under the <span class="emph">Troubleshooting Your Install</span> heading on the rvm site<a href="../Text/f_0020.html#FOOTNOTE-11" id="FNPTR-11">[11]</a>.</p>
+
+  <p id="N1047F">OK, you OS X users are done. You can skip forward to join the Windows users in Section 1.4, <a href="../Text/f_0017.html#sec.rails.versions">​<em>Choosing a Rails Version</em>​</a>. See you there.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

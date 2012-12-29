@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.documenting">17.2 Documenting What We Have Done</h2>
+
+  <p id="N1892B">To complete our retrospective, let’s take a look at the code from two new perspectives.</p>
+
+  <p id="N1892E">Rails makes it easy to run Ruby’s RDoc<a href="#FOOTNOTE-35" id="FNPTR-35">[35]</a> utility on all the source files in an application to create good-looking programmer documentation. But before we generate that documentation, we should probably create a nice introductory page so that future generations of developers will know what our application does.</p>
+
+  <p id="N18950">To do this, edit the file <code class="cf filename">doc/README_FOR_APP</code>, and enter anything you think might be useful. This file will be processed using RDoc, so you have a fair amount of formatting flexibility.</p>
+
+  <p id="N1895C">You can generate the documentation in HTML format using the <code class="cf commandname">rake</code> command:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake doc:app</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1897B">This generates documentation into the directory <code class="cf dir">doc/app</code>. See Figure 42, <a href="../Text/f_0096.html#fig.rdoc">​<em>Our application’s internal documentation</em>​</a>.</p>
+
+  <p id="N18984">Finally, we might be interested to see how much code we’ve written. There’s a Rake task for that, too.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">depot&gt; <strong class="prompt">rake stats</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">(in /Users/dave/Work/depot)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">+----------------------+-------+-------+---------+---------+-----+-------+</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Name | Lines | LOC | Classes | Methods | M/C | LOC/M |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">+----------------------+-------+-------+---------+---------+-----+-------+</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Controllers | 636 | 409 | 9 | 45 | 5 | 7 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Helpers | 24 | 24 | 0 | 1 | 0 | 22 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Models | 192 | 101 | 5 | 12 | 2 | 6 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Libraries | 0 | 0 | 0 | 0 | 0 | 0 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Integration tests | 201 | 138 | 2 | 9 | 4 | 13 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Functional tests | 424 | 285 | 9 | 0 | 0 | 0 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Unit tests | 163 | 123 | 13 | 2 | 0 | 59 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">+----------------------+-------+-------+---------+---------+-----+-------+</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">| Total | 1640 | 1080 | 38 | 69 | 1 | 13 |</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">+----------------------+-------+-------+---------+---------+-----+-------+</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">Code LOC: 534 Test LOC: 546 Code to Test Ratio: 1:1.0</code></td>
+    </tr>
+  </table>
+
+  <p id="N189CD">If you think about it, you have accomplished a lot and with not all that much code. Furthermore, much of that code was generated for you. This is the magic of Rails.</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_2">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="#FNPTR-35" id="FOOTNOTE-35">[35]</a></td>
+
+        <td>
+          <p id="N18932"><a href="http://rdoc.sourceforge.net/">http://rdoc.sourceforge.net/</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

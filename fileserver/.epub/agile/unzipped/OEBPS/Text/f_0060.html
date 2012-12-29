@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">9.4 What We Just Did</h2>
+
+  <p id="N13C10">It has been a busy, productive day so far. We’ve added a shopping cart to our store, and along the way we’ve dipped our toes into some neat Rails features:</p>
+
+  <ul>
+    <li>
+      <p id="N13C16">We created a <code class="cf ic">Cart</code> object in one request and were able to successfully locate the same cart in subsequent requests using a session object,</p>
+    </li>
+
+    <li>
+      <p id="N13C1D">We added a private method in the base class for all of our controllers, making it accessible to all of our controllers,</p>
+    </li>
+
+    <li>
+      <p id="N13C21">We created relationships between carts and line items and relationships between line items and products, and we were able to navigate using these relationships.</p>
+    </li>
+
+    <li>
+      <p id="N13C25">We added a button that caused a product to be posted to a cart, causing a new line item to be created.</p>
+    </li>
+  </ul>
+
+  <h3 id="sec.cart.playtime">Playtime</h3>
+
+  <p id="N13C2D">Here’s some stuff to try on your own:</p>
+
+  <ul>
+    <li>
+      <p id="N13C33">Add a new variable to the session to record how many times the user has accessed the store controller’s <code class="cf ic">index</code> action. Note that the first time this page is accessed, your count won’t be in the session. You can test for this with code like this:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1"><strong class="prompt">if</strong> session[:counter].nil?</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">...</code></td>
+        </tr>
+      </table>
+
+      <p id="N13C49">If the session variable isn’t there, you’ll need to initialize it. Then you’ll be able to increment it.</p>
+    </li>
+
+    <li>
+      <p id="N13C4D">Pass this counter to your template, and display it at the top of the catalog page. Hint: the <code class="cf ic">pluralize</code> helper (described <a href="../Text/f_0117.html#p.pluralize">​here​</a>) might be useful when forming the message you display.</p>
+    </li>
+
+    <li>
+      <p id="N13C57">Reset the counter to zero whenever the user adds something to the cart.</p>
+    </li>
+
+    <li>
+      <p id="N13C5B">Change the template to display the counter only if it is greater than five.</p>
+    </li>
+  </ul>
+
+  <p id="N13C5E">(You’ll find hints at <a href="http://pragprog.com/wikis/wiki/RailsPlayTime">http://pragprog.com/wikis/wiki/RailsPlayTime</a>.)</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_3">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0059.html#FNPTR-25" id="FOOTNOTE-25">[25]</a></td>
+
+        <td>
+          <p id="N13AA8">Some lines have been wrapped to fit on the page.</p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

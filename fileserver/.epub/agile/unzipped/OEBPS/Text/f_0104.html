@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">19.2 Locating and Traversing Records</h2>
+
+  <p id="N19384">In the Depot application, <code class="cf ic">LineItems</code> have direct relationships to three other models: <code class="cf ic">Cart</code>, <code class="cf ic">Order</code>, and <code class="cf ic">Product</code>. Additionally, models can have indirect relationships mediated by resource objects. The relationship between <code class="cf class">Orders</code> and <code class="cf class">Products</code> through <code class="cf class">LineItems</code> is an example of such a relationship.</p>
+
+  <p id="N1939C">All of this is made possible through ids.</p>
+
+  <h3 id="sec.primary.key">Identifying Individual Rows</h3>
+
+  <p id="N193A4">Active Record classes correspond to tables in a database. Instances of a class correspond to the individual rows in a database table. Calling <code class="cf ic">Order.find(1)</code>, for instance, returns an instance of an <code class="cf class">Order</code> class containing the data in the row with the primary key of <code class="cf ic">1</code>.</p>
+
+  <p id="N193B0">If you’re creating a new schema for a Rails application, you’ll probably want to go with the flow and let it add the <code class="cf sqlcolumn">id</code> primary key column to all your tables. However, if you need to work with an existing schema, Active Record gives you a simple way of overriding the default name of the primary key for a table.</p>
+
+  <p id="N193D0">For example, we may be working with an existing legacy schema that uses the ISBN as the primary key for the <code class="cf sqltable">books</code> table.</p>
+
+  <p id="N193D6">We specify this in our Active Record model using something like the following:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> LegacyBook &lt; ActiveRecord::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">self.primary_key = <em class="string">"isbn"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N193EF">Normally, Active Record takes care of creating new primary key values for records that we create and add to the database&mdash;they’ll be ascending integers (possibly with some gaps in the sequence). However, if we override the primary key column’s name, we also take on the responsibility of setting the primary key to a unique value before we save a new row. Perhaps surprisingly, we still set an attribute called <code class="cf variable">id</code> to do this. As far as Active Record is concerned, the primary key attribute is always set using an attribute called <code class="cf variable">id</code>. The <code class="cf ic">primary_key=</code> declaration sets the name of the column to use in the table. In the following code, we use an attribute called <code class="cf variable">id</code> even though the primary key in the database is <code class="cf sqlcolumn">isbn</code>:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">book = LegacyBook.new</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">book.id = <em class="string">"0-12345-6789"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">book.title = <em class="string">"My Great American Novel"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">book.save</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># ...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">book = LegacyBook.find(<em class="string">"0-12345-6789"</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">puts book.title <em class="comment"># =&gt; "My Great American Novel"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">p book.attributes <em class="comment">#=&gt; {"isbn" =&gt;"0-12345-6789",</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># "title"=&gt;"My Great American Novel"}</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N19462">Just to make life more confusing, the attributes of the model object have the column names <code class="cf sqlcolumn">isbn</code> and <code class="cf sqlcolumn">title</code>&mdash;<code class="cf sqlcolumn">id</code> doesn’t appear. When you need to set the primary key, use <code class="cf sqlcolumn">id</code>. At all other times, use the actual column name.</p>
+
+  <p id="N19476">Model objects also redefine the Ruby <code class="cf methodname">id</code> and <code class="cf methodname">hash</code> methods to reference the model’s primary key. This means that model objects with valid ids may be used as hash keys. It also means that unsaved model objects cannot reliably be used as hash keys (because they won’t yet have a valid id).</p>
+
+  <p id="N1947F">One final note: Rails considers two model objects as equal (using <code class="cf ic">==</code>) if they are instances of the same class and have the same primary key. This means that unsaved model objects may compare as equal even if they have different attribute data. If you find yourself comparing unsaved model objects (which is not a particularly frequent operation), you might need to override the <code class="cf ic">==</code> method.</p>
+
+  <p id="N1948E">As we will see, ids also play an important role in relationships.</p>
+
+  <h3 id="sec.ar.relationships">Specifying Relationships in Models</h3>
+
+  <p id="N19496">Active Record supports three types of relationship between tables: one-to-one, one-to-many, and many-to-many. You indicate these relationships by adding declarations to your models: <code class="cf ic">has_one</code>, <code class="cf ic">has_many</code>, <code class="cf ic">belongs_to</code>, and the wonderfully named <code class="cf ic">has_and_belongs_to_many</code>.</p>
+
+  <h4 id="heading_id_3">One-to-One Relationships</h4>
+
+  <p id="N194B6">A one-to-one association (or, more accurately, a one-to-zero-or-one relationship) is implemented using a foreign key in one row in one table to reference at most a single row in another table. A <span class="emph">one-to-one</span> relationship might exist between orders and invoices: for each order there’s at most one invoice.</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/one_to_one.png" src="../Images/one_to_one.png" /></div>
+
+  <p id="N194E9">As the example shows, we declare this in Rails by adding a <code class="cf ic">has_one</code> declaration to the <code class="cf class">Order</code> model and by adding a <code class="cf ic">belongs_to</code> declaration to the <code class="cf class">Invoice</code> model.</p>
+
+  <p id="N194F8">There’s an important rule illustrated here: the model for the table that contains the foreign key <span class="emph">always</span> has the <code class="cf ic">belongs_to</code> declaration.</p>
+
+  <h4 id="heading_id_4">One-to-Many Relationships</h4>
+
+  <p id="N19515">A one-to-many association allows you to represent a collection of objects. For example, an order might have any number of associated line items. In the database, all the line item rows for a particular order contain a foreign key column referring to that order.</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/one_to_many.png" src="../Images/one_to_many.png" /></div>
+
+  <p id="N1951B">In Active Record, the parent object (the one that logically contains a collection of child objects) uses <code class="cf ic">has_many</code> to declare its relationship to the child table, and the child table uses <code class="cf ic">belongs_to</code> to indicate its parent. In our example, class <code class="cf class">LineItem</code>&nbsp;<code class="cf ic">belongs_to :order</code>, and the <code class="cf sqltable">orders</code> table <code class="cf ic">has_many :line_items</code>.</p>
+
+  <p id="N1955B">Note that again, because the line item contains the foreign key, it has the <code class="cf ic">belongs_to</code> declaration.</p>
+
+  <h4 id="heading_id_5">Many-to-Many Relationships</h4>
+
+  <p id="N19565">Finally, we might categorize our products. A product can belong to many categories, and each category may contain multiple products. This is an example of a <span class="emph">many-to-many</span> relationship. It’s as if each side of the relationship contains a collection of items on the other side.</p>
+
+  <div xmlns:str="http://exslt.org/strings"><img alt="images/many_to_many.png" src="../Images/many_to_many.png" /></div>
+
+  <p id="N1956E">In Rails we can express this by adding the <code class="cf ic">has_and_belongs_to_many</code> declaration to both models.</p>
+
+  <p id="N19574">Many-to-many associations are symmetrical&mdash;both of the joined tables declare their association with each other using “habtm.”</p>
+
+  <p id="N1958C">Rails implements many-to-many associations using an intermediate join table. This contains foreign key pairs linking the two target tables. Active Record assumes that this join table’s name is the concatenation of the two target table names in alphabetical order. In our example, we joined the table <code class="cf sqltable">categories</code> to the table <code class="cf sqltable">products</code>, so Active Record will look for a join table named <code class="cf sqltable">categories_products</code>.</p>
+
+  <p id="N195A3">We can also define join tables directly. In the Depot application, we defined a <code class="cf class">LineItems</code> join, which joined <code class="cf class">Products</code> to either <code class="cf class">Carts</code> or <code class="cf class">Orders</code>. Defining it ourselves also gave us a place to store an additional attribute, namely, a <code class="cf ic">quantity</code>.</p>
+
+  <p id="N195B5">Now that we have covered data definitions, the next thing you would naturally want to do is access the data contained within the database, so let’s do that.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

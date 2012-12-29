@@ -1,0 +1,889 @@
+/*@font-face {
+  font-family: PPInconsolata;
+  font-weight: normal;
+  font-style:  normal;
+  src:         url(../fonts/Inconsolata-dz.otf);
+}*/
+@font-face {
+  font-family: DroidSansMono;
+  font-weight: normal;
+  font-style:  normal;
+  src:         url(../Fonts/DroidSansMono.ttf);
+}
+@font-face {
+  font-family: DroidSansMono;
+  font-weight: bold;
+  font-style:  normal;
+  src:         url(../Fonts/DroidSansMono.ttf);
+}
+@font-face {
+  font-family: DroidSans ;
+  font-weight: normal;
+  font-style:  normal;
+  src:         url(../Fonts/DroidSans.ttf);
+}
+@font-face {
+  font-family: DroidSans ;
+  font-weight: bold;
+  font-style:  normal;
+  src:         url(../Fonts/DroidSans-Bold.ttf);
+}
+/* "Trebuchet MS", Verdana, Arial, sans-serif*/
+body {
+  margin: 0pt 1em;
+  padding: 0pt;
+}
+
+
+tt, code, kbd, samp {
+  font-size: 80%;
+}
+
+h1.part-title {
+    text-align: center;
+}
+
+h1.part-title .part-number{
+  font-size: 80%;
+}
+
+
+.partintro {
+    border-top: 3px solid #aaaadd;
+    border-bottom: 3px solid #aaaadd;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-top:  2em;
+    margin-left: 20%;
+    margin-right: 20%;
+    font-style: italic;
+}
+
+h1.chapter-title {
+  margin-top:   2em;
+  text-align: right;
+}
+
+h1.chapter-title .chapter-number {
+  color:     #999999;
+  font-weight: bold; 
+  display: block;
+  font-size: 90%;
+}
+
+h1.chapter-title .chapter-name {
+  display: block;
+  color:     #555555;
+  background: url(../images/h1-underline.gif) repeat-x bottom;
+  font-size: 120%;
+  font-weight: bold; 
+  margin-bottom: 1ex;
+}
+
+h2 {
+ font-size: 140%;
+ font-weight:  bold;
+ text-align: left !important;
+ color:     #445;
+ margin-top:  1em;
+ margin-bottom: 1ex !important;
+}
+
+h3 {
+ font-size: 110%;
+ font-weight:  bold;
+ color:     #225555;
+ clear:  both;
+ margin-top:  1em;
+ margin-bottom: 1ex;
+}
+
+h4 {
+ font-size: 100%;
+ font-weight:  bold;
+ color:     #225555;
+ clear:  both;
+ margin-top:  0.8em;
+ margin-bottom: 0.8ex;
+}
+
+p {
+  line-height: 130%;
+  margin-top: 0pt;
+}
+
+.contribution { 
+  font-size: smaller;
+  color:     #888;
+  padding-left: 10%;
+  padding-right: 10%;                
+}
+
+.acronym {
+  font-weight:  bold;
+  font-variant: small-caps;
+  color:        #333333;
+}
+	     
+
+.author {
+  margin-top:  1em;
+  margin-bottom:  1em;
+  text-align:  right
+}
+
+.authorname {
+
+}
+
+.authoraffiliation {
+  font-style:  italic;
+}
+
+.authors {
+  margin-top:   3em;
+  font-size:   18pt;
+  color:       #666666;
+}
+
+/* authorq is the author asking the beta-book reader */
+div.authorq { 
+  margin: 1em 0;
+  padding: 1em;
+  background: #dddddd;
+  font-size: smaller;              
+}
+
+div.authorq .the-author-asks { 
+  font-weight: bold;
+  display: inline;
+}
+
+.b { 
+  font-weight: bold;
+}
+
+.bad-xref { 
+  color: red;
+}
+
+dl.bibliography  {
+  margin-left: 0pt;
+}
+
+dl.bibliography dt {
+    float: left;
+    clear: left;
+    width: 3.5em;
+    text-align: left;
+    font-size: 90%;
+    font-weight: bold;
+}
+
+dl.bibliography dd {
+    margin-bottom: 8px;
+    margin-left: 4em;
+    padding: 0 0 0 0;
+  }
+
+dl.bibliography dd em {
+  color: #223388;
+  font-weight: bold;
+}
+
+.unused-bookinfo {
+  margin-top:       2em;
+  margin-bottom:    4em;
+  padding:          3em;
+  border-width: 8px;
+  border-style: dotted;
+  border-color: #dddddd;	      
+}
+
+.titlepage 
+{ 
+  margin-left: 10%;
+  margin-right: 10%;
+  text-align: center;
+}
+
+.tp-title {
+  display: block;
+  margin-top: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color:        #555555;
+  border-width: 3px;
+  border-style: solid none;
+  border-color: #888888;	      
+}
+
+.tp-subtitle {
+  display: block;
+  margin-top: 10px;
+  color:        #777777;
+}
+
+.tp-authors 
+{ 
+  display: block;
+  color: #777;
+  margin-top: 20px;
+}
+
+.tp-copyright 
+{ 
+  margin-top: 45px;
+  margin-left: 20%;
+  margin-right: 20%;
+  font-size: x-small;
+  border-top: 1px solid #bbb;
+  color: #444;
+
+}
+
+
+.tp-extracted-from {
+  font-size: 70%;
+  color:     #9999bb;
+}
+
+
+div.tp-extract-explanation {
+  margin-top: 72pt;
+}
+
+div.tp-extract-explanation p {
+  font-size: 70%;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.copyright-body {
+  margin-top: 4px;
+  padding: 0pt;
+}
+
+
+
+.tp-docinfo
+{ 
+  margin-top: 30px;
+  font-size: small;
+  color: #777;
+}
+
+.booksectname {
+  font-style: italic;
+}
+
+/* these are inline code. We make them all include the cf class   font-weight: bold;  */
+
+.cf {
+  color: #227;
+  font-family: "DroidSans";
+}
+
+.classname,
+.commandname,
+.commandoption,
+.constant,
+.dirname,
+.fileextension,
+.filename,
+.inlinecode,
+.keystroke,
+.keyword,
+.methodname,
+.parametername,
+.sqlcolumn,
+.sqltable,
+.string,
+.variablename,
+.xmlattrval {
+}
+
+.stringinfile {
+  font-style:  italic;
+}
+	     
+/*
+ ** end of cf stuff 
+ */
+
+	     
+.emph {
+  font-style: italic;
+}
+
+.epigraph {
+  width:         60%;
+  position:     relative;
+  left:         30%;
+  padding-top:   0px;
+  padding-top:   0px;
+  padding-left:  8px;
+  padding-right: 8px;
+  border-style:  solid;
+  text-align:    left;
+  border-width:  6px;
+  border-color:  #dddddd;
+  font-size:    small;
+  font-style:    italic;
+  margin-bottom: 0.7em;
+}
+
+.episign {
+  padding:       2px;
+  border-style:  solid;
+  text-align:    right;
+  border-width:  2px 0px 0px 0px;
+  border-color:  #dddddd;
+  font-size:    small;
+}
+
+.episignname {
+}
+.episigntitle {
+  font-style:    italic;
+}
+.episigndate {
+}
+
+
+.figure {
+  padding:       7px;
+  border-style:  dotted;
+  text-align:    center;
+  border-width:  3px;
+  border-color:  #dddddd;
+  margin-top:    1em;
+  margin-bottom: 1em;
+}
+
+
+.firstuseinline {
+  font-style:italic;
+}
+
+.firstusemargin {
+  position: absolute;
+  top:auto;
+  left:       1em;
+  font-style:italic;
+  font-size: x-small;
+  float:     left;
+  width:     1in;
+  text-align: right;
+}
+
+.flag { 
+  color:    red;
+}
+
+.flagadvanced {
+  float: left;
+  margin-right: 1em;                
+}
+
+.footnotes {
+  margin-top:   2em;
+  border-width: 2px 0 0 0;
+  border-style: solid none none none;
+  border-color: #888888;	      
+  font-size: smaller;
+}
+
+.footnotes td.footnote-number {
+  white-space: nowrap;
+  width: 1.5em;
+}
+
+div.highlight { 
+  border-top: 3px solid #acc;             
+  border-bottom: 3px solid #acc;             
+  width: 20%;
+  float: left;               
+  margin-right: 2em;
+}
+
+div.highlight p { 
+  margin-bottom: 0.2em;
+}
+
+.initials {
+  font-weight:  bold;
+  font-variant: small-caps;
+  color:        #333333;
+}
+	     
+
+.example {
+ border: 2px solid #88d;
+ background: #ccf;
+ padding-left: 1em;
+ padding-rightt: 1em;
+ margin-left: 0pt;
+ border-radius: 15px;
+ -moz-border-radius: 15px;
+
+}
+
+.marginnote {
+  position: absolute;
+  top:auto;
+  left:       1em;
+  font-weight: bold;
+  font-size: x-small;
+  float:     left;
+  width:     1in;
+  text-align: right;
+  line-height: 100%;
+}
+
+.nohyphen {
+  -webkit-hyphens:none; 
+}
+     
+.missing {
+  position: absolute;
+  top:auto;
+  left:       1em;
+  font-weight: bold;
+  font-size: x-small;
+  float:     left;
+  width:     1in;
+  text-align: right;
+  line-height: 100%;
+}
+
+.prefacesignoff a {
+  font-weight: bold;
+ }
+
+.prefacesignoffemail {
+  font-family: courier, fixed, monospace;
+  font-size: small;
+}
+
+.prefacesignoffdate {
+  font-size: small;
+}
+
+span.shade-fg-white {
+  color: white;
+}
+span.shade-fg-black {
+  color: black;
+}
+span.shade-fg-red {
+  color: red;
+}
+span.shade-fg-green {
+  color: green;
+}
+span.shade-fg-yellow {
+  color: yellow;
+}
+span.shade-fg-blue {
+  color: blue;
+}
+span.shade-fg-magenta {
+  color: magenta;
+}
+span.shade-fg-cyan {
+  color: cyan;
+}
+
+span.shade-fg-light {
+  color: rgb(220,220,180);
+}
+span.shade-fg-dark {
+  color: rgb(50,50,100);
+}
+
+span.shade-bg-white {
+  background-color: white;
+}
+span.shade-bg-black {
+  background-color: black;
+}
+span.shade-bg-red {
+  background-color: red;
+}
+span.shade-bg-green {
+  background-color: green;
+}
+span.shade-bg-yellow {
+  background-color: yellow;
+}
+span.shade-bg-blue {
+  background-color: blue;
+}
+span.shade-bg-magenta {
+  background-color: magenta;
+}
+span.shade-bg-cyan {
+  background-color: cyan;
+}
+span.shade-bg-light {
+  background-color: rgb(220,220,180);
+}
+span.shade-bg-dark {
+  background-color: rgb(50,50,100);
+}
+
+table.processedcode { 
+  margin: 0.7em 0px;
+}
+
+.processedcode tr {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+table.shaded  tr {
+  background: #ddeeee;
+}
+
+.processedcode tr td {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+
+.codeprefix { 
+  font-family: DroidSansMono;
+  font-weight: bold;
+  font-size: 70%;
+}
+
+.codeline {
+  font-family: DroidSansMono;
+  line-height: 1.2;
+  font-size: 80%;
+}
+
+.codeline code {
+  font-family: DroidSansMono;
+}
+
+.codeline pre {
+  font-family: DroidSansMono;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-weight: bold;
+}
+
+
+.codecalloutnumber { 
+  font-size:  80%;
+}
+
+tr.livecodelozenge { 
+}                  
+
+tr.livecodelozenge td a { 
+  color: #eee8f0;
+}                  
+
+tr.livecodelozenge td { 
+  font-size: 70%;
+  padding-left: 1em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  background: #98a0a8;   
+}
+
+span.callout-number { 
+  font-size: 80%;
+  color: green;                      
+}
+
+/*
+dl {
+}
+
+dl dt.force-newline {
+  clear: left;
+  width: 100%;                      
+  display: block;
+}
+
+dl dt {
+  float: left;
+  clear: left;
+  width: 3em;
+  display: block;
+}
+
+dl dd {
+  margin-left: 3.5em;
+  padding-left: 5px;
+  margin-bottom: 5px;
+}
+*/
+
+
+dl.calloutlist  {
+  margin-left: 0pt;
+}
+
+dl.calloutlist dt {
+    float: left;
+    clear: left;
+    width: 1em;
+    text-align: left;
+    font-size: 70%;
+}
+
+dl.calloutlist dd {
+    margin: 0 0 0 1.5em;
+    padding: 0 0 0 0;
+  }
+
+.simpletable {
+  margin-top:    1em;
+  margin-bottom:  2em;
+  border-collapse: collapse;
+}
+
+table.outerlines, table.hlines {
+  padding: 2px;
+  border: 2px solid #aaaadd;
+}
+
+th.outerlines, th.hlines {
+  border-bottom: 2px solid #aaaadd;
+  background: #ddddff;
+}
+
+.simpletable td, .simpletable th {
+  text-align: left;
+  vertical-align:      top;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+
+.simpletable p.last-para-in-cell {
+  margin-bottom: 0pt;
+}
+
+.simpletable tr.zebra {
+  background: #ddffdd;
+}
+
+.simpletable tr.line-on-top td {
+  border-top: 1px solid #aaaadd;
+}
+
+.standin {
+   font-style:  italic;
+   font-weight: bold;
+   color:       #444444;
+}
+
+table.arr-recipe 
+{ 
+  border: 6px solid #6aa;
+  width: 100%;
+  padding: 0px;
+}
+
+table.arr-recipe td.arr-recipe-number
+{ 
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: smaller;
+  font-weight: bold;
+  text-align: center;
+  width: 15%;
+  background: #6aa;
+  padding: 0;
+  margin: 0;
+  color: white;
+}
+
+table.arr-recipe .arr-recipe-name
+{ 
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: larger;
+  padding-top: 1ex;
+  padding-left: 1em;
+  padding-bottom: 1ex;
+}
+
+.tabletitle {
+  font-weight: bold;	
+  padding:      2px;
+  border-width: 0px 0 2px 0;
+  border-style: none none solid none;
+  border-color: #888888;	      
+}
+
+table.pg-task  {
+ font-size: 140%;
+ font-weight:  bold;
+ text-align: left !important;
+ color:     #445;
+ margin-top:  1em;
+ margin-bottom: 1ex !important;
+}
+
+
+td.pg-what-to-do  {
+ font-size: 110%;
+ font-weight:  bold;
+ color:     #445;
+ padding:      2px;
+ text-align:    center;
+ border-style:  dotted;
+ border-width:  3px;
+ border-color:  #008000;
+ margin-top:    1em;
+ margin-bottom: 1em;}
+
+
+
+.xmltag {
+  /*font-weight: bold;	
+   color:       #444444;*/
+}
+
+.comment {
+  color:   #115511;
+  font-style: italic;  
+}
+
+.kw {
+  color:  #111199;
+  font-weight: bold;
+}
+
+.prompt {
+  color:  rgb(144, 17, 125);
+  font-weight: bold;
+}
+
+.string {
+  color:   #555511;
+  font-style: italic;  
+}
+
+
+.sidebar { 
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding: 1em;
+  font-size: 90%;
+  font-family: sans;
+  border: 3px solid #aaa;           
+}
+
+.sidebar .sidebar-title { 
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #aaa
+}
+
+.underline { 
+  text-decoration: underline;
+}
+
+div.webresources .title { 
+  font-weight: bold;
+  margin-bottom: 0pt;                        
+}
+
+div.webresources .url { 
+  font-weight: bold;
+  margin-top: 0pt;                        
+  margin-bottom: 0pt;                        
+}
+
+div.webresources .desc { 
+  margin-top: 0px;
+  margin-left: 2em;
+}
+
+div.webresources .desc p { 
+  margin-top: 0px;
+}
+
+.xref-title { 
+  font-style: italic;              
+}
+
+div.xxxsays { 
+  font-size: small;
+  margin: 1em 0;
+  padding: 1em;
+  border:  2px #aaaaaa solid;
+}
+
+div.xxxsays .heading { 
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+  border-bottom:  2px #aaaaaa solid;
+}
+
+div.xxxsays .heading  .persons-picture { 
+  float: left;
+  margin-right: 2em
+}
+
+div.xxxsays .heading  .label { 
+  font-weight: bold;
+  color:       #999999;
+  margin-bottom: 0.2em;                               
+}
+
+div.xxxsays .heading  .title { 
+  font-weight: bold;
+  font-size: larger;
+  color:       #555555;                               
+}
+
+
+.copyright { 
+
+   font-size: x-small;
+   color:       #335555;
+   background:  #aabbbb; 
+   margin-top:  3em;
+   padding-top:  3px;
+   padding-bottom:  3px;
+   text-align:   center;
+   border-top:   1px #335555 solid;
+}
+
+
+div.backmatter-cover {
+    float: left;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+
+hr.backmatter-end {
+    clear: both;
+}
+
+
+ul.praise {
+  list-style: none;
+}
+
+.praisename {
+    font-weight: bold;
+}
+
+.dedication-text {
+  margin-top:  3em;
+  font-style: italic;  
+  text-align: center;
+}
+
+.dedication-name {
+  margin-top:  0.5em;
+  text-align: right;
+}

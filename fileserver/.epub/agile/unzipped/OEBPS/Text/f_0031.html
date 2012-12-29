@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">4.1 Ruby Is an Object-Oriented Language</h2>
+
+  <p id="N110A5">Everything you manipulate in Ruby is an object, and the results of those manipulations are themselves objects.</p>
+
+  <p id="N110B2">When you write object-oriented code, you’re normally looking to model concepts from the real world. Typically during this modeling process you’ll discover categories of things that need to be represented. In an online store, the concept of a line item could be such a category. In Ruby, you’d define a <span class="firstuseinline">class</span> to represent each of these categories. You then use this class as a kind of factory that generates <span class="firstuseinline">objects</span>&mdash;instances of that class. An object is a combination of state (for example, the quantity and the product id) and methods that use that state (perhaps a method to calculate the line item’s total cost). We’ll show how to create classes <a href="../Text/f_0034.html#wtf.class.def">​here​</a>.</p>
+
+  <p id="N110C2">Objects are created by calling a <span class="firstuseinline">constructor</span>, a special method associated with a class. The standard constructor is called <code class="cf methodname">new</code>.</p>
+
+  <p id="N110CE">Given a class called <code class="cf class">LineItem</code>, you could create line item objects as follows:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">line_item_one = LineItem.new</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">line_item_one.quantity = 1</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">line_item_one.sku = <em class="string">"AUTO_B_00"</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N110E7">Methods are invoked by sending a message to an object. The message contains the method’s name, along with any parameters the method may need. When an object receives a message, it looks into its own class for a corresponding method. Let’s look at some method calls:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="string">"dave"</em>.length</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">line_item_one.quantity()</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">cart.add_line_item(next_purchase)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">submit_tag <em class="string">"Add to Cart"</em></code></td>
+    </tr>
+  </table>
+
+  <p id="N11106">Parentheses are generally optional in method calls. In Rails applications, you’ll find that most method calls involved in larger expressions will have parentheses, while those that look more like commands or declarations tend not to have them.</p>
+
+  <p id="N11109">Methods have names, as do many other constructs in Ruby. Names in Ruby have special rules, rules that you may not have seen if you come to Ruby from another language.</p>
+
+  <h3 id="heading_id_3">Ruby Names</h3>
+
+  <p id="N11117">Local variables, method parameters, and method names should all start with a lowercase letter or with an underscore: <code class="cf ic">order</code>, <code class="cf ic">line_item</code>, and <code class="cf ic">xr2000</code> are all valid. Instance variables (which we talk about <a href="../Text/f_0034.html#wtf.instance.variable">​here​</a>) begin with an “at” (@) sign, such as <code class="cf ic">@quantity</code> and <code class="cf ic">@product_id</code>. The Ruby convention is to use underscores to separate words in a multiword method or variable name (so <code class="cf ic">line_item</code> is preferable to <code class="cf ic">lineItem</code>).</p>
+
+  <p id="N1113C">Class names, module names, and constants must start with an uppercase letter. By convention they use capitalization, rather than underscores, to distinguish the start of words within the name. Class names look like <code class="cf class">Object</code>, <code class="cf class">PurchaseOrder</code>, and <code class="cf class">LineItem</code>.</p>
+
+  <p id="wtf.symbol">Rails uses <span class="firstuseinline">symbols</span> to identify things. In particular, it uses them as keys when naming method parameters and looking things up in hashes. Here is an example:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">redirect_to action: <em class="string">"edit"</em>, id: params[:id]</code></td>
+    </tr>
+  </table>
+
+  <p id="N11163">As you can see, a symbol looks like a variable name, but it’s prefixed with a colon. Examples of symbols include <code class="cf ic">:action</code>, <code class="cf ic">:line_items</code>, and <code class="cf ic">:id</code>. You can think of symbols as string literals that are magically made into constants. Alternatively, you can consider the colon to mean “thing named,” so <code class="cf ic">:id</code> is “the thing named <span class="emph">id</span>.”</p>
+
+  <p id="N11178">Now that we have used a few methods, let’s move on to how they are defined.</p>
+
+  <h3 id="wtf.method.definition">Methods</h3>
+
+  <p id="N11180">Let’s write a <span class="firstuseinline">method</span> that returns a cheery, personalized greeting. We’ll invoke that method a couple of times:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> say_goodnight(name)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">result = <em class="string">'Good night, '</em> + name</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">return</strong> result</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment"># Time for bed...</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">puts say_goodnight(<em class="string">'Mary-Ellen'</em>)</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">puts say_goodnight(<em class="string">'John-Boy'</em>)</code></td>
+    </tr>
+  </table>
+
+  <p id="wtf.puts">Having defined the method, we call it twice. In both cases, we pass the result to the method <code class="cf methodname">puts</code>, which outputs to the console its argument followed by a newline (moving on to the next line of output).</p>
+
+  <p id="N111C6">You don’t need a semicolon at the end of a statement as long as you put each statement on a separate line. Ruby comments start with a <code class="cf ic">#</code> character and run to the end of the line. Indentation is not significant (but two-character indentation is the de facto Ruby standard).</p>
+
+  <p id="N111DC">Ruby doesn’t use braces to delimit the bodies of compound statements and definitions (such as methods and classes). Instead, you simply finish the body with the keyword <code class="cf ic">end</code>. The keyword <code class="cf ic">return</code> is optional, and if not present, the results of the last expression evaluated will be returned.</p>
+
+  <p id="N111EB"></p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">14.5 What We Just Did</h2>
+
+  <p id="N1731C">By the end of this iteration, we’ve done the following:</p>
+
+  <ul>
+    <li>
+      <p id="N17322">We used <code class="cf ic">has_secure_password</code> to store an encrypted version of the password into the database.</p>
+    </li>
+
+    <li>
+      <p id="N17329">We controlled access to the administration functions using before filters to invoke an <code class="cf methodname">authorize</code> method.</p>
+    </li>
+
+    <li>
+      <p id="N17330">We saw how to use <code class="cf commandname">rails console</code> to interact directly with a model (and dig us out of a hole after we deleted the last user).</p>
+    </li>
+
+    <li>
+      <p id="N17337">We saw how a transaction can help prevent deleting the last user.</p>
+    </li>
+  </ul>
+
+  <h3 id="heading_id_3">Playtime</h3>
+
+  <p id="N1733E">Here’s some stuff to try on your own:</p>
+
+  <ul>
+    <li>
+      <p id="N17344">Modify the user update function to require and validate the current password before allowing a user’s password to be changed.</p>
+    </li>
+
+    <li>
+      <p id="N17348">When the system is freshly installed on a new machine, there are no administrators defined in the database, and hence no administrator can log on. But, if no administrator can log on, then no one can create an administrative user. Change the code so that if no administrator is defined in the database, any username works to log on (allowing you to quickly create a real administrator).</p>
+    </li>
+
+    <li>
+      <p id="N1734C">Experiment with <code class="cf commandname">rails console</code>. Try creating products, orders, and line items. Watch for the return value when you save a model object&mdash;when validation fails, you’ll see <code class="cf constant">false</code> returned. Find out why by examining the errors:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">prd = Product.new</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">=&gt; #&lt;Product id: nil, title: nil, description: nil, image_url:</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">nil, created_at: nil, updated_at: nil, price:</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">#&lt;BigDecimal:246aa1c,'0.0',4(8)&gt;&gt;</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">prd.save</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">=&gt; false</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">&gt;&gt; <strong class="prompt">prd.errors.full_messages</strong></code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">=&gt; ["Image url must be a URL for a GIF, JPG, or PNG image",</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">"Image url can't be blank", "Price should be at least 0.01",</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">"Title can't be blank", "Description can't be blank"]</code></td>
+        </tr>
+      </table>
+    </li>
+
+    <li>
+      <p id="p.http.basic">Look up the <code class="cf methodname">authenticate_or_request_with_http_basic</code> method and utilize it in your <code class="cf ic">:authorize</code> filter if the <code class="cf ic">request.format</code> is <span class="emph">not</span> <code class="cf ic">Mime::HTML</code>. Test that it works by accessing an Atom feed:</p>
+
+      <table class="processedcode">
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">curl --silent --user dave:secret \</code></td>
+        </tr>
+
+        <tr>
+          <td class="codeprefix">&nbsp;</td>
+
+          <td class="codeline"><code class="sgc-1">http://localhost:3000/products/2/who_bought.xml</code></td>
+        </tr>
+      </table>
+    </li>
+
+    <li>
+      <p id="N173A6">While we have gotten our tests working by performing a login, we haven’t yet written tests that verify that access to sensitive data requires login. Write at least one test that verifies this by calling <code class="cf methodname">logout</code> and then attempting to fetch or update some data which requires authentication.</p>
+    </li>
+  </ul>
+
+  <p id="N173AC">(You’ll find hints at <a href="http://www.pragprog.com/wikis/wiki/RailsPlayTime">http://www.pragprog.com/wikis/wiki/RailsPlayTime</a>.)</p>
+
+  <div class="footnotes">
+    <h4 id="heading_id_4">Footnotes</h4>
+
+    <table cellspacing="3">
+      <tr valign="top">
+        <td class="footnote-number"><a href="../Text/f_0082.html#FNPTR-31" id="FOOTNOTE-31">[31]</a></td>
+
+        <td>
+          <p id="N16EDA"><a href="https://github.com/rails/rails/blob/3-1-stable/activemodel/lib/active_model/secure_password.rb">https://github.com/rails/rails/blob/3-1-stable/activemodel/lib/active_model/secure_password.rb</a></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="copyright">
+    Copyright © 2011, The Pragmatic Bookshelf.
+  </div><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

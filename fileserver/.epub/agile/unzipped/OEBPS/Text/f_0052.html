@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.depot.layouts">8.2 Iteration C2: Adding a Page Layout</h2>
+
+  <p id="N13122">The pages in a typical website often share a similar layout&mdash;the designer will have created a standard template that is used when placing content. Our job is to modify this page to add decoration to each of the store pages.</p>
+
+  <p id="N1313A">So far, we’ve only made minimal changes to <code class="cf filename">application.html.erb</code>, namely to add a <code class="cf ic">class</code> attribute in <a href="../Text/f_0045.html#p.def.page.class">​​</a>. As this file is the layout used for all views for all controllers that don’t otherwise provide a layout, we can change the look and feel of the entire site by editing just one file. This makes us feel better about putting a placeholder page layout in for now; we can update it when the designer eventually returns from the islands.</p>
+
+  <p id="N1314C">Let’s update this file to define a banner and a sidebar:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_e/app/views/layouts/application.html.erb">rails31/depot_e/app/views/layouts/application.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">Line 1</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;!DOCTYPE html&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;html&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;title&gt;</strong>Pragprog Books Online Store<strong class="prompt">&lt;/title&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">5</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">&lt;%= stylesheet_link_tag "application" %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">&lt;%= javascript_include_tag "application" %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">&lt;%= csrf_meta_tag %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/head&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;body</strong> class=<em class="string">"&lt;%= controller.controller_name %</em>&gt;"&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">10</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"banner"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">&lt;%= image_tag("logo.png") %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">&lt;%= @page_title || "Pragmatic Bookshelf" %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"columns"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">15</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"side"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www...."</em> <strong class="prompt">&gt;</strong>Home<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www..../faq"</em> <strong class="prompt">&gt;</strong>Questions<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www..../news"</em> <strong class="prompt">&gt;</strong>News<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">20</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;li&gt;</strong> <strong class="prompt">&lt;a</strong> href=<em class="string">"http://www..../contact"</em> <strong class="prompt">&gt;</strong>Contact<strong class="prompt">&lt;/a&gt;</strong> <strong class="prompt">&lt;/li&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/ul&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;div</strong> id=<em class="string">"main"</em> <strong class="prompt">&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">&lt;%= yield %&gt;</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">25</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> <span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/div&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/body&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/html&gt;</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="sec.page.title">Apart from the usual HTML gubbins, this layout has three Rails-specific items. As mentioned previously, line 5 uses a Rails helper method to generate a <code class="cf xmltag">&lt;link&gt;</code> tag to our application’s stylesheet. Similarly, line 6 generates a <code class="cf xmltag">&lt;link&gt;</code> to our application’s scripts. Finally, line 7 sets up all the behind-the-scenes data needed to prevent cross-site request forgery attacks, which will be important once we add forms in Chapter 12, <a href="../Text/f_0072.html#chp.check.out">​<em>Task G: Check Out!</em>​</a>.</p>
+
+  <p id="N1326B">On line 12, we set the page heading to the value in the instance variable <code class="cf variable">@page_title</code>. The real magic, however, takes place on line 24. When we invoke <code class="cf ic">yield</code>, Rails automatically substitutes in the page-specific content&mdash;the stuff generated by the view invoked by this request. Here, this will be the catalog page generated by <code class="cf filename">index.html.erb</code>.</p>
+
+  <p id="N1328E">To make this all work, first rename the file <code class="cf filename">application.css</code> to <code class="cf filename">application.css.scss</code>, and then add the following:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/depot_e/app/assets/stylesheets/application.css.scss">rails31/depot_e/app/assets/stylesheets/application.css.scss</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">/*</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">This</em> <em class="comment">is</em> <em class="comment">a</em> <em class="comment">manifest</em> <em class="comment">file</em> <em class="comment">that'll</em> <em class="comment">automatically</em> <em class="comment">include</em> <em class="comment">all</em> <em class="comment">the</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">stylesheets</em> <em class="comment">available</em> <em class="comment">in</em> <em class="comment">this</em> <em class="comment">directory</em> <em class="comment">and</em> <em class="comment">any</em> <em class="comment">sub-directories.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">You're</em> <em class="comment">free</em> <em class="comment">to</em> <em class="comment">add</em> <em class="comment">application-wide</em> <em class="comment">styles</em> <em class="comment">to</em> <em class="comment">this</em> <em class="comment">file</em> <em class="comment">and</em> <em class="comment">they'll</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">appear</em> <em class="comment">at</em> <em class="comment">the</em> <em class="comment">top</em> <em class="comment">of</em> <em class="comment">the</em> <em class="comment">compiled</em> <em class="comment">file,</em> <em class="comment">but</em> <em class="comment">it's</em> <em class="comment">generally</em> <em class="comment">better</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*</em> <em class="comment">to</em> <em class="comment">create</em> <em class="comment">a</em> <em class="comment">new</em> <em class="comment">file</em> <em class="comment">per</em> <em class="comment">style</em> <em class="comment">scope.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*=</em> <em class="comment">require_self</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*=</em> <em class="comment">require_tree</em> <em class="comment">.</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><em class="comment">*/</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">#banner {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background: #9c9;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 10px;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">border-bottom: 2px solid;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font: small-caps 40px/40px <em class="string">"Times New Roman"</em>, serif;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">color: #282;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">text-align: center;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">img {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">float: left;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">#notice {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">color: #000 !important;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">border: 2px solid red;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 1em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin-bottom: 2em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background-color: #f0f0f0;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font: bold smaller sans-serif;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">#columns {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background: #141;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">#main {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">margin-left: 17em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 1em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background: white;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">#side {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">float: left;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 1em 2em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">width: 13em;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">background: #141;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ul {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">padding: 0;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">li {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">list-style: none;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">a {</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">color: #bfb;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">font-size: small;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codehighlightline">*</span> &nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">}</code></td>
+    </tr>
+  </table>
+
+  <p id="N133FD">Again we make heavy use of Sass, which is exactly what the file rename enabled us to do. For example, there is a <code class="cf ic">img</code> selector nested inside the <code class="cf ic">#banner</code> selector. There also is an <code class="cf ic">a</code> selector inside of the <code class="cf ic">#side</code> selector.</p>
+
+  <p id="N1340C">Hit Refresh, and the browser window looks something like Figure 12, <a href="#fig.depot.e.index.1">​<em>Catalog with layout added</em>​</a>. It won’t win any design awards, but it’ll show our customer roughly what the final page will look like.</p>
+
+  <table class="figure" id="fig.depot.e.index.1">
+    <tr>
+      <td><img alt="images/depot_e_index_1.png" src="../Images/depot_e_index_1.png" xmlns:str="http://exslt.org/strings" /></td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <hr />
+        <b>Figure 12. Catalog with layout added</b>
+      </td>
+    </tr>
+  </table>
+
+  <p id="N13430">Looking at this page, we spot a minor problem with how prices are displayed. The database stores the price as a number, but we’d like to show it as dollars and cents. A price of 12.34 should be shown as $12.34, and 13 should display as $13.00. We’ll tackle that next.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

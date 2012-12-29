@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.form.helpers">21.2 Generating Forms</h2>
+
+  <p id="N1C421">HTML provides a number of elements, attributes, and attribute values that control how input is gathered. You certainly could hand-code your form directly into the template, but there really is no need to do that.</p>
+
+  <p id="N1C43E">In this section, we will cover a number of <span class="emph">helpers</span> that Rails provides that assist with this process. In Section 21.5, <a href="../Text/f_0117.html#sec.helpers">​<em>Using Helpers</em>​</a>, we will show you how you can create your own helpers.</p>
+
+  <p id="N1C447">HTML provides a number of ways to collect data in forms. A few of the more common means are shown in Figure 48, <a href="../Text/f_0113.html#fig.html.forms">​<em>Some of the common ways to enter data into forms</em>​</a>. Note that the form itself is not representative of any sort of typical use; in general, you will use only a subset of these methods to collect data.</p>
+
+  <p id="N1C44D">Let’s look at the template that was used to produce that form:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/views/app/views/form/input.html.erb">rails31/views/app/views/form/input.html.erb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">Line 1</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form_for(:model) <strong class="prompt">do</strong> |form| %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :input %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.text_field :input, :placeholder =&gt; <em class="string">'Enter text here...'</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">5</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :address, :style =&gt; <em class="string">'float: left'</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.text_area :address, :rows =&gt; 3, :cols =&gt; 40 %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">10</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :color %&gt;:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.radio_button :color, <em class="string">'red'</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">15</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :red %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.radio_button :color, <em class="string">'yellow'</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :yellow %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.radio_button :color, <em class="string">'green'</em> %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :green %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">20</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label <em class="string">'condiment'</em> %&gt;:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.check_box :ketchup %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">25</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :ketchup %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.check_box :mustard %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :mustard %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.check_box :mayonnaise %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :mayonnaise %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">30</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :priority %&gt;:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.select :priority, (1..10) %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">35</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :start %&gt;:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.date_select :start %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">40</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.label :alarm %&gt;:</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;%= form.time_select :alarm %&gt;</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">45</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">&lt;/p&gt;</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix"><span class="codeprefix">-</span>&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">&lt;% <strong class="prompt">end</strong> %&gt;</code></td>
+    </tr>
+  </table>
+
+  <p id="N1C541">In that template, you will see a number of labels, such as the one on line 3. You use labels to associate text with an input field for a specified attribute. The text of the label will default to the attribute name unless you specify it explicitly.</p>
+
+  <p id="N1C547">You use the <code class="cf methodname">text_field</code> and <code class="cf methodname">text_area</code> helpers (on lines 4 and 9, respectively) to gather single-line and multiline input fields. You may specify a <code class="cf ic">placeholder</code>, which will be displayed inside the field until the user provides a value. Not every browser supports this function, but those that don’t simply will display an empty box. Since this will degrade gracefully, there is no need for you to design to the least common denominator&mdash;make use of this feature, because those who can see it will benefit from it immediately.</p>
+
+  <p id="N1C559">Placeholders are one of the many small “fit and finish” features provided with HTML5, and once again, Rails is ready even if the browser your users have installed is not. You can use the <code class="cf methodname">search_field</code>, <code class="cf methodname">telephone_field</code>, <code class="cf methodname">url_field</code>, <code class="cf methodname">email_field</code>, <code class="cf methodname">number_field</code>, and <code class="cf methodname">range_field</code> helpers to prompt for a specific type of input. How the browser will make use of this information varies. Some may display the field slightly differently in order to more clearly identify its function. Safari on Mac, for example, will display search fields with rounded corners and will insert a little <code class="cf ic">x</code> for clearing the field once data entry begins. Some may provide added validation. For example, Opera will validate URL fields prior to submission. The iPad will even adjust the virtual on-screen keyboard to provide ready access to characters such as the <code class="cf ic">@</code> sign when entering an email address.</p>
+
+  <p id="N1C578">Although the support for these functions varies by browser, those that don’t provide extra support for these functions simply display a plain, unadorned input box. Once again, nothing is gained by waiting. If you have an input field that’s expected to contain an email address, don’t simply use <code class="cf methodname">text_field</code>&mdash;go ahead and start using <code class="cf methodname">email_field</code> now.</p>
+
+  <p id="N1C581">Lines 14, 24, and 34 demonstrate three different ways to provide a constrained set of options. Although the display may vary a bit from browser to browser, these are all well supported across all browsers. The <code class="cf methodname">select</code> method is particularly flexible&mdash;it can be passed a simple <code class="cf class">Enumeration</code> as shown here, an array of pairs of name/value pairs, or a Hash. A number of form options helpers<a href="../Text/f_0118.html#FOOTNOTE-45" id="FNPTR-45">[45]</a> are available to produce such lists from various sources, including the database.</p>
+
+  <p id="N1C599">Finally, lines 39 and 44 show prompts for a date and time, respectively. As you might expect by now, Rails provides plenty of options here too.<a href="../Text/f_0118.html#FOOTNOTE-46" id="FNPTR-46">[46]</a></p>
+
+  <p id="N1C5A7">Not shown in this example are <code class="cf methodname">hidden_field</code> and <code class="cf methodname">password_field</code>. A hidden field is not displayed at all, but the value is passed back to the server. This may be useful as an alternative to storing transient data in sessions, enabling data from one request to be passed onto the next. Password fields are displayed, but the text entered in them is obscured.</p>
+
+  <p id="N1C5B6">This is more than an adequate starter set for most needs. Should you find that you have additional needs, you are quite likely to find a helper or plugin is already available for you. A good place to start is with the Rails Guides.<a href="../Text/f_0118.html#FOOTNOTE-47" id="FNPTR-47">[47]</a></p>
+
+  <p id="N1C5BE">Meanwhile, let’s explore how the data forms submit is processed.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

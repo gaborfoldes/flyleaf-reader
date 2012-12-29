@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!DOCTYPE package PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="PragmaticBook" version="2.0">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <dc:identifier id="PragmaticBook" opf:scheme="ISBN">978-1-934356-54-8</dc:identifier>
+    <dc:title>Agile Web Development with Rails</dc:title>
+    <dc:rights>Copyright © 2011 Pragmatic Programmers, LLC</dc:rights>
+    <dc:subject>Pragmatic Bookshelf</dc:subject>
+    <dc:creator opf:role="aut">Sam Ruby</dc:creator>
+    <dc:creator opf:role="aut">Dave Thomas</dc:creator>
+    <dc:creator opf:role="aut">David Heinemeier Hansson</dc:creator>
+    <dc:publisher>The Pragmatic Bookshelf, LLC (205844)</dc:publisher>
+    <dc:language>en</dc:language>
+    <meta name="cover" content="cover-image" />
+    <meta content="0.4.2" name="Sigil version" />
+  </metadata>
+  <manifest>
+    <item href="Styles/bookshelf.css" id="bookshelf-css" media-type="text/css" />
+    <item href="Styles/book_local.css" id="book_local-css" media-type="text/css" />
+    <item href="Misc/book_local.js" id="book_local-js" media-type="text/javascript" />
+    <item href="Styles/page-template.xpgt" id="pt" media-type="application/vnd.adobe-page-template+xml" />
+    <item href="Text/cover.xhtml" id="cover" media-type="application/xhtml+xml" />
+    <item href="Fonts/DroidSansMono.ttf" id="DroidSansMono" media-type="font/opentype" />
+    <item href="Fonts/DroidSans.ttf" id="DroidSans" media-type="font/opentype" />
+    <item href="Fonts/DroidSans-Bold.ttf" id="DroidSansBold" media-type="font/opentype" />
+    <item href="Images/cover.jpg" id="cover-image" media-type="image/jpeg" />
+    <item href="Images/joe.jpg" id="joe-image" media-type="image/jpeg" />
+    <item href="Images/WigglyRoad.jpg" id="wiggly-image" media-type="image/jpeg" />
+    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml" />
+    <item href="Text/f_0000.html" id="f_0000" media-type="application/xhtml+xml" />
+    <item href="Text/f_0001.html" id="f_0001" media-type="application/xhtml+xml" />
+    <item href="Text/f_0002.html" id="f_0002" media-type="application/xhtml+xml" />
+    <item href="Text/f_0003.html" id="f_0003" media-type="application/xhtml+xml" />
+    <item href="Text/f_0004.html" id="f_0004" media-type="application/xhtml+xml" />
+    <item href="Text/f_0005.html" id="f_0005" media-type="application/xhtml+xml" />
+    <item href="Text/f_0006.html" id="f_0006" media-type="application/xhtml+xml" />
+    <item href="Text/f_0007.html" id="f_0007" media-type="application/xhtml+xml" />
+    <item href="Text/f_0008.html" id="f_0008" media-type="application/xhtml+xml" />
+    <item href="Text/f_0009.html" id="f_0009" media-type="application/xhtml+xml" />
+    <item href="Text/f_0010.html" id="f_0010" media-type="application/xhtml+xml" />
+    <item href="Text/f_0011.html" id="f_0011" media-type="application/xhtml+xml" />
+    <item href="Text/f_0012.html" id="f_0012" media-type="application/xhtml+xml" />
+    <item href="Text/f_0013.html" id="f_0013" media-type="application/xhtml+xml" />
+    <item href="Text/f_0014.html" id="f_0014" media-type="application/xhtml+xml" />
+    <item href="Text/f_0015.html" id="f_0015" media-type="application/xhtml+xml" />
+    <item href="Text/f_0016.html" id="f_0016" media-type="application/xhtml+xml" />
+    <item href="Text/f_0017.html" id="f_0017" media-type="application/xhtml+xml" />
+    <item href="Text/f_0018.html" id="f_0018" media-type="application/xhtml+xml" />
+    <item href="Text/f_0019.html" id="f_0019" media-type="application/xhtml+xml" />
+    <item href="Text/f_0020.html" id="f_0020" media-type="application/xhtml+xml" />
+    <item href="Text/f_0021.html" id="f_0021" media-type="application/xhtml+xml" />
+    <item href="Text/f_0022.html" id="f_0022" media-type="application/xhtml+xml" />
+    <item href="Text/f_0023.html" id="f_0023" media-type="application/xhtml+xml" />
+    <item href="Text/f_0024.html" id="f_0024" media-type="application/xhtml+xml" />
+    <item href="Text/f_0025.html" id="f_0025" media-type="application/xhtml+xml" />
+    <item href="Text/f_0026.html" id="f_0026" media-type="application/xhtml+xml" />
+    <item href="Text/f_0027.html" id="f_0027" media-type="application/xhtml+xml" />
+    <item href="Text/f_0028.html" id="f_0028" media-type="application/xhtml+xml" />
+    <item href="Text/f_0029.html" id="f_0029" media-type="application/xhtml+xml" />
+    <item href="Text/f_0030.html" id="f_0030" media-type="application/xhtml+xml" />
+    <item href="Text/f_0031.html" id="f_0031" media-type="application/xhtml+xml" />
+    <item href="Text/f_0032.html" id="f_0032" media-type="application/xhtml+xml" />
+    <item href="Text/f_0033.html" id="f_0033" media-type="application/xhtml+xml" />
+    <item href="Text/f_0034.html" id="f_0034" media-type="application/xhtml+xml" />
+    <item href="Text/f_0035.html" id="f_0035" media-type="application/xhtml+xml" />
+    <item href="Text/f_0036.html" id="f_0036" media-type="application/xhtml+xml" />
+    <item href="Text/f_0037.html" id="f_0037" media-type="application/xhtml+xml" />
+    <item href="Text/f_0038.html" id="f_0038" media-type="application/xhtml+xml" />
+    <item href="Text/f_0039.html" id="f_0039" media-type="application/xhtml+xml" />
+    <item href="Text/f_0040.html" id="f_0040" media-type="application/xhtml+xml" />
+    <item href="Text/f_0041.html" id="f_0041" media-type="application/xhtml+xml" />
+    <item href="Text/f_0042.html" id="f_0042" media-type="application/xhtml+xml" />
+    <item href="Text/f_0043.html" id="f_0043" media-type="application/xhtml+xml" />
+    <item href="Text/f_0044.html" id="f_0044" media-type="application/xhtml+xml" />
+    <item href="Text/f_0045.html" id="f_0045" media-type="application/xhtml+xml" />
+    <item href="Text/f_0046.html" id="f_0046" media-type="application/xhtml+xml" />
+    <item href="Text/f_0047.html" id="f_0047" media-type="application/xhtml+xml" />
+    <item href="Text/f_0048.html" id="f_0048" media-type="application/xhtml+xml" />
+    <item href="Text/f_0049.html" id="f_0049" media-type="application/xhtml+xml" />
+    <item href="Text/f_0050.html" id="f_0050" media-type="application/xhtml+xml" />
+    <item href="Text/f_0051.html" id="f_0051" media-type="application/xhtml+xml" />
+    <item href="Text/f_0052.html" id="f_0052" media-type="application/xhtml+xml" />
+    <item href="Text/f_0053.html" id="f_0053" media-type="application/xhtml+xml" />
+    <item href="Text/f_0054.html" id="f_0054" media-type="application/xhtml+xml" />
+    <item href="Text/f_0055.html" id="f_0055" media-type="application/xhtml+xml" />
+    <item href="Text/f_0056.html" id="f_0056" media-type="application/xhtml+xml" />
+    <item href="Text/f_0057.html" id="f_0057" media-type="application/xhtml+xml" />
+    <item href="Text/f_0058.html" id="f_0058" media-type="application/xhtml+xml" />
+    <item href="Text/f_0059.html" id="f_0059" media-type="application/xhtml+xml" />
+    <item href="Text/f_0060.html" id="f_0060" media-type="application/xhtml+xml" />
+    <item href="Text/f_0061.html" id="f_0061" media-type="application/xhtml+xml" />
+    <item href="Text/f_0062.html" id="f_0062" media-type="application/xhtml+xml" />
+    <item href="Text/f_0063.html" id="f_0063" media-type="application/xhtml+xml" />
+    <item href="Text/f_0064.html" id="f_0064" media-type="application/xhtml+xml" />
+    <item href="Text/f_0065.html" id="f_0065" media-type="application/xhtml+xml" />
+    <item href="Text/f_0066.html" id="f_0066" media-type="application/xhtml+xml" />
+    <item href="Text/f_0067.html" id="f_0067" media-type="application/xhtml+xml" />
+    <item href="Text/f_0068.html" id="f_0068" media-type="application/xhtml+xml" />
+    <item href="Text/f_0069.html" id="f_0069" media-type="application/xhtml+xml" />
+    <item href="Text/f_0070.html" id="f_0070" media-type="application/xhtml+xml" />
+    <item href="Text/f_0071.html" id="f_0071" media-type="application/xhtml+xml" />
+    <item href="Text/f_0072.html" id="f_0072" media-type="application/xhtml+xml" />
+    <item href="Text/f_0073.html" id="f_0073" media-type="application/xhtml+xml" />
+    <item href="Text/f_0074.html" id="f_0074" media-type="application/xhtml+xml" />
+    <item href="Text/f_0075.html" id="f_0075" media-type="application/xhtml+xml" />
+    <item href="Text/f_0076.html" id="f_0076" media-type="application/xhtml+xml" />
+    <item href="Text/f_0077.html" id="f_0077" media-type="application/xhtml+xml" />
+    <item href="Text/f_0078.html" id="f_0078" media-type="application/xhtml+xml" />
+    <item href="Text/f_0079.html" id="f_0079" media-type="application/xhtml+xml" />
+    <item href="Text/f_0080.html" id="f_0080" media-type="application/xhtml+xml" />
+    <item href="Text/f_0081.html" id="f_0081" media-type="application/xhtml+xml" />
+    <item href="Text/f_0082.html" id="f_0082" media-type="application/xhtml+xml" />
+    <item href="Text/f_0083.html" id="f_0083" media-type="application/xhtml+xml" />
+    <item href="Text/f_0084.html" id="f_0084" media-type="application/xhtml+xml" />
+    <item href="Text/f_0085.html" id="f_0085" media-type="application/xhtml+xml" />
+    <item href="Text/f_0086.html" id="f_0086" media-type="application/xhtml+xml" />
+    <item href="Text/f_0087.html" id="f_0087" media-type="application/xhtml+xml" />
+    <item href="Text/f_0088.html" id="f_0088" media-type="application/xhtml+xml" />
+    <item href="Text/f_0089.html" id="f_0089" media-type="application/xhtml+xml" />
+    <item href="Text/f_0090.html" id="f_0090" media-type="application/xhtml+xml" />
+    <item href="Text/f_0091.html" id="f_0091" media-type="application/xhtml+xml" />
+    <item href="Text/f_0092.html" id="f_0092" media-type="application/xhtml+xml" />
+    <item href="Text/f_0093.html" id="f_0093" media-type="application/xhtml+xml" />
+    <item href="Text/f_0094.html" id="f_0094" media-type="application/xhtml+xml" />
+    <item href="Text/f_0095.html" id="f_0095" media-type="application/xhtml+xml" />
+    <item href="Text/f_0096.html" id="f_0096" media-type="application/xhtml+xml" />
+    <item href="Text/f_0097.html" id="f_0097" media-type="application/xhtml+xml" />
+    <item href="Text/f_0098.html" id="f_0098" media-type="application/xhtml+xml" />
+    <item href="Text/f_0099.html" id="f_0099" media-type="application/xhtml+xml" />
+    <item href="Text/f_0100.html" id="f_0100" media-type="application/xhtml+xml" />
+    <item href="Text/f_0101.html" id="f_0101" media-type="application/xhtml+xml" />
+    <item href="Text/f_0102.html" id="f_0102" media-type="application/xhtml+xml" />
+    <item href="Text/f_0103.html" id="f_0103" media-type="application/xhtml+xml" />
+    <item href="Text/f_0104.html" id="f_0104" media-type="application/xhtml+xml" />
+    <item href="Text/f_0105.html" id="f_0105" media-type="application/xhtml+xml" />
+    <item href="Text/f_0106.html" id="f_0106" media-type="application/xhtml+xml" />
+    <item href="Text/f_0107.html" id="f_0107" media-type="application/xhtml+xml" />
+    <item href="Text/f_0108.html" id="f_0108" media-type="application/xhtml+xml" />
+    <item href="Text/f_0109.html" id="f_0109" media-type="application/xhtml+xml" />
+    <item href="Text/f_0110.html" id="f_0110" media-type="application/xhtml+xml" />
+    <item href="Text/f_0111.html" id="f_0111" media-type="application/xhtml+xml" />
+    <item href="Text/f_0112.html" id="f_0112" media-type="application/xhtml+xml" />
+    <item href="Text/f_0113.html" id="f_0113" media-type="application/xhtml+xml" />
+    <item href="Text/f_0114.html" id="f_0114" media-type="application/xhtml+xml" />
+    <item href="Text/f_0115.html" id="f_0115" media-type="application/xhtml+xml" />
+    <item href="Text/f_0116.html" id="f_0116" media-type="application/xhtml+xml" />
+    <item href="Text/f_0117.html" id="f_0117" media-type="application/xhtml+xml" />
+    <item href="Text/f_0118.html" id="f_0118" media-type="application/xhtml+xml" />
+    <item href="Text/f_0119.html" id="f_0119" media-type="application/xhtml+xml" />
+    <item href="Text/f_0120.html" id="f_0120" media-type="application/xhtml+xml" />
+    <item href="Text/f_0121.html" id="f_0121" media-type="application/xhtml+xml" />
+    <item href="Text/f_0122.html" id="f_0122" media-type="application/xhtml+xml" />
+    <item href="Text/f_0123.html" id="f_0123" media-type="application/xhtml+xml" />
+    <item href="Text/f_0124.html" id="f_0124" media-type="application/xhtml+xml" />
+    <item href="Text/f_0125.html" id="f_0125" media-type="application/xhtml+xml" />
+    <item href="Text/f_0126.html" id="f_0126" media-type="application/xhtml+xml" />
+    <item href="Text/f_0127.html" id="f_0127" media-type="application/xhtml+xml" />
+    <item href="Text/f_0128.html" id="f_0128" media-type="application/xhtml+xml" />
+    <item href="Text/f_0129.html" id="f_0129" media-type="application/xhtml+xml" />
+    <item href="Text/f_0130.html" id="f_0130" media-type="application/xhtml+xml" />
+    <item href="Text/f_0131.html" id="f_0131" media-type="application/xhtml+xml" />
+    <item href="Text/f_0132.html" id="f_0132" media-type="application/xhtml+xml" />
+    <item href="Text/f_0133.html" id="f_0133" media-type="application/xhtml+xml" />
+    <item href="Text/f_0134.html" id="f_0134" media-type="application/xhtml+xml" />
+    <item href="Text/f_0135.html" id="f_0135" media-type="application/xhtml+xml" />
+    <item href="Text/f_0136.html" id="f_0136" media-type="application/xhtml+xml" />
+    <item href="Text/f_0137.html" id="f_0137" media-type="application/xhtml+xml" />
+    <item href="Text/f_0138.html" id="f_0138" media-type="application/xhtml+xml" />
+    <item href="Text/f_0139.html" id="f_0139" media-type="application/xhtml+xml" />
+    <item href="Text/f_0140.html" id="f_0140" media-type="application/xhtml+xml" />
+    <item href="Text/f_0141.html" id="f_0141" media-type="application/xhtml+xml" />
+    <item href="Text/f_0142.html" id="f_0142" media-type="application/xhtml+xml" />
+    <item href="Text/f_0143.html" id="f_0143" media-type="application/xhtml+xml" />
+    <item href="Text/f_0144.html" id="f_0144" media-type="application/xhtml+xml" />
+    <item href="Text/f_0145.html" id="f_0145" media-type="application/xhtml+xml" />
+    <item href="Text/f_0146.html" id="f_0146" media-type="application/xhtml+xml" />
+    <item href="Text/f_0147.html" id="f_0147" media-type="application/xhtml+xml" />
+    <item href="Images/demo_startscreen.png" id="img1" media-type="image/png" />
+    <item href="Images/template_missing.png" id="img2" media-type="image/png" />
+    <item href="Images/hello1.png" id="img3" media-type="image/png" />
+    <item href="Images/demo_files.png" id="img4" media-type="image/png" />
+    <item href="Images/hello2.png" id="img5" media-type="image/png" />
+    <item href="Images/goodbye1.png" id="img6" media-type="image/png" />
+    <item href="Images/hello3.png" id="img7" media-type="image/png" />
+    <item href="Images/basic_mvc.png" id="img8" media-type="image/png" />
+    <item href="Images/rails_mvc.png" id="img9" media-type="image/png" />
+    <item href="Images/buyer_flow.png" id="img10" media-type="image/png" />
+    <item href="Images/seller_flow.png" id="img11" media-type="image/png" />
+    <item href="Images/initial_data.png" id="img12" media-type="image/png" />
+    <item href="Images/depot_a_admin.png" id="img13" media-type="image/png" />
+    <item href="Images/depot_a_big_desc.png" id="img14" media-type="image/png" />
+    <item href="Images/depot_a_new.png" id="img15" media-type="image/png" />
+    <item href="Images/depot_a_list.png" id="img16" media-type="image/png" />
+    <item href="Images/depot_c_list.png" id="img17" media-type="image/png" />
+    <item href="Images/depot_b_no_fields.png" id="img18" media-type="image/png" />
+    <item href="Images/depot_b_price_error.png" id="img19" media-type="image/png" />
+    <item href="Images/depot_c_index.png" id="img20" media-type="image/png" />
+    <item href="Images/depot_d_index_1.png" id="img21" media-type="image/png" />
+    <item href="Images/depot_e_index_1.png" id="img22" media-type="image/png" />
+    <item href="Images/depot_f_format_price.png" id="img23" media-type="image/png" />
+    <item href="Images/depot_f_formatted_index.png" id="img24" media-type="image/png" />
+    <item href="Images/depot_f_add_no_view.png" id="img25" media-type="image/png" />
+    <item href="Images/depot_f_dup_product.png" id="img26" media-type="image/png" />
+    <item href="Images/depot_g_cart.png" id="img27" media-type="image/png" />
+    <item href="Images/depot_g_cart_undo.png" id="img28" media-type="image/png" />
+    <item href="Images/depot_g_exception.png" id="img29" media-type="image/png" />
+    <item href="Images/depot_h_invalid_product.png" id="img30" media-type="image/png" />
+    <item href="Images/depot_h_cart_empty.png" id="img31" media-type="image/png" />
+    <item href="Images/depot_i_cart.png" id="img32" media-type="image/png" />
+    <item href="Images/depot_k_less_ugly.png" id="img33" media-type="image/png" />
+    <item href="Images/yft.png" id="img34" media-type="image/png" />
+    <item href="Images/layout_failure.png" id="img35" media-type="image/png" />
+    <item href="Images/form_for.png" id="img36" media-type="image/png" />
+    <item href="Images/depot_p_checkout_1.png" id="img37" media-type="image/png" />
+    <item href="Images/depot_p_full_house.png" id="img38" media-type="image/png" />
+    <item href="Images/depot_p_checkout_result.png" id="img39" media-type="image/png" />
+    <item href="Images/depot_paginate.png" id="img40" media-type="image/png" />
+    <item href="Images/depot_p_add_user.png" id="img41" media-type="image/png" />
+    <item href="Images/form_flow.png" id="img42" media-type="image/png" />
+    <item href="Images/depot_p_index.png" id="img43" media-type="image/png" />
+    <item href="Images/depot_q_user_list.png" id="img44" media-type="image/png" />
+    <item href="Images/english_translation.png" id="img45" media-type="image/png" />
+    <item href="Images/i18n_trans_not_avail.png" id="img46" media-type="image/png" />
+    <item href="Images/i18n_title_and_side.png" id="img47" media-type="image/png" />
+    <item href="Images/i18n_main.png" id="img48" media-type="image/png" />
+    <item href="Images/i18n_cart.png" id="img49" media-type="image/png" />
+    <item href="Images/i18n_currency.png" id="img50" media-type="image/png" />
+    <item href="Images/i18n_checkout.png" id="img51" media-type="image/png" />
+    <item href="Images/i18n_translation_missing.png" id="img52" media-type="image/png" />
+    <item href="Images/i18n_mixed_errors.png" id="img53" media-type="image/png" />
+    <item href="Images/i18n_errors.png" id="img54" media-type="image/png" />
+    <item href="Images/i18n_flash.png" id="img55" media-type="image/png" />
+    <item href="Images/prod_webserver_arch.png" id="img57" media-type="image/png" />
+    <item href="Images/depot_r_rdoc.png" id="img58" media-type="image/png" />
+    <item href="Images/rails_layout.png" id="img59" media-type="image/png" />
+    <item href="Images/app_dir_layout.png" id="img60" media-type="image/png" />
+    <item href="Images/naming.png" id="img61" media-type="image/png" />
+    <item href="Images/table_name_mapping.png" id="img62" media-type="image/png" />
+    <item href="Images/sql_type_mapping.png" id="img63" media-type="image/png" />
+    <item href="Images/one_to_one.png" id="img64" media-type="image/png" />
+    <item href="Images/one_to_many.png" id="img65" media-type="image/png" />
+    <item href="Images/many_to_many.png" id="img66" media-type="image/png" />
+    <item href="Images/ar_callbacks.png" id="img67" media-type="image/png" />
+    <item href="Images/form_helpers.png" id="img68" media-type="image/png" />
+    <item href="Images/mvc_integration.png" id="img69" media-type="image/png" />
+    <item href="Images/file_upload.png" id="img70" media-type="image/png" />
+    <item href="Images/view_cache.png" id="img71" media-type="image/png" />
+    <item href="Images/migration_types.png" id="img72" media-type="image/png" />
+    <item href="Images/active_resource_price.png" id="img73" media-type="image/png" />
+    <item href="Images/rackup_store.png" id="img74" media-type="image/png" />
+    <item href="Images/i18n_selector.png" id="img75" media-type="image/png" />
+    <item href="Images/David.png" id="said8" media-type="image/png" />
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="cover" linear="no" />
+    <itemref idref="f_0000" />
+    <itemref idref="f_0001" />
+    <itemref idref="f_0002" />
+    <itemref idref="f_0003" />
+    <itemref idref="f_0004" />
+    <itemref idref="f_0005" />
+    <itemref idref="f_0006" />
+    <itemref idref="f_0007" />
+    <itemref idref="f_0008" />
+    <itemref idref="f_0009" />
+    <itemref idref="f_0010" />
+    <itemref idref="f_0011" />
+    <itemref idref="f_0012" />
+    <itemref idref="f_0013" />
+    <itemref idref="f_0014" />
+    <itemref idref="f_0015" />
+    <itemref idref="f_0016" />
+    <itemref idref="f_0017" />
+    <itemref idref="f_0018" />
+    <itemref idref="f_0019" />
+    <itemref idref="f_0020" />
+    <itemref idref="f_0021" />
+    <itemref idref="f_0022" />
+    <itemref idref="f_0023" />
+    <itemref idref="f_0024" />
+    <itemref idref="f_0025" />
+    <itemref idref="f_0026" />
+    <itemref idref="f_0027" />
+    <itemref idref="f_0028" />
+    <itemref idref="f_0029" />
+    <itemref idref="f_0030" />
+    <itemref idref="f_0031" />
+    <itemref idref="f_0032" />
+    <itemref idref="f_0033" />
+    <itemref idref="f_0034" />
+    <itemref idref="f_0035" />
+    <itemref idref="f_0036" />
+    <itemref idref="f_0037" />
+    <itemref idref="f_0038" />
+    <itemref idref="f_0039" />
+    <itemref idref="f_0040" />
+    <itemref idref="f_0041" />
+    <itemref idref="f_0042" />
+    <itemref idref="f_0043" />
+    <itemref idref="f_0044" />
+    <itemref idref="f_0045" />
+    <itemref idref="f_0046" />
+    <itemref idref="f_0047" />
+    <itemref idref="f_0048" />
+    <itemref idref="f_0049" />
+    <itemref idref="f_0050" />
+    <itemref idref="f_0051" />
+    <itemref idref="f_0052" />
+    <itemref idref="f_0053" />
+    <itemref idref="f_0054" />
+    <itemref idref="f_0055" />
+    <itemref idref="f_0056" />
+    <itemref idref="f_0057" />
+    <itemref idref="f_0058" />
+    <itemref idref="f_0059" />
+    <itemref idref="f_0060" />
+    <itemref idref="f_0061" />
+    <itemref idref="f_0062" />
+    <itemref idref="f_0063" />
+    <itemref idref="f_0064" />
+    <itemref idref="f_0065" />
+    <itemref idref="f_0066" />
+    <itemref idref="f_0067" />
+    <itemref idref="f_0068" />
+    <itemref idref="f_0069" />
+    <itemref idref="f_0070" />
+    <itemref idref="f_0071" />
+    <itemref idref="f_0072" />
+    <itemref idref="f_0073" />
+    <itemref idref="f_0074" />
+    <itemref idref="f_0075" />
+    <itemref idref="f_0076" />
+    <itemref idref="f_0077" />
+    <itemref idref="f_0078" />
+    <itemref idref="f_0079" />
+    <itemref idref="f_0080" />
+    <itemref idref="f_0081" />
+    <itemref idref="f_0082" />
+    <itemref idref="f_0083" />
+    <itemref idref="f_0084" />
+    <itemref idref="f_0085" />
+    <itemref idref="f_0086" />
+    <itemref idref="f_0087" />
+    <itemref idref="f_0088" />
+    <itemref idref="f_0089" />
+    <itemref idref="f_0090" />
+    <itemref idref="f_0091" />
+    <itemref idref="f_0092" />
+    <itemref idref="f_0093" />
+    <itemref idref="f_0094" />
+    <itemref idref="f_0095" />
+    <itemref idref="f_0096" />
+    <itemref idref="f_0097" />
+    <itemref idref="f_0098" />
+    <itemref idref="f_0099" />
+    <itemref idref="f_0100" />
+    <itemref idref="f_0101" />
+    <itemref idref="f_0102" />
+    <itemref idref="f_0103" />
+    <itemref idref="f_0104" />
+    <itemref idref="f_0105" />
+    <itemref idref="f_0106" />
+    <itemref idref="f_0107" />
+    <itemref idref="f_0108" />
+    <itemref idref="f_0109" />
+    <itemref idref="f_0110" />
+    <itemref idref="f_0111" />
+    <itemref idref="f_0112" />
+    <itemref idref="f_0113" />
+    <itemref idref="f_0114" />
+    <itemref idref="f_0115" />
+    <itemref idref="f_0116" />
+    <itemref idref="f_0117" />
+    <itemref idref="f_0118" />
+    <itemref idref="f_0119" />
+    <itemref idref="f_0120" />
+    <itemref idref="f_0121" />
+    <itemref idref="f_0122" />
+    <itemref idref="f_0123" />
+    <itemref idref="f_0124" />
+    <itemref idref="f_0125" />
+    <itemref idref="f_0126" />
+    <itemref idref="f_0127" />
+    <itemref idref="f_0128" />
+    <itemref idref="f_0129" />
+    <itemref idref="f_0130" />
+    <itemref idref="f_0131" />
+    <itemref idref="f_0132" />
+    <itemref idref="f_0133" />
+    <itemref idref="f_0134" />
+    <itemref idref="f_0135" />
+    <itemref idref="f_0136" />
+    <itemref idref="f_0137" />
+    <itemref idref="f_0138" />
+    <itemref idref="f_0139" />
+    <itemref idref="f_0140" />
+    <itemref idref="f_0141" />
+    <itemref idref="f_0142" />
+    <itemref idref="f_0143" />
+    <itemref idref="f_0144" />
+    <itemref idref="f_0145" />
+    <itemref idref="f_0146" />
+    <itemref idref="f_0147" />
+  </spine>
+  <guide>
+    <reference href="Text/cover.xhtml" title="Cover" type="cover" />
+  </guide>
+</package>

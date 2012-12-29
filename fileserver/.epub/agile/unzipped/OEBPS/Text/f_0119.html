@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+</head>
+
+<body>
+  <h1 class="chapter-title" id="chp.caching"><span class="chapter-number">Chapter 22</span><br />
+  <span class="chapter-name">Caching</span></h1>
+
+  <div class="epigraph epitext">
+    <ul>
+      <li>
+        <p id="N1D55E">caching full pages statically,</p>
+      </li>
+
+      <li>
+        <p id="N1D562">caching the results of an action,</p>
+      </li>
+
+      <li>
+        <p id="N1D566">expiring pages from the cache, and</p>
+      </li>
+
+      <li>
+        <p id="N1D56A">caching a part of a page.</p>
+      </li>
+    </ul>
+  </div>
+
+  <p id="N1D56D">Many applications seem to spend a lot of their time doing the same task over and over. A blog application renders the list of current articles for every visitor. A store application will display the same page of product information for everyone who requests it.</p>
+
+  <p id="N1D576">All this repetition costs us resources and time on the server. Rendering the front page of your site may require half a dozen database queries, and it may end up running through a number of Ruby methods and Rails templates. It isn’t a big deal for an individual request, but multiply that by several thousand hits an hour, and suddenly your server is starting to glow a dull red. Your users will see this as slower response times.</p>
+
+  <p id="N1D579">In situations such as these, we can use caching to greatly reduce the load on our servers and increase the responsiveness of our applications. Rather than generate the same old content from scratch, time after time, we create it once and remember the result. The next time a request arrives for that same page, we deliver it from the cache rather than create it. Or better yet, somebody else delivers it from <span class="emph">their</span> cache, and the request never gets to us at all. Because when it comes down to it, the request that is the most efficient to process is the one that you never see.</p>
+
+  <p id="N1D57F">The first thing to realize is that the Internet has a rich set of features available to prevent duplicate and redundant requests from getting to your application. Rails is designed to work with the Internet. But if you find that there are cases where Internet caching is not appropriate, or despite your best efforts duplicate requests are still coming in, Rails offers three additional approaches to caching: <span class="emph">page caching</span>, <span class="emph">action caching</span>, and <span class="emph">fragment caching</span>.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

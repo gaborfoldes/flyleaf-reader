@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="sec.cache.page">22.2 Page Caching</h2>
+
+  <p id="N1D70D"><span class="firstuseinline">Page caching</span> is the simplest and most efficient form of Rails caching. The first time a user requests a particular URL, our application gets invoked and generates a page of HTML. The contents of this page are stored in the cache. The next time a request containing that URL is received, the HTML of the page will be delivered straight from the cache. Your application never sees the request. In fact, Rails is not involved at all. The web server itself handles the entire request, which makes page caching very, very efficient. Your application delivers these pages at the same speed that the server can deliver any other static content.</p>
+
+  <p id="N1D722">Sometimes, though, our application needs to be at least partially involved in handling these requests. For example, your store might display details of certain products only to a subset of users (perhaps premium customers get earlier access to new products). In this case, the page you display will have the same content, but you don’t want to display it to just anyone&mdash;you need to filter access to the cached content. Rails provides <span class="firstuseinline">action caching</span> for this purpose. With action caching, your application controller is still invoked, and it’s invoked before filters are run. However, the action itself is not called if there’s an existing cached page.</p>
+
+  <p id="N1D731">Let’s look at this in the context of a site that has public content and premium, members-only content. We have two controllers: an admin controller that verifies that someone is a member and a content controller with actions to show both public and premium content. The public content consists of a single page with links to premium articles. If someone requests premium content and they’re not a member, we redirect them to an action in the admin controller that signs them up.</p>
+
+  <p id="N1D734">Ignoring caching for a minute, we can implement the content side of this application using a before filter to verify the user’s status and a couple of action methods for the two kinds of content:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/cookies/app/controllers/content_controller.rb">rails31/e1/cookies/app/controllers/content_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ContentController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">before_filter :verify_premium_user, :except =&gt; :public_content</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> public_content</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@articles = Article.list_public</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> premium_content</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">@articles = Article.list_premium</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">private</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">def</strong> verify_premium_user</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">user = session[:user_id]</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">user = User.find(user) <strong class="prompt">if</strong> user</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">unless</strong> user &amp;&amp; user.active?</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">redirect_to :controller =&gt; <em class="string">"login"</em>, :action =&gt; <em class="string">"signup_new"</em></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N1D79A">Because the content pages are fixed, they can be cached. We can cache the public content at the page level, but we have to restrict access to the cached premium content to members, so we need to use action-level caching for it. To enable caching, we simply add two declarations to our class:</p>
+
+  <table class="processedcode">
+    <tr class="livecodelozenge">
+      <td colspan="2"><a href="http://media.pragprog.com/titles/rails4/code/rails31/e1/cookies/app/controllers/content_controller.rb">rails31/e1/cookies/app/controllers/content_controller.rb</a></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> ContentController &lt; ApplicationController</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">before_filter :verify_premium_user, :except =&gt; :public_content</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">caches_page :public_content</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">caches_action :premium_content</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D7CB">The <code class="cf ic">caches_page</code> directive tells Rails to cache the output of <code class="cf methodname">public_content</code> the first time it is produced. Thereafter, this page will be delivered directly from the web server.</p>
+
+  <p id="N1D7D4">The second directive, <code class="cf ic">caches_action</code>, tells Rails to cache the results of executing <code class="cf methodname">premium_content</code> but still to execute the filters. This means that we’ll still validate that the person requesting the page is allowed to do so, but we won’t actually execute the action more than once.</p>
+
+  <p id="N1D7F3">Action caching is a good example of an <span class="emph">around filter</span>, described <a href="../Text/f_0111.html#sec.filter">​here​</a>. The before part of the filter checks to see whether the cached item exists. If it does, it renders it directly to the user, preventing the real action from running. The after part of the filter saves the results of running the action in the cache.</p>
+
+  <p id="N1D7FC"><code class="cf methodname">caches_action</code> can accept a number of options. A <code class="cf ic">:cache_path</code> option allows you to modify the action cache path. This can be useful for actions that handle a number of different conditions with different cache needs. <code class="cf ic">:if</code> and <code class="cf ic">:unless</code> allow you to pass a Proc that will control when an action should be passed. Finally, a <code class="cf ic">:layout</code> option, if <code class="cf constant">false</code>, will cause Rails to cache only your action content. This is useful when your layout has dynamic information.</p>
+
+  <p id="N1D810">Caching is, by default, enabled only in production environments. You can turn it on or off manually by setting this:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">ActionController::Base.perform_caching = true | false</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D83A">You can make this change in your application’s environment files (in <code class="cf dir">config/environments</code>), although the preferred syntax is slightly different there:</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">config.action_controller.perform_caching = true</code></td>
+    </tr>
+  </table>
+
+  <p id="N1D84B">Note that both Rails action and page caching are strictly URL based. A page is cached according to the content of the URL that first generated it, and subsequent requests to that same URL will return the saved content.</p>
+
+  <p id="N1D84E">This means that dynamic pages that depend on information not in the URL are poor candidates for caching. These include the following:</p>
+
+  <ul>
+    <li>
+      <p id="N1D854">Pages where the content is time based (although see <a href="../Text/f_0122.html#sec.time.based.expiry">​<em>Time-Based Expiry of Cached Pages</em>​</a>).</p>
+    </li>
+
+    <li>
+      <p id="N1D85B">Pages whose content depends on session information. For example, if you customize pages for each of your users, you’re unlikely to be able to cache them (although you might be able to take advantage of fragment caching, described starting <a href="../Text/f_0123.html#sec.fragment.caching">​here​</a>).</p>
+    </li>
+
+    <li>
+      <p id="N1D862">Pages generated from data that you don’t control. For example, a page displaying information from our database might not be cachable if non-Rails applications can update that database too. Our cached page would become out-of-date without our application knowing.</p>
+    </li>
+  </ul>
+
+  <p id="N1D865">However, caching <span class="emph">can</span> cope with pages generated from volatile content that’s under your control. As we’ll see in the next section, it’s simply a question of removing the cached pages when they become outdated.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>

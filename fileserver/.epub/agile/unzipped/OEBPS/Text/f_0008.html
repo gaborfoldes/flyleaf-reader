@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Agile Web Development with Rails</title>
+  <link href="../Styles/bookshelf.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/book_local.css" rel="stylesheet" type="text/css" />
+  <link href="../Styles/page-template.xpgt" rel="stylesheet" type="application/vnd.adobe-page-template+xml" />
+  <meta content="rails4" name="bookcode" />
+  <style type="text/css">
+/*<![CDATA[*/
+
+  code.sgc-1 {white-space: pre-wrap;}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <h2 id="heading_id_2">Rails Simply Feels Right</h2>
+
+  <p id="N10147">First, a large number of developers were frustrated with the technologies they were using to create web applications. It didn’t seem to matter whether they were using Java, PHP, or .NET&mdash;there was a growing sense that their job was just too damn hard. And then, suddenly, along came Rails, and Rails was easier.</p>
+
+  <p id="N1014A">But easy on its own doesn’t cut it. We’re talking about professional developers writing real-world websites. They wanted to feel that the applications they were developing would stand the test of time&mdash;that they were designed and implemented using modern, professional techniques. So, these developers dug into Rails and discovered it wasn’t just a tool for hacking out sites.</p>
+
+  <p id="N1014D">For example, <span class="emph">all</span> Rails applications are implemented using the Model-View-Controller (MVC) architecture. Java developers are used to frameworks such as Tapestry and Struts, which are based on MVC. But Rails takes MVC further: when you develop in Rails, you start with a working application, there’s a place for each piece of code, and all the pieces of your application interact in a standard way.</p>
+
+  <p id="N10161">Professional programmers write tests. And again, Rails delivers. All Rails applications have testing support baked right in. As you add functionality to the code, Rails automatically creates test stubs for that functionality. The framework makes it easy to test applications, and as a result, Rails applications tend to get tested.</p>
+
+  <p id="N1016A">Rails applications are written in Ruby, a modern, object-oriented scripting language. Ruby is concise without being unintelligibly terse&mdash;you can express ideas naturally and cleanly in Ruby code. This leads to programs that are easy to write and (just as important) are easy to read months later.</p>
+
+  <p id="N1016D">Rails takes Ruby to the limit, extending it in novel ways that make a programmer’s life easier. This makes our programs shorter and more readable. It also allows us to perform tasks that would normally be done in external configuration files inside the codebase instead. This makes it far easier to see what’s happening. The following code defines the model class for a project. Don’t worry about the details for now. Instead, just think about how much information is being expressed in a few lines of code.</p>
+
+  <table class="processedcode">
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">class</strong> Project &lt; ActiveRecord::Base</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">belongs_to :portfolio</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">has_one :project_manager</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">has_many :milestones</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">has_many :deliverables, through: milestones</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">validates :name, :description, presence: true</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">validates :non_disclosure_agreement, acceptance: true</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1">validates :short_name, uniqueness: true</code></td>
+    </tr>
+
+    <tr>
+      <td class="codeprefix">&nbsp;</td>
+
+      <td class="codeline"><code class="sgc-1"><strong class="prompt">end</strong></code></td>
+    </tr>
+  </table>
+
+  <p id="N10199">Two other philosophical underpinnings keep Rails code short and readable: DRY and convention over configuration. DRY stands for <span class="emph">don’t repeat yourself</span>: every piece of knowledge in a system should be expressed in just one place. Rails uses the power of Ruby to bring that to life. You’ll find very little duplication in a Rails application; you say what you need to say in one place&mdash;a place often suggested by the conventions of the MVC architecture&mdash;and then move on. For programmers used to other web frameworks, where a simple change to the schema could involve them in half a dozen or more code changes, this was a revelation.</p>
+
+  <p id="N101A3"><span class="emph">Convention over configuration</span> is crucial, too. It means that Rails has sensible defaults for just about every aspect of knitting together your application. Follow the conventions, and you can write a Rails application using less code than a typical Java web application uses in XML configuration. If you need to override the conventions, Rails makes that easy, too.</p>
+
+  <p id="N101AB">Developers coming to Rails found something else, too. Rails isn’t playing catch-up with the new de facto web standards; it’s helping define them. And Rails makes it easy for developers to integrate features such as Ajax and RESTful interfaces into their code, because support is built in. (And if you’re not familiar with Ajax and REST interfaces, never fear&mdash;we’ll explain them later in the book.)</p>
+
+  <p id="N101AE">Developers are worried about deployment too. They found that with Rails you can deploy successive releases of your application to any number of servers with a single command (and roll them back equally easily should the release prove to be somewhat less than perfect).</p>
+
+  <p id="N101B1">Rails was extracted from a real-world, commercial application. It turns out that the best way to create a framework is to find the central themes in a specific application and then bottle them up in a generic foundation of code. When you’re developing your Rails application, you’re starting with half of a really good application already in place.</p>
+
+  <p id="N101BA">But there’s something else to Rails&mdash;something that’s hard to describe. Somehow, it just feels right. Of course, you’ll have to take our word for that until you write some Rails applications for yourself (which should be in the next forty-five minutes or so…). That’s what this book is all about.</p><script src="../Misc/book_local.js" type="text/javascript">
+</script>
+</body>
+</html>
