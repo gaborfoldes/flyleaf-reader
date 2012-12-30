@@ -13,6 +13,7 @@ var app = module.exports = express.createServer();
 
 
 bookServer.loadBook('agile');
+//bookServer.loadBook('postwar');
 
 //var debug = fs.createWriteStream('log/debug.log');
 //debug.log = function() { debug.write(format.apply(this, arguments) + '\n') };
