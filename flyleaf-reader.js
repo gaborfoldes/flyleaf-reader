@@ -11,17 +11,7 @@ var express = require('express'),
 var app = module.exports = express.createServer();
 
 // Load books
-require('child_process').exec('ls fileserver/.epub/', function (error, stdout, stderr) {
-    var foundBooks = stdout.split('\n');
-    for (i in foundBooks) {
-        var bookid = foundBooks[i]; //.match(/fileserver\/.epub\/([^\/]*)\/original/);
-        if (bookid && bookid != '') {
-          console.log('Found: ' + bookid);
-          bookServer.loadBook(bookid);
-        }
-    }
-});
-
+bookServer.parseBooks();
 
 // Configure server
 app.configure(function(){
@@ -39,14 +29,14 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	app.use(express.static(__dirname + '/fileserver'));
+	app.use(express.static(__dirname + '/public'));
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
 	var oneYear = 31557600000;
 	app.use(express.staticCache());
-	app.use(express.static(__dirname + '/fileserver', {maxAge: oneYear}));
+	app.use(express.static(__dirname + '/public', {maxAge: oneYear}));
 	app.use(express.errorHandler()); 
 });
 
@@ -54,11 +44,12 @@ app.configure('production', function(){
 /*
   Routes
   ------
-                     Start: / -> index.html
-     Pre-generated content: /read/:book/chapters/:chapter -> point request to: /.epub/:book/processed/:chapter
-           Manifested item: /read/:book/items/:item -> resolve and point request to: /.epub/:book/unzipped/:itemhref
-   Non-manifested resource: /read/:book/direct/:href -> point request to /.epub/:book/unzipped/:href
-             Invoke reader: /read/:book/:chapter? -> reader.html
+                    Hidden: /. -> 404
+     Pre-generated content: /view/:book/chapters/:chapter -> point request to: /.epub/:book/processed/:chapter
+           Manifested item: /view/:book/items/:item -> resolve and point request to: /.epub/:book/unzipped/:itemhref
+   Non-manifested resource: /view/:book/direct/:href -> point request to /.epub/:book/unzipped/:href
+             Invoke reader: /view/:book/:chapter? -> reader.html
+     Refresh book metadata: /refresh
            Pass on generic: * -> static server
 */
 
@@ -67,25 +58,25 @@ app.get(/\/\./, function(req, res, next) {
 	res.send(404);
 });
 
-app.get('/a/:book/chapters/:chapter', function(req, res, next) {
+app.get('/view/:book/chapters/:chapter', function(req, res, next) {
 	req.url = '/.epub/' + req.params.book + '/processed/' + req.params.chapter + '.xml';
 	console.log('Rerouting to:', req.url);
 	return next();
 })
 
-app.get('/a/:book/items/:itemid', function(req, res, next) {
+app.get('/view/:book/items/:itemid', function(req, res, next) {
 	req.url = '/.epub/' + req.params.book + '/unzipped/' + bookServer.getBook(req.params.book).manifest[req.params.itemid].href;
 	console.log('Rerouting to:', req.url);
 	return next();
 })
 
-app.get('/a/:book/apple-touch:touchimage', function(req, res, next) {
+app.get('/view/:book/apple-touch:touchimage', function(req, res, next) {
 	req.url = '/.epub/' + req.params.book + '/processed/apple-touch' + req.params.touchimage;
 	console.log('Rerouting to:', req.url);
 	return next();
 })
 
-app.get('/a/:book/:chapter?', function(req, res, next) {
+app.get('/view/:book/:chapter?', function(req, res, next) {
 	book = bookServer.getBook(req.params.book);
   if (!book) {
     res.send(404);
@@ -98,6 +89,47 @@ app.get('/a/:book/:chapter?', function(req, res, next) {
     });
   }
 })
+
+app.get('/refresh', function(req, res, next) {
+  console.log('Reloading books.');
+  bookServer.parseBooks();
+  res.send(200);
+})
+
+app.get('/refresh/:book', function(req, res, next) {
+  console.log('Loading book:' + req.params.book);
+  bookServer.loadBook(req.params.book);
+  res.send(200);
+})
+
+app.get('/search', function(req, res, next) {
+  console.log('Searching all books.');
+  var booklist = bookServer.getBookList();
+  res.send(Object.keys(booklist));
+})
+
+app.get('/search/:book', function(req, res, next) {
+  console.log('Getting book metadata:' + req.params.book);
+  var book = bookServer.getBook(req.params.book),
+      result = {};
+  result[book.bookid] = book.metadata;
+  res.send(result);
+})
+
+app.get('/search/:term/:value', function(req, res, next) {
+  console.log('Searching books:' + req.params.term + ' = ' + req.params.value);
+  var booklist = bookServer.searchBooks(req.params.term, req.params.value),
+      result = {};
+  for (i in booklist) {
+    result[booklist[i].bookid] = booklist[i].metadata;
+  };
+  res.send(result);
+})
+
+
+/*
+Start server
+*/
 
 if (app.settings.env === 'production') {
   app.listen(80, '10.0.0.182');

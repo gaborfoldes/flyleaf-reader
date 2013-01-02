@@ -12,7 +12,7 @@ $(function(){
 
     $.ajaxSetup({
       error: function(xhr, status, error) {
-        $('article').html('<center>Sorry, it looks like we messed up and we could not load the requested page.</center>');
+        $('article').html('<center>Page not found.</center>');
         console.log('Error:', status, error);
       }
     });
