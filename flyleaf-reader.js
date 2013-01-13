@@ -90,13 +90,13 @@ app.get('/view/:book/:chapter?', function(req, res, next) {
   }
 })
 
-app.get('/refresh', function(req, res, next) {
+app.get('/load', function(req, res, next) {
   console.log('Reloading books.');
   bookServer.parseBooks();
   res.send(200);
 })
 
-app.get('/refresh/:book', function(req, res, next) {
+app.get('/load/:book', function(req, res, next) {
   console.log('Loading book:' + req.params.book);
   bookServer.loadBook(req.params.book);
   res.send(200);
@@ -134,7 +134,7 @@ Start server
 if (app.settings.env === 'production') {
   app.listen(80, '10.0.0.182');
 } else {
-  app.listen(3000, 'localhost');
+  app.listen(3001, 'localhost');
 }
 console.log("Flyleaf reader started (%s mode)", app.settings.env);
 
