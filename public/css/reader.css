@@ -219,7 +219,7 @@ a:hover { color: #335C11 !important; }
 
 header { background: black; position: fixed; top: 0; left: 0; width: 100%; height: 40px; }
 
-.toolbar ul {list-style-type: none; margin: 0; padding: 0;}
+.toolbar ul {list-style-type: none; margin: 0 !important; padding: 0 !important;}
 
 .toolbar-icon {
     float: left;
@@ -244,7 +244,7 @@ header { background: black; position: fixed; top: 0; left: 0; width: 100%; heigh
 .toolbar #position { color: gray; vertical-align: middle; line-height: 40px; padding-right: 2%; }
 
 .toolbar .right { float: right;}
-.toolbar .center { width: 120px; margin: auto;}
+.toolbar .center { width: 120px; margin: auto !important;}
 
 @media handheld, only screen and (max-device-width: 480px) {
     header { height: 32px; }

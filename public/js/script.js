@@ -29,7 +29,7 @@ $(function(){
                 var headext = $(data).children('headext');
                 var title = $(data).children('title');
                 if (title) { $('head title').html(title.html()); }
-                $('head').append(headext.html())
+                $('head').prepend(headext.html())
                 $('nav').html(nav.html());
                 $('article').html(article.html());
                 setSize(window.scale, true);
