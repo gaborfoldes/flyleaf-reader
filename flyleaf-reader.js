@@ -132,7 +132,7 @@ Start server
 */
 
 if (app.settings.env === 'production') {
-  app.listen(80, '10.0.0.182');
+  app.listen(80, '172.31.24.250');
 } else {
   app.listen(3001, '0.0.0.0');
 }
