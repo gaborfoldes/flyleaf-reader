@@ -127,6 +127,12 @@ app.get('/search/:term/:value', function(req, res, next) {
 })
 
 
+app.get('/', function(req, res, next) {
+  res.render('index.html');
+})
+
+
+
 /*
 Start server
 */
